@@ -1,6 +1,21 @@
 {
   "name": "ts-slonik-plugin",
   "version": "1.0.0",
+  "description": "Typescript language service plugin for slonik.",
+  "keywords": [
+    "slonik",
+    "typescript language service plugin"
+  ],
+  "bugs": {
+    "url": "https://github.com/hoonoh/ts-slonik-plugin/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hoonoh/ts-slonik-plugin"
+  },
+  "author": {
+    "name": "hoonoh"
+  },
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -22,6 +37,37 @@
     "test:ci": "yarn test:pre && yarn test && yarn test:post",
     "lint": "eslint './src/*.ts' './src/**/*.ts'",
     "types": "tsc"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "release": {
+    "branches": [
+      "main"
+    ],
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      [
+        "@semantic-release/changelog",
+        {
+          "changelogTitle": "# ts-slonik-plugin changelog"
+        }
+      ],
+      "@semantic-release/github",
+      [
+        "@semantic-release/git",
+        {
+          "assets": [
+            "package.json",
+            "CHANGELOG.md"
+          ],
+          "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+        }
+      ]
+    ]
   },
   "jest": {
     "verbose": true,
@@ -46,13 +92,20 @@
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.ts$"
   },
   "devDependencies": {
+    "@semantic-release/changelog": "5.0.1",
+    "@semantic-release/commit-analyzer": "8.0.1",
+    "@semantic-release/git": "9.0.0",
+    "@semantic-release/github": "7.2.0",
+    "@semantic-release/release-notes-generator": "9.0.2",
     "@types/jest": "^26.0.20",
     "@types/node": "^14.14.32",
     "@types/pg": "^7.14.11",
     "@typescript-eslint/eslint-plugin": "^4.17.0",
     "@typescript-eslint/parser": "^4.17.0",
     "chalk": "^4.1.0",
+    "commitizen": "^4.2.3",
     "cpy-cli": "^3.1.1",
+    "cz-conventional-changelog": "3.3.0",
     "eslint": "^7.21.0",
     "eslint-config-airbnb-typescript": "^12.3.1",
     "eslint-config-prettier": "^8.1.0",
@@ -68,6 +121,7 @@
     "node-pg-migrate": "^5.9.0",
     "prettier": "^2.2.1",
     "rimraf": "^3.0.2",
+    "semantic-release": "^17.4.2",
     "slonik": "^23.6.2",
     "slonik-sql-tag-raw": "^1.1.1",
     "ts-essentials": "^7.0.1",
