@@ -7,11 +7,12 @@
     "plugins": [
       {
         "name": "ts-slonik-plugin",
-        "command": "psql postgresql://root:r00t-p455w0rD@localhost/raon_live -c",
-        "cost_pattern": "\\(cost=\\d+.?\\d*\\.\\.(\\d+.?\\d*)",
-        "error_cost": 100,
-        "warn_cost": 50,
-        "info_cost": -1
+        "debug": true,
+        "pg": {
+          "include": {
+            "schema": ["users", "media"]
+          }
+        }
       }
     ]
   }

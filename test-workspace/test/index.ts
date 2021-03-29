@@ -1,46 +1,63 @@
-import { createPool, sql } from 'slonik';
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+import { sql } from 'slonik';
 
-const pool = createPool('db_endpoint');
+const string = 'string';
+const number = 1123000;
 
-const id = 'id';
-const token = 'token';
+sql`select ${'string'}`;
+sql`select ${string}`;
+sql`select ${1123001}`;
+sql`select ${number}`;
+sql`select (${sql.array([1, 2, 3], 'int4')})`;
+sql`select (${sql.binary(Buffer.from('abc'))})`;
+sql`select 1123002 from ${sql.identifier(['users', 'users'])}`;
+sql`select ${string} where ${sql.join([true, true], sql` and `)}`;
+sql`select (${sql.join([1, 2], sql`, `)})`;
+sql`
+  select ${sql.join(
+    [sql`(${sql.join([1, 2], sql`, `)})`, sql`(${sql.join([3, 4], sql`, `)})`],
+    sql`, `,
+  )}
+`;
+sql`select ${sql.join([1, 2], sql`, `)}`;
+sql`
+    select bar, baz
+    from ${sql.unnest(
+      [
+        [1, 'foo'],
+        [2, 'bar'],
+      ],
+      ['int4', 'text'],
+    )} AS foo(bar, baz)
+  `;
 
-// select
-pool.maybeOne(sql`select * from users.users where id = ${id}`);
-pool.any(sql`select * from users.users order by id desc`);
-pool.maybeOne(sql`select id, password from users.passwords where user_id = ${id}`);
-pool.maybeOne(
-  sql`
-    select t.id, t.user_id, u.role
-    from users.users u
-    join users.tokens t on t.user_id = u.id
-    where t.refresh_token=${token} and u.id=${id}
-  `,
-);
+// ts-slonik-plugin-disable-cost-errors
+sql`
+  select
+  table_schema "tableSchema",
+  table_name "tableName",
+  column_name "columnName",
+  data_type "dataType",
+  udt_name "udtName",
+  is_nullable "isNullable"
+  from information_schema.columns
+  where true
+  and table_schema not in ('pg_catalog', 'information_schema')
+  order by table_schema, table_name, ordinal_position;
+`;
 
-// insert
-pool.query(
-  sql`
-    insert into users.tokens
-    (user_id, refresh_token)
-    values(${id}, ${token})
-    returning id
-  `,
-);
-// insert with unnest
-pool.query(
-  sql`
-    insert into users.users (alias, email, created_at, updated_at, metadata)
-    select *
-    from ${sql.unnest([], ['text', 'text', 'timestamptz', 'timestamptz', 'jsonb'])}
-    returning *
-  `,
-);
-// insert with json
-pool.query(sql`
-  insert into media.renderers (id,extension,renderer,options)
-  values (${id}, 'avif', 'sharp', ${sql.json({ note: 'note' })})
-`);
+(() => {
+  const table = 'schema.table';
+  const valueMatchingText = ['a', 'b', 'c'];
+  const columnTypeText = 'text';
+  const valueMatchingInt = [1, 2, 3];
+  const columnTypeInt = 'int4';
 
-// alter table
-pool.query(sql`alter table users.users disable trigger insert_handler`);
+  sql`delete from ${table} where col_test in (${sql.array(valueMatchingText, columnTypeText)})`;
+
+  sql`delete from ${table} where col_int_arr in (${sql.array(valueMatchingInt, columnTypeInt)})`;
+})();
+
+(table: 'schema.table', columnType: 'int4', valueMatching: ('a' | 'b' | 'c')[]) => {
+  sql`delete from ${table} where col_int_arr in (${sql.array(valueMatching, columnType)})`;
+};

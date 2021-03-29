@@ -1,2 +1,6 @@
+coverage
+dist
 node_modules
-lib
+yarn-error.log
+zz-test.ts
+src/test/querries

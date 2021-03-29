@@ -45,5 +45,33 @@
 
   "extensions": {
     "recommendations": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode"]
+  },
+  "launch": {
+    "configurations": [
+      {
+        "type": "node",
+        "request": "launch",
+        "name": "Jest Tests",
+        "program": "${workspaceRoot:ts-slonik-plugin}/node_modules/jest/bin/jest.js",
+        // "args": ["-i"],
+        // "preLaunchTask": "build",
+        "internalConsoleOptions": "openOnSessionStart"
+        // "outFiles": ["${workspaceRoot:ts-slonik-plugin}/dist/**/*"],
+        // "envFile": "${workspaceRoot:ts-slonik-plugin}/.env"
+      },
+      {
+        "name": "test generator",
+        "type": "node",
+        "request": "launch",
+        "runtimeExecutable": "node",
+        "runtimeArgs": ["--nolazy", "-r", "ts-node/register/transpile-only"],
+        "args": ["src/test/generator/generate.ts"],
+        "env": { "NODE_ENV": "dev" },
+        "cwd": "${workspaceRoot:ts-slonik-plugin}",
+        "internalConsoleOptions": "openOnSessionStart",
+        "skipFiles": ["<node_internals>/**", "node_modules/**"]
+      }
+    ],
+    "compounds": []
   }
 }
