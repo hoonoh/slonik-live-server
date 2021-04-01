@@ -3,6 +3,7 @@ import ts from 'typescript/lib/tsserverlibrary';
 import { Value } from '../../types';
 import { CallExpressionHandler } from '../call-expression';
 import { FunctionHandler } from '../function';
+import { PropertyAccessExpressionHandler } from '../property-access-expression';
 
 export class SlonikSqlJsonHandler {
   /**
@@ -90,6 +91,10 @@ export class SlonikSqlJsonHandler {
           } else if (ts.isCallExpression(prop.initializer)) {
             const v: Value[] = [];
             CallExpressionHandler.handle(typeChecker, prop.initializer, v);
+            join[name] = v[0]?.value;
+          } else if (ts.isPropertyAccessExpression(prop.initializer)) {
+            const v: Value[] = [];
+            PropertyAccessExpressionHandler.handle(typeChecker, prop.initializer, v);
             join[name] = v[0]?.value;
           } else {
             join[name] = fallback(prop.initializer);
