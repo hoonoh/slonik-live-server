@@ -251,4 +251,23 @@ describe('sql.json', () => {
       expect(diagnostic.messageText.toString()).toContain(expected);
     });
   });
+
+  describe('should handle value from call expression', () => {
+    const expected = `select * from (values('{"foo":"a"}'::jsonb)) as t(foo)`;
+
+    const results = getDiagnosticFromSourceText(`
+      import { sql } from 'slonik';
+      const foo = 'foo';
+      sql\`select * from (values(\${sql.json({ [foo]: 'bar'.replace('bar', 'baz') })}::jsonb)) as t(foo)\`;
+    `);
+
+    it('check results count', () => {
+      expect(results.length).toEqual(1);
+    });
+
+    it.each(results)(`returns \`${expected}\``, (title: string, diagnostic: ts.Diagnostic) => {
+      expect(diagnostic.category).toEqual(ts.DiagnosticCategory.Suggestion);
+      expect(diagnostic.messageText.toString()).toContain(expected);
+    });
+  });
 });

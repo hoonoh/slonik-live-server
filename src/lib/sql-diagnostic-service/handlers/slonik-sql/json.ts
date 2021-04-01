@@ -1,6 +1,7 @@
 import ts from 'typescript/lib/tsserverlibrary';
 
 import { Value } from '../../types';
+import { CallExpressionHandler } from '../call-expression';
 import { FunctionHandler } from '../function';
 
 export class SlonikSqlJsonHandler {
@@ -50,10 +51,6 @@ export class SlonikSqlJsonHandler {
       return recursedDepth === 0 ? JSON.stringify(rtn) : rtn;
     }
 
-    //
-    // todo: call expression
-    //
-
     if (ts.isObjectLiteralExpression(exp)) {
       exp.properties.forEach(prop => {
         let name: string | undefined;
@@ -90,6 +87,10 @@ export class SlonikSqlJsonHandler {
               );
               return rtn;
             }, [] as Record<string, unknown>[]);
+          } else if (ts.isCallExpression(prop.initializer)) {
+            const v: Value[] = [];
+            CallExpressionHandler.handle(typeChecker, prop.initializer, v);
+            join[name] = v[0]?.value;
           } else {
             join[name] = fallback(prop.initializer);
           }
