@@ -4,6 +4,7 @@ import { LanguageServiceLogger } from '../../logger';
 import { Value } from '../types';
 import { skipSiblings } from '../util/skip-siblings';
 import { joinTextBlocksAndValues } from '../util/textblock-value-join';
+import { CallExpressionHandler } from './call-expression';
 // eslint-disable-next-line import/no-cycle
 import { IdentifierHandler } from './identifier';
 import { PrimitiveHandler } from './primitive';
@@ -58,11 +59,10 @@ export class TemplateSpanChildHandler {
       //
       // call expression
       //
-      ts.isCallExpression(node) &&
-      node.getChildCount() > 0
+      ts.isCallExpression(node)
     ) {
       TemplateSpanChildHandler.debugHandled('call expression');
-      IdentifierHandler.handle(typeChecker, node.getChildAt(0), values, skipAtPosition, isRaw);
+      CallExpressionHandler.handle(typeChecker, node, values, isRaw);
       skipSiblings(node, skipAtPosition);
     } else if (
       //

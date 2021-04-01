@@ -83,27 +83,6 @@ describe('identifier handler', () => {
     });
   });
 
-  describe('should handle function', () => {
-    const expected = `select 'strFromFunction'`;
-
-    const results = getDiagnosticFromSourceText(`
-      import { sql } from 'slonik';
-      function rtnStr() {
-        return 'strFromFunction';
-      }
-      sql<string>\`select \${rtnStr()}\`;
-    `);
-
-    it('check results count', () => {
-      expect(results.length).toEqual(1);
-    });
-
-    it.each(results)(`returns \`${expected}\``, (title: string, diagnostic: ts.Diagnostic) => {
-      expect(diagnostic.category).toEqual(ts.DiagnosticCategory.Suggestion);
-      expect(diagnostic.messageText.toString()).toContain(expected);
-    });
-  });
-
   describe('should handle property assignment', () => {
     const expected = `select 'bar'`;
 
@@ -136,47 +115,6 @@ describe('identifier handler', () => {
       const makeFoo = () => new Foo();
       const foo = makeFoo();
       sql\`select foo from (values('foo')) as t(foo) where foo = \${foo.bar}\`;
-    `);
-
-    it('check results count', () => {
-      expect(results.length).toEqual(1);
-    });
-
-    it.each(results)(`returns \`${expected}\``, (title: string, diagnostic: ts.Diagnostic) => {
-      expect(diagnostic.category).toEqual(ts.DiagnosticCategory.Suggestion);
-      expect(diagnostic.messageText.toString()).toContain(expected);
-    });
-  });
-
-  describe('should handle method signature', () => {
-    const expected = `select * from (values('bar')) as t(foo) where foo = 'a'`;
-
-    const results = getDiagnosticFromSourceText(`
-      import { sql } from 'slonik';
-      sql\`select * from (values('bar')) as t(foo) where foo = \${new Array(['bar']).join('')}\`;
-    `);
-
-    it('check results count', () => {
-      expect(results.length).toEqual(1);
-    });
-
-    it.each(results)(`returns \`${expected}\``, (title: string, diagnostic: ts.Diagnostic) => {
-      expect(diagnostic.category).toEqual(ts.DiagnosticCategory.Suggestion);
-      expect(diagnostic.messageText.toString()).toContain(expected);
-    });
-  });
-
-  describe('should handle method declaration', () => {
-    const expected = `select * from (values('bar')) as t(bar) where bar = 'bar'`;
-
-    const results = getDiagnosticFromSourceText(`
-      import { sql } from 'slonik';
-      class Foo {
-        getBar() {
-          return 'bar';
-        }
-      }
-      sql\`select * from (values('bar')) as t(bar) where bar = \${new Foo().getBar()}\`;
     `);
 
     it('check results count', () => {
