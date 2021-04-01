@@ -56,10 +56,18 @@ export class SlonikSqlJsonHandler {
 
     if (ts.isObjectLiteralExpression(exp)) {
       exp.properties.forEach(prop => {
-        const name =
-          ts.isPropertyAssignment(prop) && ts.isIdentifier(prop.name)
-            ? prop.name.escapedText.toString()
-            : `UNRESOLVED_NAME: ${prop.name?.getText()}`;
+        let name: string | undefined;
+
+        if (ts.isPropertyAssignment(prop) && ts.isIdentifier(prop.name)) {
+          name = prop.name.escapedText.toString();
+        } else if (ts.isPropertyAssignment(prop) && ts.isComputedPropertyName(prop.name)) {
+          const symbol = typeChecker.getSymbolAtLocation(prop.name);
+          if (symbol?.escapedName) {
+            name = symbol.escapedName.toString();
+          }
+        }
+
+        name ??= `UNRESOLVED_NAME: ${prop.name?.getText()}`;
 
         /* istanbul ignore else */
         if (ts.isPropertyAssignment(prop)) {
