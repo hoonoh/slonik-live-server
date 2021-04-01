@@ -4,10 +4,13 @@ import { LanguageServiceLogger } from '../../logger';
 import { Value } from '../types';
 import { skipSiblings } from '../util/skip-siblings';
 import { joinTextBlocksAndValues } from '../util/textblock-value-join';
+// eslint-disable-next-line import/no-cycle
+import { BinaryExpressionHandler } from './binary-expression';
 import { CallExpressionHandler } from './call-expression';
 // eslint-disable-next-line import/no-cycle
 import { IdentifierHandler } from './identifier';
 import { PrimitiveHandler } from './primitive';
+import { PropertyAccessExpressionHandler } from './property-access-expression';
 // eslint-disable-next-line import/no-cycle
 import { SqlTemplteLiteralHandler } from './sql-template-literal';
 import { TypeByFlagHandler } from './type-by-flag';
@@ -43,8 +46,16 @@ export class TemplateSpanChildHandler {
       ts.isBinaryExpression(node)
     ) {
       TemplateSpanChildHandler.debugHandled('binary expression');
-      const type = typeChecker.getTypeAtLocation(node);
-      TypeByFlagHandler.handle(type, values);
+      BinaryExpressionHandler.handle(typeChecker, node, values, isRaw);
+      skipSiblings(node, skipAtPosition);
+    } else if (
+      //
+      // property access expression
+      //
+      ts.isPropertyAccessExpression(node)
+    ) {
+      TemplateSpanChildHandler.debugHandled('property access expression');
+      PropertyAccessExpressionHandler.handle(typeChecker, node, values, isRaw);
       skipSiblings(node, skipAtPosition);
     } else if (
       //
@@ -63,15 +74,6 @@ export class TemplateSpanChildHandler {
     ) {
       TemplateSpanChildHandler.debugHandled('call expression');
       CallExpressionHandler.handle(typeChecker, node, values, isRaw);
-      skipSiblings(node, skipAtPosition);
-    } else if (
-      //
-      // property access expression
-      //
-      ts.isPropertyAccessExpression(node)
-    ) {
-      TemplateSpanChildHandler.debugHandled('property access expression');
-      IdentifierHandler.handle(typeChecker, node, values, skipAtPosition, isRaw);
       skipSiblings(node, skipAtPosition);
     } else if (
       //
@@ -120,7 +122,7 @@ export class TemplateSpanChildHandler {
         // fallback to type value
         //
         const t = typeChecker.getTypeAtLocation(node);
-        TypeByFlagHandler.handle(t, values);
+        TypeByFlagHandler.handle(t, values, isRaw);
         skipSiblings(node, skipAtPosition);
       }
     } /* istanbul ignore else */ else if (

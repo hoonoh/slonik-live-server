@@ -3,9 +3,9 @@ import ts from 'typescript/lib/tsserverlibrary';
 import { Value } from '../types';
 
 export class TypeByFlagHandler {
-  static handle(type: ts.Type, values: Value[]) {
+  static handle(type: ts.Type, values: Value[], isRaw = false) {
     if (type.isStringLiteral()) {
-      values.push({ value: type.value, isString: true } as Value);
+      values.push({ value: type.value, isString: isRaw ? undefined : true } as Value);
     } else if (type.isLiteral()) {
       values.push({ value: type.value } as Value);
     } else {
@@ -19,7 +19,7 @@ export class TypeByFlagHandler {
         .map(f => ts.TypeFlags[f]);
 
       if (flagNames.includes('String')) {
-        values.push({ value: 'a', isString: true } as Value);
+        values.push({ value: 'a', isString: isRaw ? undefined : true } as Value);
       } else if (flagNames.includes('Number')) {
         values.push({ value: '1' } as Value);
       } else if (flagNames.includes('Boolean')) {

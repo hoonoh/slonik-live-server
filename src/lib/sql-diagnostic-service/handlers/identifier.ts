@@ -4,11 +4,15 @@ import { LanguageServiceLogger } from '../../logger';
 import { Value } from '../types';
 import { checkSymbolImportDeclaration } from '../util/check-import-declaration';
 import { joinTextBlocksAndValues } from '../util/textblock-value-join';
+// eslint-disable-next-line import/no-cycle
+import { BinaryExpressionHandler } from './binary-expression';
 import { CallExpressionHandler } from './call-expression';
 import { KindHandler } from './kind';
+import { LiteralHandler } from './literal';
 import { PrimitiveHandler } from './primitive';
 // eslint-disable-next-line import/no-cycle
 import { SqlTemplteLiteralHandler } from './sql-template-literal';
+import { TypeByFlagHandler } from './type-by-flag';
 
 export class IdentifierHandler {
   private static debugHandled = LanguageServiceLogger.handlerDebugger('identifier');
@@ -81,34 +85,42 @@ export class IdentifierHandler {
       CallExpressionHandler.handle(typeChecker, initializer, values, isRaw);
     } else if (
       //
-      // property assignment
+      // parameter
       //
       valueDeclaration &&
-      ts.isPropertyAssignment(valueDeclaration)
+      ts.isParameter(valueDeclaration)
     ) {
-      IdentifierHandler.debugHandled('property assignment');
-      PrimitiveHandler.handle(valueDeclaration.initializer, values, isRaw);
+      IdentifierHandler.debugHandled('parameter');
+      if (
+        valueDeclaration.type &&
+        ts.isLiteralTypeNode(valueDeclaration.type) &&
+        ts.isLiteralExpression(valueDeclaration.type.literal)
+      ) {
+        LiteralHandler.handle(valueDeclaration.type.literal, values, isRaw);
+      } else if (valueDeclaration.type) {
+        const t = typeChecker.getTypeAtLocation(valueDeclaration.type);
+        TypeByFlagHandler.handle(t, values, isRaw);
+      }
+      // PrimitiveHandler.handle(valueDeclaration.type, values, isRaw);
     } else if (
       //
-      // property access expression
-      //
-      valueDeclaration &&
-      (ts.isPropertyDeclaration(valueDeclaration) || ts.isPropertySignature(valueDeclaration)) &&
-      valueDeclaration.type?.kind
-    ) {
-      IdentifierHandler.debugHandled('property access expression');
-      initializer = valueDeclaration.initializer;
-      KindHandler.handle(valueDeclaration.type.kind, values, initializer, isRaw);
-    } else if (
-      //
-      // value declaration type
+      // variable declaration
       //
       valueDeclaration &&
       ts.isVariableDeclaration(valueDeclaration) &&
       valueDeclaration.type
     ) {
-      IdentifierHandler.debugHandled('primitive');
+      IdentifierHandler.debugHandled('variable declaration');
       PrimitiveHandler.handle(valueDeclaration.type, values, isRaw);
+    } else if (
+      //
+      // binary expression
+      //
+      initializer &&
+      ts.isBinaryExpression(initializer)
+    ) {
+      IdentifierHandler.debugHandled('binary expression');
+      BinaryExpressionHandler.handle(typeChecker, initializer, values, isRaw);
     } else if (
       //
       // undefined
@@ -121,6 +133,15 @@ export class IdentifierHandler {
     ) {
       IdentifierHandler.debugHandled('null from undefined');
       values.push({ value: 'null' });
+    } else if (
+      //
+      // literal expression
+      //
+      initializer &&
+      ts.isLiteralExpression(initializer)
+    ) {
+      IdentifierHandler.debugHandled('literal expression');
+      LiteralHandler.handle(initializer, values, isRaw);
     } /* istanbul ignore else */ else if (
       //
       // fallback
@@ -128,7 +149,7 @@ export class IdentifierHandler {
       kind
     ) {
       IdentifierHandler.debugHandled('kind (fallback)');
-      KindHandler.handle(kind, values, initializer, isRaw);
+      KindHandler.handle(kind, values, isRaw);
     }
   }
 }

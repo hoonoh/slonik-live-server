@@ -6,16 +6,14 @@ import { Value } from '../types';
 export class KindHandler {
   private static debugHandled = LanguageServiceLogger.handlerDebugger('kind');
 
-  static handle(kind: ts.SyntaxKind, values: Value[], initializer?: ts.Expression, isRaw = false) {
-    if (kind === ts.SyntaxKind.NumberKeyword || kind === ts.SyntaxKind.NumericLiteral) {
+  static handle(kind: ts.SyntaxKind, values: Value[], isRaw = false) {
+    if (kind === ts.SyntaxKind.NumberKeyword) {
       KindHandler.debugHandled('number');
-      const value = initializer && ts.isNumericLiteral(initializer) ? initializer.text : '1';
-      values.push({ value });
-    } else if (kind === ts.SyntaxKind.StringKeyword || kind === ts.SyntaxKind.StringLiteral) {
+      values.push({ value: '1' });
+    } else if (kind === ts.SyntaxKind.StringKeyword) {
       KindHandler.debugHandled('string');
-      const value = initializer && ts.isStringLiteral(initializer) ? initializer.text : 'a';
-      values.push({ value, isString: isRaw ? undefined : true });
-    } else if (kind === ts.SyntaxKind.TrueKeyword || kind === ts.SyntaxKind.BooleanKeyword) {
+      values.push({ value: 'a', isString: isRaw ? undefined : true });
+    } else if (kind === ts.SyntaxKind.TrueKeyword) {
       KindHandler.debugHandled('true');
       values.push({ value: 'true' });
     } else if (kind === ts.SyntaxKind.FalseKeyword) {

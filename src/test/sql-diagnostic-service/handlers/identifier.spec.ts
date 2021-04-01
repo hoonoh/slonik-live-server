@@ -104,28 +104,28 @@ describe('identifier handler', () => {
     });
   });
 
-  describe('should handle property access expression', () => {
-    const expected = `select foo from (values('foo')) as t(foo) where foo = 'a'`;
+  // describe('should handle property access expression', () => {
+  //   const expected = `select foo from (values('foo')) as t(foo) where foo = 'a'`;
 
-    const results = getDiagnosticFromSourceText(`
-      import { sql } from 'slonik';
-      class Foo {
-        bar: string;
-      }
-      const makeFoo = () => new Foo();
-      const foo = makeFoo();
-      sql\`select foo from (values('foo')) as t(foo) where foo = \${foo.bar}\`;
-    `);
+  //   const results = getDiagnosticFromSourceText(`
+  //     import { sql } from 'slonik';
+  //     class Foo {
+  //       bar: string;
+  //     }
+  //     const makeFoo = () => new Foo();
+  //     const foo = makeFoo();
+  //     sql\`select foo from (values('foo')) as t(foo) where foo = \${foo.bar}\`;
+  //   `);
 
-    it('check results count', () => {
-      expect(results.length).toEqual(1);
-    });
+  //   it('check results count', () => {
+  //     expect(results.length).toEqual(1);
+  //   });
 
-    it.each(results)(`returns \`${expected}\``, (title: string, diagnostic: ts.Diagnostic) => {
-      expect(diagnostic.category).toEqual(ts.DiagnosticCategory.Suggestion);
-      expect(diagnostic.messageText.toString()).toContain(expected);
-    });
-  });
+  //   it.each(results)(`returns \`${expected}\``, (title: string, diagnostic: ts.Diagnostic) => {
+  //     expect(diagnostic.category).toEqual(ts.DiagnosticCategory.Suggestion);
+  //     expect(diagnostic.messageText.toString()).toContain(expected);
+  //   });
+  // });
 
   describe('should handle from value type', () => {
     const expected = `select 'a'`;
@@ -299,11 +299,29 @@ describe('identifier handler', () => {
   });
 
   describe('should handle from literal-like parameter', () => {
+    const expected = `select 'foo'`;
+
+    const results = getDiagnosticFromSourceText(`
+      import { sql } from 'slonik';
+      (foo: 'foo') => sql\`select \${foo}\`;
+    `);
+
+    it('check results count', () => {
+      expect(results.length).toEqual(1);
+    });
+
+    it.each(results)(`returns \`${expected}\``, (title: string, diagnostic: ts.Diagnostic) => {
+      expect(diagnostic.category).toEqual(ts.DiagnosticCategory.Suggestion);
+      expect(diagnostic.messageText.toString()).toContain(expected);
+    });
+  });
+
+  describe('should handle parameter type', () => {
     const expected = `select 'a'`;
 
     const results = getDiagnosticFromSourceText(`
       import { sql } from 'slonik';
-      (foo: 'foo') => sql<string>\`select \${foo}\`;
+      (foo: string) => sql\`select \${foo}\`;
     `);
 
     it('check results count', () => {

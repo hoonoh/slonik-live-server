@@ -89,7 +89,7 @@ export class FunctionHandler {
       declaration.type
     ) {
       FunctionHandler.debugHandled('method signature type kind');
-      KindHandler.handle(declaration.type.kind, values, undefined, isRaw);
+      KindHandler.handle(declaration.type.kind, values, isRaw);
     } else {
       const type = typeChecker.getTypeAtLocation(declaration);
       if (
@@ -99,7 +99,7 @@ export class FunctionHandler {
         type
       ) {
         FunctionHandler.debugHandled('declaration type');
-        TypeByFlagHandler.handle(type, values);
+        TypeByFlagHandler.handle(type, values, isRaw);
       } else {
         //
         // unhandled
