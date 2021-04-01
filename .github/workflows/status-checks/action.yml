@@ -1,0 +1,23 @@
+runs:
+  using: composite
+
+  steps:
+    - name: Install dependencies
+      shell: bash
+      run: yarn --immutable
+
+    - name: Build
+      shell: bash
+      run: yarn build
+
+    - name: Check linting
+      shell: bash
+      run: yarn lint
+
+    - name: Check types
+      shell: bash
+      run: yarn types
+
+    - name: Run tests
+      shell: bash
+      run: yarn test:db:wait && yarn test:db:migrate:up && yarn test
