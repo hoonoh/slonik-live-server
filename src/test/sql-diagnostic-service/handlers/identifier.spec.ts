@@ -1,6 +1,12 @@
 import ts from 'typescript/lib/tsserverlibrary';
 
-import { getDiagnosticFromSourceText } from '../../util';
+import {
+  DiagnosticFromFileResult,
+  File,
+  getDiagnosticFromSourceText,
+  getTestTargets,
+  mockService,
+} from '../../util';
 
 describe('identifier handler', () => {
   describe('should handle no substitution template literal', () => {
@@ -104,28 +110,73 @@ describe('identifier handler', () => {
     });
   });
 
-  // describe('should handle property access expression', () => {
-  //   const expected = `select foo from (values('foo')) as t(foo) where foo = 'a'`;
+  describe('should handle property access expression', () => {
+    const expected = `
+        select
+        jsonb_set(
+          foo,
+          '{foo,bar}',
+          '"baz"'
+        )
+        from
+        (values('{"foo":{"bar":"bar"}}'::jsonb)) as t(foo)
+      `;
 
-  //   const results = getDiagnosticFromSourceText(`
-  //     import { sql } from 'slonik';
-  //     class Foo {
-  //       bar: string;
-  //     }
-  //     const makeFoo = () => new Foo();
-  //     const foo = makeFoo();
-  //     sql\`select foo from (values('foo')) as t(foo) where foo = \${foo.bar}\`;
-  //   `);
+    const mainText = `
+      import { sql } from 'slonik';
+      import { raw } from 'slonik-sql-tag-raw';
+      import { Foo } from './foo';
+      const foo = new Foo();
+      sql\`
+        select
+        jsonb_set(
+          foo,
+          '{\${raw(foo.id)},bar}',
+          '"baz"'
+        )
+        from
+        (values('{"foo":{"bar":"bar"}}'::jsonb)) as t(foo)
+      \`;
+    `;
 
-  //   it('check results count', () => {
-  //     expect(results.length).toEqual(1);
-  //   });
+    const fooText = `
+      interface IFoo {
+        readonly id: string;
+      }
+      export class Foo implements IFoo {
+        readonly id = 'foo';
+      }
+    `;
 
-  //   it.each(results)(`returns \`${expected}\``, (title: string, diagnostic: ts.Diagnostic) => {
-  //     expect(diagnostic.category).toEqual(ts.DiagnosticCategory.Suggestion);
-  //     expect(diagnostic.messageText.toString()).toContain(expected);
-  //   });
-  // });
+    const files: File[] = [
+      {
+        fileName: 'main.ts',
+        path: './main.ts',
+        text: mainText,
+      },
+      {
+        fileName: 'foo.ts',
+        path: './foo.ts',
+        text: fooText,
+      },
+    ];
+
+    const { languageService, sqlDiagnosticService } = mockService(files);
+    const testTargets = getTestTargets(languageService, sqlDiagnosticService, files);
+    const results = testTargets.map(
+      ([, sourceFile, node], idx) =>
+        ['', sqlDiagnosticService.checkSqlNode(sourceFile, node), idx] as DiagnosticFromFileResult,
+    );
+
+    it('check results count', () => {
+      expect(results.length).toEqual(1);
+    });
+
+    it.each(results)(`returns \`${expected}\``, (title: string, diagnostic: ts.Diagnostic) => {
+      expect(diagnostic.category).toEqual(ts.DiagnosticCategory.Suggestion);
+      expect(diagnostic.messageText.toString()).toContain(expected);
+    });
+  });
 
   describe('should handle from value type', () => {
     const expected = `select 'a'`;

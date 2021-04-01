@@ -1,6 +1,7 @@
 import ts from 'typescript/lib/tsserverlibrary';
 
 import { LanguageServiceLogger } from '../../logger';
+import { traceKind } from '../../util';
 import { Value } from '../types';
 import { skipSiblings } from '../util/skip-siblings';
 import { joinTextBlocksAndValues } from '../util/textblock-value-join';
@@ -25,6 +26,15 @@ export class TemplateSpanChildHandler {
     skipAtPosition: number[],
     isRaw = false,
   ) {
+    LanguageServiceLogger.debug(() => [
+      `[span child info]`,
+      `isRaw:`,
+      isRaw,
+      `kind:`,
+      traceKind(node.kind),
+      `text:`,
+      `>>>${node.getText()}<<<`,
+    ]);
     if (
       //
       // primitives

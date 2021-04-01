@@ -10,6 +10,7 @@ import { CallExpressionHandler } from './call-expression';
 import { KindHandler } from './kind';
 import { LiteralHandler } from './literal';
 import { PrimitiveHandler } from './primitive';
+import { PropertyAccessExpressionHandler } from './property-access-expression';
 // eslint-disable-next-line import/no-cycle
 import { SqlTemplteLiteralHandler } from './sql-template-literal';
 import { TypeByFlagHandler } from './type-by-flag';
@@ -101,7 +102,15 @@ export class IdentifierHandler {
         const t = typeChecker.getTypeAtLocation(valueDeclaration.type);
         TypeByFlagHandler.handle(t, values, isRaw);
       }
-      // PrimitiveHandler.handle(valueDeclaration.type, values, isRaw);
+    } else if (
+      //
+      // property access expression
+      //
+      initializer &&
+      ts.isPropertyAccessExpression(initializer)
+    ) {
+      IdentifierHandler.debugHandled('property access expression');
+      PropertyAccessExpressionHandler.handle(typeChecker, initializer, values, isRaw);
     } else if (
       //
       // variable declaration
