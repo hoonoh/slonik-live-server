@@ -145,10 +145,6 @@ _Default: `50`_
 
 Any cost over this value will be code warning.
 
-## Todo
-
-- Calculate accurate location of errors. (`/syntax error at or near "(.+)"/)`)
-
 ## Notes
 
 This project was inspired by [ts-sql-plugin](https://github.com/xialvjun/ts-sql-plugin)
