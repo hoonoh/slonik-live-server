@@ -1,7 +1,9 @@
 import ts from 'typescript/lib/tsserverlibrary';
 
 import { Value } from '../../types';
+import { CallExpressionHandler } from '../call-expression';
 import { FunctionHandler } from '../function';
+import { PropertyAccessExpressionHandler } from '../property-access-expression';
 
 export class SlonikSqlJsonHandler {
   /**
@@ -50,16 +52,20 @@ export class SlonikSqlJsonHandler {
       return recursedDepth === 0 ? JSON.stringify(rtn) : rtn;
     }
 
-    //
-    // todo: call expression
-    //
-
     if (ts.isObjectLiteralExpression(exp)) {
       exp.properties.forEach(prop => {
-        const name =
-          ts.isPropertyAssignment(prop) && ts.isIdentifier(prop.name)
-            ? prop.name.escapedText.toString()
-            : `UNRESOLVED_NAME: ${prop.name?.getText()}`;
+        let name: string | undefined;
+
+        if (ts.isPropertyAssignment(prop) && ts.isIdentifier(prop.name)) {
+          name = prop.name.escapedText.toString();
+        } else if (ts.isPropertyAssignment(prop) && ts.isComputedPropertyName(prop.name)) {
+          const symbol = typeChecker.getSymbolAtLocation(prop.name);
+          if (symbol?.escapedName) {
+            name = symbol.escapedName.toString();
+          }
+        }
+
+        name ??= `UNRESOLVED_NAME: ${prop.name?.getText()}`;
 
         /* istanbul ignore else */
         if (ts.isPropertyAssignment(prop)) {
@@ -82,6 +88,14 @@ export class SlonikSqlJsonHandler {
               );
               return rtn;
             }, [] as Record<string, unknown>[]);
+          } else if (ts.isCallExpression(prop.initializer)) {
+            const v: Value[] = [];
+            CallExpressionHandler.handle(typeChecker, prop.initializer, v);
+            join[name] = v[0]?.value;
+          } else if (ts.isPropertyAccessExpression(prop.initializer)) {
+            const v: Value[] = [];
+            PropertyAccessExpressionHandler.handle(typeChecker, prop.initializer, v);
+            join[name] = v[0]?.value;
           } else {
             join[name] = fallback(prop.initializer);
           }

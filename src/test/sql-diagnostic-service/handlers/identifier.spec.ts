@@ -1,6 +1,12 @@
 import ts from 'typescript/lib/tsserverlibrary';
 
-import { getDiagnosticFromSourceText } from '../../util';
+import {
+  DiagnosticFromFileResult,
+  File,
+  getDiagnosticFromSourceText,
+  getTestTargets,
+  mockService,
+} from '../../util';
 
 describe('identifier handler', () => {
   describe('should handle no substitution template literal', () => {
@@ -83,27 +89,6 @@ describe('identifier handler', () => {
     });
   });
 
-  describe('should handle function', () => {
-    const expected = `select 'strFromFunction'`;
-
-    const results = getDiagnosticFromSourceText(`
-      import { sql } from 'slonik';
-      function rtnStr() {
-        return 'strFromFunction';
-      }
-      sql<string>\`select \${rtnStr()}\`;
-    `);
-
-    it('check results count', () => {
-      expect(results.length).toEqual(1);
-    });
-
-    it.each(results)(`returns \`${expected}\``, (title: string, diagnostic: ts.Diagnostic) => {
-      expect(diagnostic.category).toEqual(ts.DiagnosticCategory.Suggestion);
-      expect(diagnostic.messageText.toString()).toContain(expected);
-    });
-  });
-
   describe('should handle property assignment', () => {
     const expected = `select 'bar'`;
 
@@ -126,58 +111,62 @@ describe('identifier handler', () => {
   });
 
   describe('should handle property access expression', () => {
-    const expected = `select foo from (values('foo')) as t(foo) where foo = 'a'`;
+    const expected = `
+        select
+        jsonb_set(
+          foo,
+          '{foo,bar}',
+          '"baz"'
+        )
+        from
+        (values('{"foo":{"bar":"bar"}}'::jsonb)) as t(foo)
+      `;
 
-    const results = getDiagnosticFromSourceText(`
+    const mainText = `
       import { sql } from 'slonik';
-      class Foo {
-        bar: string;
+      import { raw } from 'slonik-sql-tag-raw';
+      import { Foo } from './foo';
+      const foo = new Foo();
+      sql\`
+        select
+        jsonb_set(
+          foo,
+          '{\${raw(foo.id)},bar}',
+          '"baz"'
+        )
+        from
+        (values('{"foo":{"bar":"bar"}}'::jsonb)) as t(foo)
+      \`;
+    `;
+
+    const fooText = `
+      interface IFoo {
+        readonly id: string;
       }
-      const makeFoo = () => new Foo();
-      const foo = makeFoo();
-      sql\`select foo from (values('foo')) as t(foo) where foo = \${foo.bar}\`;
-    `);
-
-    it('check results count', () => {
-      expect(results.length).toEqual(1);
-    });
-
-    it.each(results)(`returns \`${expected}\``, (title: string, diagnostic: ts.Diagnostic) => {
-      expect(diagnostic.category).toEqual(ts.DiagnosticCategory.Suggestion);
-      expect(diagnostic.messageText.toString()).toContain(expected);
-    });
-  });
-
-  describe('should handle method signature', () => {
-    const expected = `select * from (values('bar')) as t(foo) where foo = 'a'`;
-
-    const results = getDiagnosticFromSourceText(`
-      import { sql } from 'slonik';
-      sql\`select * from (values('bar')) as t(foo) where foo = \${new Array(['bar']).join('')}\`;
-    `);
-
-    it('check results count', () => {
-      expect(results.length).toEqual(1);
-    });
-
-    it.each(results)(`returns \`${expected}\``, (title: string, diagnostic: ts.Diagnostic) => {
-      expect(diagnostic.category).toEqual(ts.DiagnosticCategory.Suggestion);
-      expect(diagnostic.messageText.toString()).toContain(expected);
-    });
-  });
-
-  describe('should handle method declaration', () => {
-    const expected = `select * from (values('bar')) as t(bar) where bar = 'bar'`;
-
-    const results = getDiagnosticFromSourceText(`
-      import { sql } from 'slonik';
-      class Foo {
-        getBar() {
-          return 'bar';
-        }
+      export class Foo implements IFoo {
+        readonly id = 'foo';
       }
-      sql\`select * from (values('bar')) as t(bar) where bar = \${new Foo().getBar()}\`;
-    `);
+    `;
+
+    const files: File[] = [
+      {
+        fileName: 'main.ts',
+        path: './main.ts',
+        text: mainText,
+      },
+      {
+        fileName: 'foo.ts',
+        path: './foo.ts',
+        text: fooText,
+      },
+    ];
+
+    const { languageService, sqlDiagnosticService } = mockService(files);
+    const testTargets = getTestTargets(languageService, sqlDiagnosticService, files);
+    const results = testTargets.map(
+      ([, sourceFile, node], idx) =>
+        ['', sqlDiagnosticService.checkSqlNode(sourceFile, node), idx] as DiagnosticFromFileResult,
+    );
 
     it('check results count', () => {
       expect(results.length).toEqual(1);
@@ -361,11 +350,29 @@ describe('identifier handler', () => {
   });
 
   describe('should handle from literal-like parameter', () => {
+    const expected = `select 'foo'`;
+
+    const results = getDiagnosticFromSourceText(`
+      import { sql } from 'slonik';
+      (foo: 'foo') => sql\`select \${foo}\`;
+    `);
+
+    it('check results count', () => {
+      expect(results.length).toEqual(1);
+    });
+
+    it.each(results)(`returns \`${expected}\``, (title: string, diagnostic: ts.Diagnostic) => {
+      expect(diagnostic.category).toEqual(ts.DiagnosticCategory.Suggestion);
+      expect(diagnostic.messageText.toString()).toContain(expected);
+    });
+  });
+
+  describe('should handle parameter type', () => {
     const expected = `select 'a'`;
 
     const results = getDiagnosticFromSourceText(`
       import { sql } from 'slonik';
-      (foo: 'foo') => sql<string>\`select \${foo}\`;
+      (foo: string) => sql\`select \${foo}\`;
     `);
 
     it('check results count', () => {

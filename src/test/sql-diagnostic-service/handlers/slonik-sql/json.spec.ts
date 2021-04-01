@@ -232,4 +232,65 @@ describe('sql.json', () => {
       expect(diagnostic.messageText.toString()).toContain(expected);
     });
   });
+
+  describe('should handle computed property name', () => {
+    const expected = `select * from (values('{"foo":"bar"}'::jsonb)) as t(foo)`;
+
+    const results = getDiagnosticFromSourceText(`
+      import { sql } from 'slonik';
+      const foo = 'foo';
+      sql\`select * from (values(\${sql.json({ [foo]: 'bar' })}::jsonb)) as t(foo)\`;
+    `);
+
+    it('check results count', () => {
+      expect(results.length).toEqual(1);
+    });
+
+    it.each(results)(`returns \`${expected}\``, (title: string, diagnostic: ts.Diagnostic) => {
+      expect(diagnostic.category).toEqual(ts.DiagnosticCategory.Suggestion);
+      expect(diagnostic.messageText.toString()).toContain(expected);
+    });
+  });
+
+  describe('should handle value from call expression', () => {
+    const expected = `select * from (values('{"foo":"a"}'::jsonb)) as t(foo)`;
+
+    const results = getDiagnosticFromSourceText(`
+      import { sql } from 'slonik';
+      const foo = 'foo';
+      sql\`select * from (values(\${sql.json({ [foo]: 'bar'.replace('bar', 'baz') })}::jsonb)) as t(foo)\`;
+    `);
+
+    it('check results count', () => {
+      expect(results.length).toEqual(1);
+    });
+
+    it.each(results)(`returns \`${expected}\``, (title: string, diagnostic: ts.Diagnostic) => {
+      expect(diagnostic.category).toEqual(ts.DiagnosticCategory.Suggestion);
+      expect(diagnostic.messageText.toString()).toContain(expected);
+    });
+  });
+
+  describe('should handle value from property access expression', () => {
+    const expected = `select * from (values('{"foo":"a","barBaz":"baz"}'::jsonb)) as t(foo)`;
+
+    const results = getDiagnosticFromSourceText(`
+      import { sql } from 'slonik';
+      const foo = 'foo';
+      const bar = { baz: 'baz' };
+      sql\`select * from (values(\${sql.json({
+        [foo]: 'bar'.replace('bar', 'baz'),
+        barBaz: bar.baz,
+      })}::jsonb)) as t(foo)\`;
+    `);
+
+    it('check results count', () => {
+      expect(results.length).toEqual(1);
+    });
+
+    it.each(results)(`returns \`${expected}\``, (title: string, diagnostic: ts.Diagnostic) => {
+      expect(diagnostic.category).toEqual(ts.DiagnosticCategory.Suggestion);
+      expect(diagnostic.messageText.toString()).toContain(expected);
+    });
+  });
 });

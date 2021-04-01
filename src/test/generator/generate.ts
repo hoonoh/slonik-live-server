@@ -26,9 +26,13 @@ testTargets.forEach(target => {
     console.log(headChalk('#####[END]\n'));
   };
 
-  logWithHeader('clean source text', sourceFile.getText(), '#777');
+  if (process.env.NODE_ENV !== 'dev') {
+    logWithHeader('clean source text', sourceFile.getText(), '#777');
+  }
 
-  logWithHeader('diagnostic messageText', diagnostic?.messageText.toString(), '#777');
+  if (process.env.NODE_ENV !== 'dev') {
+    logWithHeader('diagnostic messageText', diagnostic?.messageText.toString(), '#777');
+  }
 
   const sourceTextEscaped = sourceFile
     .getText()
@@ -45,9 +49,13 @@ testTargets.forEach(target => {
     .toString()
     .replace(/^explain cost is ok: \d{1,}.\d{1,}[\n\s]+tested with query:[\n\s]+/, '');
 
-  logWithHeader('source text escaped', sourceTextEscaped, '#777');
+  if (process.env.NODE_ENV !== 'dev') {
+    logWithHeader('source text escaped', sourceTextEscaped, '#777');
+  }
 
-  logWithHeader('expected render targe', expected, '#777');
+  if (process.env.NODE_ENV !== 'dev') {
+    logWithHeader('expected render target', expected, '#777');
+  }
 
   const testBody = `import ts from 'typescript/lib/tsserverlibrary';
 

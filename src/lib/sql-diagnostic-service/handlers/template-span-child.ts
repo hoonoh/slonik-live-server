@@ -1,12 +1,17 @@
 import ts from 'typescript/lib/tsserverlibrary';
 
 import { LanguageServiceLogger } from '../../logger';
+import { traceKind } from '../../util';
 import { Value } from '../types';
 import { skipSiblings } from '../util/skip-siblings';
 import { joinTextBlocksAndValues } from '../util/textblock-value-join';
 // eslint-disable-next-line import/no-cycle
+import { BinaryExpressionHandler } from './binary-expression';
+import { CallExpressionHandler } from './call-expression';
+// eslint-disable-next-line import/no-cycle
 import { IdentifierHandler } from './identifier';
 import { PrimitiveHandler } from './primitive';
+import { PropertyAccessExpressionHandler } from './property-access-expression';
 // eslint-disable-next-line import/no-cycle
 import { SqlTemplteLiteralHandler } from './sql-template-literal';
 import { TypeByFlagHandler } from './type-by-flag';
@@ -21,6 +26,15 @@ export class TemplateSpanChildHandler {
     skipAtPosition: number[],
     isRaw = false,
   ) {
+    LanguageServiceLogger.debug(() => [
+      `[span child info]`,
+      `isRaw:`,
+      isRaw,
+      `kind:`,
+      traceKind(node.kind),
+      `text:`,
+      `>>>${node.getText()}<<<`,
+    ]);
     if (
       //
       // primitives
@@ -42,8 +56,16 @@ export class TemplateSpanChildHandler {
       ts.isBinaryExpression(node)
     ) {
       TemplateSpanChildHandler.debugHandled('binary expression');
-      const type = typeChecker.getTypeAtLocation(node);
-      TypeByFlagHandler.handle(type, values);
+      BinaryExpressionHandler.handle(typeChecker, node, values, isRaw);
+      skipSiblings(node, skipAtPosition);
+    } else if (
+      //
+      // property access expression
+      //
+      ts.isPropertyAccessExpression(node)
+    ) {
+      TemplateSpanChildHandler.debugHandled('property access expression');
+      PropertyAccessExpressionHandler.handle(typeChecker, node, values, isRaw);
       skipSiblings(node, skipAtPosition);
     } else if (
       //
@@ -58,20 +80,10 @@ export class TemplateSpanChildHandler {
       //
       // call expression
       //
-      ts.isCallExpression(node) &&
-      node.getChildCount() > 0
+      ts.isCallExpression(node)
     ) {
       TemplateSpanChildHandler.debugHandled('call expression');
-      IdentifierHandler.handle(typeChecker, node.getChildAt(0), values, skipAtPosition, isRaw);
-      skipSiblings(node, skipAtPosition);
-    } else if (
-      //
-      // property access expression
-      //
-      ts.isPropertyAccessExpression(node)
-    ) {
-      TemplateSpanChildHandler.debugHandled('property access expression');
-      IdentifierHandler.handle(typeChecker, node, values, skipAtPosition, isRaw);
+      CallExpressionHandler.handle(typeChecker, node, values, isRaw);
       skipSiblings(node, skipAtPosition);
     } else if (
       //
@@ -120,7 +132,7 @@ export class TemplateSpanChildHandler {
         // fallback to type value
         //
         const t = typeChecker.getTypeAtLocation(node);
-        TypeByFlagHandler.handle(t, values);
+        TypeByFlagHandler.handle(t, values, isRaw);
         skipSiblings(node, skipAtPosition);
       }
     } /* istanbul ignore else */ else if (

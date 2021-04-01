@@ -4,44 +4,19 @@ import { LanguageServiceLogger } from '../../logger';
 import { Value } from '../types';
 import { checkSymbolImportDeclaration } from '../util/check-import-declaration';
 import { joinTextBlocksAndValues } from '../util/textblock-value-join';
-import { DateClassHandler } from './date-class';
-import { FunctionHandler } from './function';
+// eslint-disable-next-line import/no-cycle
+import { BinaryExpressionHandler } from './binary-expression';
+import { CallExpressionHandler } from './call-expression';
+import { KindHandler } from './kind';
+import { LiteralHandler } from './literal';
 import { PrimitiveHandler } from './primitive';
+import { PropertyAccessExpressionHandler } from './property-access-expression';
 // eslint-disable-next-line import/no-cycle
 import { SqlTemplteLiteralHandler } from './sql-template-literal';
 import { TypeByFlagHandler } from './type-by-flag';
 
 export class IdentifierHandler {
   private static debugHandled = LanguageServiceLogger.handlerDebugger('identifier');
-
-  private static handleByKind(
-    kind: ts.SyntaxKind,
-    values: Value[],
-    initializer?: ts.Expression,
-    isRaw = false,
-  ) {
-    if (kind === ts.SyntaxKind.NumberKeyword || kind === ts.SyntaxKind.NumericLiteral) {
-      IdentifierHandler.debugHandled('number');
-      const value = initializer && ts.isNumericLiteral(initializer) ? initializer.text : '1';
-      values.push({ value });
-    } else if (kind === ts.SyntaxKind.StringKeyword || kind === ts.SyntaxKind.StringLiteral) {
-      IdentifierHandler.debugHandled('string');
-      const value = initializer && ts.isStringLiteral(initializer) ? initializer.text : 'a';
-      values.push({ value, isString: isRaw ? undefined : true });
-    } else if (kind === ts.SyntaxKind.TrueKeyword || kind === ts.SyntaxKind.BooleanKeyword) {
-      IdentifierHandler.debugHandled('true');
-      values.push({ value: 'true' });
-    } else if (kind === ts.SyntaxKind.FalseKeyword) {
-      IdentifierHandler.debugHandled('false');
-      values.push({ value: 'false' });
-    } /* istanbul ignore else */ else if (
-      kind === ts.SyntaxKind.NullKeyword ||
-      kind === ts.SyntaxKind.UndefinedKeyword
-    ) {
-      IdentifierHandler.debugHandled('null');
-      values.push({ value: 'null' });
-    }
-  }
 
   static handle(
     typeChecker: ts.TypeChecker,
@@ -107,57 +82,54 @@ export class IdentifierHandler {
       initializer &&
       ts.isCallExpression(initializer)
     ) {
-      if (ts.isIdentifier(initializer.expression)) {
-        IdentifierHandler.debugHandled('call expression identifier');
-        IdentifierHandler.handle(typeChecker, initializer.expression, values, []);
-      } else {
-        IdentifierHandler.debugHandled('call expression');
-        const signature = typeChecker.getResolvedSignature(initializer);
-        /* istanbul ignore else */
-        if (signature) {
-          const returnType = typeChecker.getReturnTypeOfSignature(signature);
-          TypeByFlagHandler.handle(returnType, values);
-        }
-      }
+      IdentifierHandler.debugHandled('call expression');
+      CallExpressionHandler.handle(typeChecker, initializer, values, isRaw);
     } else if (
       //
-      // function
-      //
-      (valueDeclaration && initializer && ts.isArrowFunction(initializer)) ||
-      (valueDeclaration && ts.isFunctionDeclaration(valueDeclaration))
-    ) {
-      IdentifierHandler.debugHandled('function');
-      FunctionHandler.handle(valueDeclaration, values, isRaw);
-    } else if (
-      //
-      // property assignment
+      // parameter
       //
       valueDeclaration &&
-      ts.isPropertyAssignment(valueDeclaration)
+      ts.isParameter(valueDeclaration)
     ) {
-      IdentifierHandler.debugHandled('property assignment');
-      PrimitiveHandler.handle(valueDeclaration.initializer, values, isRaw);
+      IdentifierHandler.debugHandled('parameter');
+      if (
+        valueDeclaration.type &&
+        ts.isLiteralTypeNode(valueDeclaration.type) &&
+        ts.isLiteralExpression(valueDeclaration.type.literal)
+      ) {
+        LiteralHandler.handle(valueDeclaration.type.literal, values, isRaw);
+      } else if (valueDeclaration.type) {
+        const t = typeChecker.getTypeAtLocation(valueDeclaration.type);
+        TypeByFlagHandler.handle(t, values, isRaw);
+      }
     } else if (
       //
       // property access expression
       //
-      valueDeclaration &&
-      (ts.isPropertyDeclaration(valueDeclaration) || ts.isPropertySignature(valueDeclaration)) &&
-      valueDeclaration.type?.kind
+      initializer &&
+      ts.isPropertyAccessExpression(initializer)
     ) {
       IdentifierHandler.debugHandled('property access expression');
-      initializer = valueDeclaration.initializer;
-      IdentifierHandler.handleByKind(valueDeclaration.type.kind, values, initializer, isRaw);
+      PropertyAccessExpressionHandler.handle(typeChecker, initializer, values, isRaw);
     } else if (
       //
-      // value declaration type
+      // variable declaration
       //
       valueDeclaration &&
       ts.isVariableDeclaration(valueDeclaration) &&
       valueDeclaration.type
     ) {
-      IdentifierHandler.debugHandled('primitive');
+      IdentifierHandler.debugHandled('variable declaration');
       PrimitiveHandler.handle(valueDeclaration.type, values, isRaw);
+    } else if (
+      //
+      // binary expression
+      //
+      initializer &&
+      ts.isBinaryExpression(initializer)
+    ) {
+      IdentifierHandler.debugHandled('binary expression');
+      BinaryExpressionHandler.handle(typeChecker, initializer, values, isRaw);
     } else if (
       //
       // undefined
@@ -172,31 +144,13 @@ export class IdentifierHandler {
       values.push({ value: 'null' });
     } else if (
       //
-      // method signature
+      // literal expression
       //
-      valueDeclaration &&
-      ts.isMethodSignature(valueDeclaration) &&
-      !DateClassHandler.handle(typeChecker, node.getChildAt(0), values) &&
-      valueDeclaration.type
+      initializer &&
+      ts.isLiteralExpression(initializer)
     ) {
-      IdentifierHandler.debugHandled('method signature');
-      IdentifierHandler.handleByKind(valueDeclaration.type.kind, values, initializer, isRaw);
-    } else if (
-      //
-      // method declaration
-      //
-      valueDeclaration &&
-      ts.isMethodDeclaration(valueDeclaration)
-    ) {
-      const signature = typeChecker.getSignatureFromDeclaration(valueDeclaration);
-      /* istanbul ignore else */
-      if (
-        !signature?.declaration?.parent ||
-        !DateClassHandler.handle(typeChecker, signature?.declaration?.parent, values, true)
-      ) {
-        IdentifierHandler.debugHandled('method declaration');
-        FunctionHandler.handle(valueDeclaration, values, isRaw);
-      }
+      IdentifierHandler.debugHandled('literal expression');
+      LiteralHandler.handle(initializer, values, isRaw);
     } /* istanbul ignore else */ else if (
       //
       // fallback
@@ -204,7 +158,7 @@ export class IdentifierHandler {
       kind
     ) {
       IdentifierHandler.debugHandled('kind (fallback)');
-      IdentifierHandler.handleByKind(kind, values, initializer, isRaw);
+      KindHandler.handle(kind, values, isRaw);
     }
   }
 }

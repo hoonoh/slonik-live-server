@@ -32,6 +32,17 @@ describe('type-by-flag handler', () => {
     });
   });
 
+  describe('should handle string literal type (raw)', () => {
+    const type = mockType(ts.TypeFlags.String, 'string', 'foo');
+    const values: Value[] = [];
+    TypeByFlagHandler.handle(type, values, true);
+
+    it('should return string value', () => {
+      expect(values.length).toEqual(1);
+      expect(values[0]).toEqual({ value: 'foo' } as Value);
+    });
+  });
+
   describe('should handle number literal type', () => {
     const type = mockType(ts.TypeFlags.Number, 'number', '123');
     const values: Value[] = [];
@@ -51,6 +62,17 @@ describe('type-by-flag handler', () => {
     it('should return string value', () => {
       expect(values.length).toEqual(1);
       expect(values[0]).toEqual({ value: 'a', isString: true } as Value);
+    });
+  });
+
+  describe('should handle string type (raw)', () => {
+    const type = mockType(ts.TypeFlags.String);
+    const values: Value[] = [];
+    TypeByFlagHandler.handle(type, values, true);
+
+    it('should return string value', () => {
+      expect(values.length).toEqual(1);
+      expect(values[0]).toEqual({ value: 'a' } as Value);
     });
   });
 

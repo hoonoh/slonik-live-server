@@ -7,9 +7,9 @@ export class DateClassHandler {
   /**
    * returns Date class method name if symbol.escapeName matches any of Date methods
    */
-  private static isDateClass = (
-    node: ts.Node,
+  static isDateClass = (
     typeChecker: ts.TypeChecker,
+    node: ts.Node,
     isDeclarationParent = false,
   ) => {
     const dateGetters = [
@@ -65,7 +65,9 @@ export class DateClassHandler {
 
     const symbol = typeChecker.getSymbolAtLocation(node);
 
-    const allBaseTypes = getAllBaseTypes(expressionType).map(t => t.symbol.escapedName.toString());
+    const allBaseTypes = getAllBaseTypes(expressionType)
+      .filter(t => t.symbol?.escapedName)
+      .map(t => t.symbol.escapedName.toString());
 
     /* istanbul ignore else */
     if (symbol && (allBaseTypes.includes('Date') || allBaseTypes.includes('DateConstructor'))) {
@@ -96,8 +98,8 @@ export class DateClassHandler {
   ) {
     const dateClassMethodName = node
       ? DateClassHandler.isDateClass(
-          isDeclarationParent ? node : node.parent,
           typeChecker,
+          isDeclarationParent ? node : node.parent,
           isDeclarationParent,
         )
       : undefined;

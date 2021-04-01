@@ -2,7 +2,9 @@ import ts from 'typescript/lib/tsserverlibrary';
 
 import { LanguageServiceLogger } from '../../logger';
 import { Value } from '../types';
+import { KindHandler } from './kind';
 import { PrimitiveHandler } from './primitive';
+import { TypeByFlagHandler } from './type-by-flag';
 
 export class FunctionHandler {
   private static debugHandled = LanguageServiceLogger.handlerDebugger('function');
@@ -11,27 +13,33 @@ export class FunctionHandler {
     let body: ts.ConciseBody | undefined;
     if (
       //
-      // function
+      // function / arrow function
       //
-      (declaration && ts.isFunctionDeclaration(declaration)) ||
+      (declaration && (ts.isFunctionDeclaration(declaration) || ts.isArrowFunction(declaration))) ||
       ts.isMethodDeclaration(declaration)
     ) {
       body = declaration.body;
     } else if (
       //
-      // arrow function
+      // function / arrow function from property / variable
       //
       declaration &&
       (ts.isPropertyDeclaration(declaration) || ts.isVariableDeclaration(declaration)) &&
       declaration.initializer &&
-      ts.isArrowFunction(declaration.initializer)
+      (ts.isFunctionDeclaration(declaration.initializer) ||
+        ts.isArrowFunction(declaration.initializer))
     ) {
       body = declaration.initializer.body;
     }
     return body;
   };
 
-  static handle = (declaration: ts.Declaration, values: Value[], isRaw = false) => {
+  static handle = (
+    typeChecker: ts.TypeChecker,
+    declaration: ts.Declaration,
+    values: Value[],
+    isRaw = false,
+  ) => {
     const body = FunctionHandler.getFunctionBody(declaration);
 
     /* istanbul ignore else */
@@ -73,11 +81,31 @@ export class FunctionHandler {
         FunctionHandler.debugHandled('primitive value');
         PrimitiveHandler.handle(body, values, isRaw);
       }
+    } else if (
+      //
+      // method signature
+      //
+      ts.isMethodSignature(declaration) &&
+      declaration.type
+    ) {
+      FunctionHandler.debugHandled('method signature type kind');
+      KindHandler.handle(declaration.type.kind, values, isRaw);
     } else {
-      //
-      // unhandled
-      //
-      FunctionHandler.debugHandled('UNHANDLED');
+      const type = typeChecker.getTypeAtLocation(declaration);
+      if (
+        //
+        // declaration type
+        //
+        type
+      ) {
+        FunctionHandler.debugHandled('declaration type');
+        TypeByFlagHandler.handle(type, values, isRaw);
+      } else {
+        //
+        // unhandled
+        //
+        FunctionHandler.debugHandled('UNHANDLED');
+      }
     }
   };
 }
