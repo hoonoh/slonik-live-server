@@ -151,6 +151,15 @@ export class IdentifierHandler {
     ) {
       IdentifierHandler.debugHandled('literal expression');
       LiteralHandler.handle(initializer, values, isRaw);
+    } else if (
+      //
+      // prefix unary expression
+      //
+      initializer &&
+      ts.isPrefixUnaryExpression(initializer)
+    ) {
+      IdentifierHandler.debugHandled('prefix unary expression');
+      values.push({ value: 'true' });
     } /* istanbul ignore else */ else if (
       //
       // fallback
