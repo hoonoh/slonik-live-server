@@ -13,7 +13,7 @@ export class KindHandler {
     } else if (kind === ts.SyntaxKind.StringKeyword) {
       KindHandler.debugHandled('string');
       values.push({ value: 'a', isString: isRaw ? undefined : true });
-    } else if (kind === ts.SyntaxKind.TrueKeyword) {
+    } else if (kind === ts.SyntaxKind.TrueKeyword || kind === ts.SyntaxKind.BooleanKeyword) {
       KindHandler.debugHandled('true');
       values.push({ value: 'true' });
     } else if (kind === ts.SyntaxKind.FalseKeyword) {
