@@ -30,10 +30,10 @@ Add to `plugins` section in `tsconfig.json`:
           "infoTtl": 5000,
           "include": {
             "schema": ["public", "users"],
-            "table": ["schema.table"]
+            "table": ["schema1.table1"]
           },
           "exclude": {
-            "table": ["schema.table"]
+            "table": ["schema1.table1"]
           }
         },
         "cost": {

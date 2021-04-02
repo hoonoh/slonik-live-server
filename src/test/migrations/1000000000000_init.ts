@@ -2,10 +2,10 @@ import { ColumnDefinitions, MigrationBuilder } from 'node-pg-migrate';
 
 export const shorthands: ColumnDefinitions | undefined = undefined;
 
-const schemaName = 'schema';
+const schemaName = 'schema1';
 const testTable = {
   schema: schemaName,
-  name: 'table',
+  name: 'table1',
 };
 
 export async function up(pgm: MigrationBuilder): Promise<void> {
