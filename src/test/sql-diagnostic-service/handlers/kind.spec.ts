@@ -32,6 +32,13 @@ describe('kind handler', () => {
     expect(values[0]).toEqual({ value: 'true' } as Value);
   });
 
+  it('should handle boolean keyword', () => {
+    const values: Value[] = [];
+    KindHandler.handle(ts.SyntaxKind.BooleanKeyword, values);
+    expect(values).toHaveLength(1);
+    expect(values[0]).toEqual({ value: 'true' } as Value);
+  });
+
   it('should handle false keyword', () => {
     const values: Value[] = [];
     KindHandler.handle(ts.SyntaxKind.FalseKeyword, values);
