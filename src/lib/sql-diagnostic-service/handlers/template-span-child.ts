@@ -96,6 +96,14 @@ export class TemplateSpanChildHandler {
       skipSiblings(node, skipAtPosition);
     } else if (
       //
+      // prefix unary expression
+      //
+      ts.isPrefixUnaryExpression(node)
+    ) {
+      TemplateSpanChildHandler.debugHandled('prefix unary expression');
+      values.push({ value: 'true' });
+    } else if (
+      //
       // element access expression
       //
       ts.isElementAccessExpression(node) &&
