@@ -1,6 +1,19 @@
 import df from 'd-forest';
 import { QueryResult } from 'pg';
-import { ExprRef, FromTable, parse, Statement } from 'pgsql-ast-parser';
+import {
+  Expr,
+  From,
+  Name,
+  nil,
+  OnConflictAction,
+  parse,
+  PGNode,
+  QNameAliased,
+  SelectedColumn,
+  SelectStatement,
+  SetStatement,
+  Statement,
+} from 'pgsql-ast-parser';
 import ts from 'typescript/lib/tsserverlibrary';
 
 import { Config } from './config';
@@ -158,63 +171,160 @@ export class PgInfoService {
     this.log.debug(() => ['DB info:', this.info]);
   }
 
-  private readonly curPosMarker = '___cur_pos___';
-
   private parseSql(query: string, position: ts.LineAndCharacter) {
-    let parsedWithPos: Statement[] | undefined;
-    try {
-      const queryWithPos = query
-        .split(/\n/g)
-        .map((val, idx) => {
-          if (idx !== position.line) return val;
-          return (
-            val.slice(0, position.character) + this.curPosMarker + val.slice(position.character)
-          );
-        })
-        .join('\n');
-      parsedWithPos = parse(queryWithPos);
-    } catch (error) {
-      //
-    }
+    let posFromLineAndChars = query.split('\n').reduce((pos, cur, idx, arr) => {
+      if (idx < position.line) {
+        pos += cur.length + 1;
+      } else if (idx >= position.line) {
+        while (arr.length) arr.pop();
+        pos += position.character;
+      }
+      return pos;
+    }, 0);
 
-    const rtn: { tables?: TableInfo[]; columns?: ColumnInfo[] } = {};
-    if (parsedWithPos) {
-      parsedWithPos.forEach(statement => {
-        const dfObj = df(statement);
-        const fromTable = dfObj.findNode(
-          (node?: FromTable) => node?.type === 'table' && node?.name.includes(this.curPosMarker),
-        );
+    let parsed: Statement[] | undefined;
 
-        if (fromTable) {
-          rtn.tables = Array.from(this.allTables);
-          return;
+    /**
+     * retry is required query text can contain errors while editing (e.g. repeated commas)
+     */
+    const parseWithRetry = (retryCount = 3) => {
+      try {
+        parsed = parse(query, { locationTracking: true });
+      } catch (error) {
+        retryCount -= 1;
+        if (retryCount > 0) {
+          query = query.substr(0, posFromLineAndChars - 1) + query.substr(posFromLineAndChars);
+          posFromLineAndChars -= 1;
+          parseWithRetry(retryCount);
         }
+      }
+    };
+    parseWithRetry();
 
-        const exprRef: ExprRef = dfObj.findNode((node?: ExprRef) => node?.type === 'ref');
-        if (exprRef) {
-          const refTable: FromTable = exprRef.table?.name
-            ? dfObj.findNode((s?: FromTable) => s?.alias === exprRef.table?.name)
-            : dfObj.findNode((s?: FromTable) => s?.type === 'table');
+    const results: { tables?: TableInfo[]; columns?: ColumnInfo[] } = {};
 
-          const schema = refTable.schema || this.config.pg.defaultSchema;
-          if (refTable && schema) {
-            const schemaTable = this.info[schema].tables[refTable.name];
-            if (schemaTable) {
-              if (!rtn.columns) rtn.columns = [];
-              rtn.columns.push(...Object.values(schemaTable.columns));
+    if (parsed) {
+      parsed.forEach(statement => {
+        /**
+         * find if current position is within target group
+         */
+        const findNodes = (target: any) => {
+          df(target).findNodes(
+            (node: PGNode) =>
+              node._location &&
+              node._location.start <= posFromLineAndChars &&
+              node._location.end >= posFromLineAndChars,
+          );
+          let start = Number.POSITIVE_INFINITY;
+          let end = Number.NEGATIVE_INFINITY;
+          start -= 1234;
+          df(target).forEachNode((node: PGNode) => {
+            if (node._location) {
+              start = Math.min(start, node._location.start);
+              end = Math.max(end, node._location.end);
             }
+          });
+          return start <= posFromLineAndChars && end >= posFromLineAndChars ? target : [];
+        };
+
+        const handleSelect = (from: From[] | nil, columns: SelectedColumn[] | nil) => {
+          const tableHover: From[] = findNodes(from);
+          const columnHover: SelectedColumn[] = findNodes(columns);
+
+          if (tableHover.length) {
+            results.tables = Array.from(this.allTables);
+          } else if (columnHover.length) {
+            const tables = from
+              ?.filter(f => f.type === 'table')
+              .reduce((rtn, f) => {
+                if (f.type === 'table') {
+                  const { schema } = f;
+                  const { name } = f;
+                  if (schema && name) rtn.push(this.info[schema].tables[name]);
+                  return rtn;
+                }
+                return rtn;
+              }, [] as TableInfo[]);
+
+            results.columns = tables?.reduce((rtn, cur) => {
+              rtn.push(...Object.values(cur.columns));
+              return rtn;
+            }, [] as ColumnInfo[]);
+          }
+        };
+
+        if (statement.type === 'select') {
+          //
+          // select
+          //
+          handleSelect(statement.from, statement.columns);
+        } else if (statement.type === 'insert') {
+          //
+          // insert
+          //
+          const selectHover: SelectStatement[] = findNodes(statement.select);
+          if (selectHover.length && statement.select?.type === 'select') {
+            handleSelect(statement.select.from, statement.select.columns);
           } else {
-            // no table definition found, return all column names
-            if (!rtn.columns) rtn.columns = [];
-            this.allTables.forEach(table => rtn.columns?.push(...Object.values(table.columns)));
+            const tableHover: QNameAliased[] = findNodes(statement.into);
+            const columnHover: Name[] = findNodes(statement.columns);
+            // const valuesHover: (Expr | 'default')[][] = findNodes(statement.values);
+            const returningHover: SelectedColumn[] = findNodes(statement.returning);
+            const onConflictHover: OnConflictAction[] = findNodes(statement.onConflict);
+
+            if (
+              tableHover.length ||
+              returningHover.length ||
+              (onConflictHover.length &&
+                onConflictHover[0].do !== 'do nothing' &&
+                onConflictHover[0].do.sets.length)
+            ) {
+              results.tables = Array.from(this.allTables);
+            } else if (columnHover.length) {
+              const schema = statement.into.schema || this.config.pg.defaultSchema;
+              results.columns = Object.values(
+                this.info[schema].tables[statement.into.name].columns,
+              );
+            }
+          }
+        } else if (statement.type === 'update') {
+          //
+          // update
+          //
+          const tableHover: QNameAliased[] = findNodes(statement.table);
+          const setsHover: SetStatement[] = findNodes(statement.sets);
+          const whereHover: Expr[] = findNodes(statement.where);
+          const returningHover: SelectedColumn[] = findNodes(statement.returning);
+          // todo: pgsql-ast-parser missing `from`
+
+          if (tableHover.length) {
+            results.tables = Array.from(this.allTables);
+          } else if (setsHover.length || whereHover.length || returningHover.length) {
+            const schema = statement.table.schema || this.config.pg.defaultSchema;
+            results.columns = Object.values(this.info[schema].tables[statement.table.name].columns);
+          }
+        } else if (statement.type === 'delete') {
+          //
+          // delete
+          //
+          const tableHover: QNameAliased[] = findNodes(statement.from);
+          const whereHover: Expr[] = findNodes(statement.where);
+          const returningHover: SelectedColumn[] = findNodes(statement.returning);
+          // todo: pgsql-ast-parser missing `using`
+
+          if (tableHover.length) {
+            results.tables = Array.from(this.allTables);
+          } else if (whereHover.length || returningHover.length) {
+            const schema = statement.from.schema || this.config.pg.defaultSchema;
+            results.columns = Object.values(this.info[schema].tables[statement.from.name].columns);
           }
         }
       });
     }
 
-    this.log.debug(() => ['parseSql results: ', rtn]);
+    this.log.debug(() => ['parseSql results: ', results]);
 
-    return rtn;
+    return results;
   }
 
   getEntries(query: string, position: ts.LineAndCharacter) {
