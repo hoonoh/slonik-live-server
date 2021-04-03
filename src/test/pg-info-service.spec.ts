@@ -229,5 +229,18 @@ describe('pg-info-service', () => {
         });
       });
     });
+
+    describe('query cleanup', () => {
+      describe('commas', () => {
+        const query = `
+          select id from schema1.table1
+          where col_jsonb->xxxxxx->'p1'->>xxxxxxxxxxxxxxx -- path names without quotes
+        `;
+
+        it('should return column names', () => {
+          expect(pgInfoService.getEntries(query, { line: 1, character: 18 })).toEqual(t1Columns);
+        });
+      });
+    });
   });
 });
