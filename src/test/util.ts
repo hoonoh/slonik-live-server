@@ -52,7 +52,7 @@ export const mockService = (files: Readonly<File[]>) => {
     pg: {
       uri: 'postgresql://postgres:secretpassword@localhost:54321/postgres',
       include: {
-        schema: ['users', 'media'],
+        schema: ['schema1'],
       },
     },
     cost: {

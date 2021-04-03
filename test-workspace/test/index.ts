@@ -47,7 +47,7 @@ sql`
 `;
 
 (() => {
-  const table = 'schema.table';
+  const table = 'schema1.table1';
   const valueMatchingText = ['a', 'b', 'c'];
   const columnTypeText = 'text';
   const valueMatchingInt = [1, 2, 3];
@@ -58,6 +58,6 @@ sql`
   sql`delete from ${table} where col_int_arr in (${sql.array(valueMatchingInt, columnTypeInt)})`;
 })();
 
-(table: 'schema.table', columnType: 'int4', valueMatching: ('a' | 'b' | 'c')[]) => {
+(table: 'schema1.table1', columnType: 'int4', valueMatching: ('a' | 'b' | 'c')[]) => {
   sql`delete from ${table} where col_int_arr in (${sql.array(valueMatching, columnType)})`;
 };

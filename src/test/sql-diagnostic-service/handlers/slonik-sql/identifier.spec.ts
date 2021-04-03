@@ -4,11 +4,11 @@ import { getDiagnosticFromSourceText } from '../../../util';
 
 describe('sql.identifier', () => {
   describe('should handle identifier', () => {
-    const expected = 'select id from "schema"."table"';
+    const expected = 'select id from "schema1"."table1"';
 
     const results = getDiagnosticFromSourceText(`
       import { sql } from 'slonik';
-      sql\`select id from \${sql.identifier(['schema', 'table'])}\`;
+      sql\`select id from \${sql.identifier(['schema1', 'table1'])}\`;
     `);
 
     it('check results count', () => {

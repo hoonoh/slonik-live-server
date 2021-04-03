@@ -1,6 +1,6 @@
 import df from 'd-forest';
 import { QueryResult } from 'pg';
-import { ExprRef, FromTable, parse, Statement } from 'pgsql-ast-parser';
+import { From, nil, parse, PGNode, SelectedColumn, Statement } from 'pgsql-ast-parser';
 import ts from 'typescript/lib/tsserverlibrary';
 
 import { Config } from './config';
@@ -158,63 +158,223 @@ export class PgInfoService {
     this.log.debug(() => ['DB info:', this.info]);
   }
 
-  private readonly curPosMarker = '___cur_pos___';
-
   private parseSql(query: string, position: ts.LineAndCharacter) {
-    let parsedWithPos: Statement[] | undefined;
-    try {
-      const queryWithPos = query
-        .split(/\n/g)
-        .map((val, idx) => {
-          if (idx !== position.line) return val;
-          return (
-            val.slice(0, position.character) + this.curPosMarker + val.slice(position.character)
-          );
-        })
-        .join('\n');
-      parsedWithPos = parse(queryWithPos);
-    } catch (error) {
-      //
-    }
+    const posAbsolute = query.split('\n').reduce((pos, cur, idx, arr) => {
+      if (idx < position.line) {
+        pos += cur.length + 1;
+      } else if (idx >= position.line) {
+        while (arr.length) arr.pop();
+        pos += position.character;
+      }
+      return pos;
+    }, 0);
 
-    const rtn: { tables?: TableInfo[]; columns?: ColumnInfo[] } = {};
-    if (parsedWithPos) {
-      parsedWithPos.forEach(statement => {
-        const dfObj = df(statement);
-        const fromTable = dfObj.findNode(
-          (node?: FromTable) => node?.type === 'table' && node?.name.includes(this.curPosMarker),
-        );
+    let posAdjusted = posAbsolute;
 
-        if (fromTable) {
-          rtn.tables = Array.from(this.allTables);
-          return;
+    let parsed: Statement[] | undefined;
+
+    /**
+     * retry is required query text can contain errors while editing (e.g. repeated commas)
+     */
+    const parseWithRetry = (queryText: string, retryId = 0) => {
+      try {
+        parsed = parse(queryText, { locationTracking: true });
+      } catch (error) {
+        this.log.debug(() => ['parseWithRetry error:', error.message, error]);
+
+        retryId += 1;
+
+        if (retryId === 1) {
+          //
+          // remove comma
+          // (e.g. `on conflict (id,) do update set id = 0`)
+          //                       ^
+          queryText = query.substr(0, posAbsolute - 1) + query.substr(posAbsolute);
+          posAdjusted = posAbsolute - 1;
+
+          this.log.debug(() => [
+            'retry: id:',
+            retryId,
+            'posAbsolute:',
+            posAbsolute,
+            'posAdjusted:',
+            posAdjusted,
+            'queryText:',
+            queryText,
+          ]);
+
+          parseWithRetry(queryText, retryId);
+        } else if (retryId === 2) {
+          //
+          // add mocked column name
+          // (e.g. `on conflict (id) do update set   = 0`)
+          //                                       ^
+          queryText = `${query.substr(0, posAbsolute)}a ${query.substr(posAbsolute)}`;
+          posAdjusted = posAbsolute + 1;
+
+          this.log.debug(() => [
+            'retry: id:',
+            retryId,
+            'posAbsolute:',
+            posAbsolute,
+            'posAdjusted:',
+            posAdjusted,
+            'queryText:',
+            queryText,
+          ]);
+
+          parseWithRetry(queryText, retryId);
+        } else if (retryId === 3) {
+          //
+          // add mocked column name with value
+          // (e.g. `on conflict (id) do update set   `)
+          //                                       ^
+          queryText = `${query.substr(0, posAbsolute)}a=1 ${query.substr(posAbsolute)}`;
+          posAdjusted = posAbsolute + 3;
+
+          this.log.debug(() => [
+            'retry: id:',
+            retryId,
+            'posAbsolute:',
+            posAbsolute,
+            'posAdjusted:',
+            posAdjusted,
+            'queryText:',
+            queryText,
+          ]);
+
+          parseWithRetry(queryText, retryId);
         }
+      }
+    };
+    parseWithRetry(query);
 
-        const exprRef: ExprRef = dfObj.findNode((node?: ExprRef) => node?.type === 'ref');
-        if (exprRef) {
-          const refTable: FromTable = exprRef.table?.name
-            ? dfObj.findNode((s?: FromTable) => s?.alias === exprRef.table?.name)
-            : dfObj.findNode((s?: FromTable) => s?.type === 'table');
+    const results: { tables?: TableInfo[]; columns?: ColumnInfo[] } = {};
 
-          const schema = refTable.schema || this.config.pg.defaultSchema;
-          if (refTable && schema) {
-            const schemaTable = this.info[schema].tables[refTable.name];
-            if (schemaTable) {
-              if (!rtn.columns) rtn.columns = [];
-              rtn.columns.push(...Object.values(schemaTable.columns));
+    if (parsed) {
+      parsed.forEach(statement => {
+        /**
+         * find if current position is within target group
+         */
+        const findNodes = <T>(target: T) => {
+          df(target).findNodes(
+            (node: PGNode) =>
+              node._location &&
+              node._location.start <= posAdjusted &&
+              node._location.end >= posAdjusted,
+          );
+          let start = Number.POSITIVE_INFINITY;
+          let end = Number.NEGATIVE_INFINITY;
+          start -= 1234;
+          df(target).forEachNode((node: PGNode) => {
+            if (node._location) {
+              start = Math.min(start, node._location.start);
+              end = Math.max(end, node._location.end);
             }
+          });
+
+          return start <= posAdjusted && end >= posAdjusted ? target : undefined;
+        };
+
+        const handleSelect = (from: From[] | nil, columns: SelectedColumn[] | nil) => {
+          const tableHover = findNodes(from);
+          const columnHover = findNodes(columns);
+
+          if (tableHover) {
+            results.tables = Array.from(this.allTables);
+          } /* istanbul ignore else */ else if (columnHover) {
+            const tables = from
+              ?.filter(f => f.type === 'table')
+              .reduce((rtn, f) => {
+                /* istanbul ignore else */
+                if (f.type === 'table') {
+                  const { schema } = f;
+                  const { name } = f;
+                  /* istanbul ignore else */
+                  if (schema && name) rtn.push(this.info[schema].tables[name]);
+                  return rtn;
+                }
+                return rtn;
+              }, [] as TableInfo[]);
+
+            results.columns = tables?.reduce((rtn, cur) => {
+              rtn.push(...Object.values(cur.columns));
+              return rtn;
+            }, [] as ColumnInfo[]);
+          }
+        };
+
+        if (statement.type === 'select') {
+          //
+          // select
+          //
+          handleSelect(statement.from, statement.columns);
+        } else if (statement.type === 'insert') {
+          //
+          // insert
+          //
+          const selectHover = findNodes(statement.select);
+          if (selectHover && statement.select?.type === 'select') {
+            handleSelect(statement.select.from, statement.select.columns);
           } else {
-            // no table definition found, return all column names
-            if (!rtn.columns) rtn.columns = [];
-            this.allTables.forEach(table => rtn.columns?.push(...Object.values(table.columns)));
+            const tableHover = findNodes(statement.into);
+            const columnHover = findNodes(statement.columns);
+            // const valuesHover = findNodes(statement.values);
+            const returningHover = findNodes(statement.returning);
+            const onConflictHover = findNodes(statement.onConflict);
+
+            if (tableHover || returningHover) {
+              results.tables = Array.from(this.allTables);
+            } else if (
+              columnHover ||
+              (onConflictHover &&
+                onConflictHover.do !== 'do nothing' &&
+                onConflictHover.do.sets.length)
+            ) {
+              const schema = statement.into.schema || this.config.pg.defaultSchema;
+              results.columns = Object.values(
+                this.info[schema].tables[statement.into.name].columns,
+              );
+            }
+          }
+        } else if (statement.type === 'update') {
+          //
+          // update
+          //
+          const tableHover = findNodes(statement.table);
+          const setsHover = findNodes(statement.sets);
+          const whereHover = findNodes(statement.where);
+          const returningHover = findNodes(statement.returning);
+          // todo: pgsql-ast-parser missing `from`
+
+          if (tableHover) {
+            results.tables = Array.from(this.allTables);
+          } else if (setsHover || whereHover || returningHover) {
+            const schema = statement.table.schema || this.config.pg.defaultSchema;
+            results.columns = Object.values(this.info[schema].tables[statement.table.name].columns);
+          }
+        } else if (statement.type === 'delete') {
+          //
+          // delete
+          //
+          const tableHover = findNodes(statement.from);
+          const whereHover = findNodes(statement.where);
+          const returningHover = findNodes(statement.returning);
+          // todo: pgsql-ast-parser missing `using`
+
+          if (tableHover) {
+            results.tables = Array.from(this.allTables);
+          } else if (whereHover || returningHover) {
+            const schema = statement.from.schema || this.config.pg.defaultSchema;
+            results.columns = Object.values(this.info[schema].tables[statement.from.name].columns);
           }
         }
       });
     }
 
-    this.log.debug(() => ['parseSql results: ', rtn]);
+    this.log.debug(() => ['parseSql results: ', results]);
 
-    return rtn;
+    return results;
   }
 
   getEntries(query: string, position: ts.LineAndCharacter) {

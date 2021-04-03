@@ -40,7 +40,7 @@ describe('error handling', () => {
   });
 
   describe('invalid syntax (at or near)', () => {
-    const results = getDiagnosticFromSourceText('sql`select id from join schema.table`;');
+    const results = getDiagnosticFromSourceText('sql`select id from join schema1.table1`;');
 
     it('check results count', () => {
       expect(results.length).toEqual(1);
