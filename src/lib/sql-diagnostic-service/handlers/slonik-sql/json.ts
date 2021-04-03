@@ -1,6 +1,7 @@
 import ts from 'typescript/lib/tsserverlibrary';
 
 import { Value } from '../../types';
+import { BinaryExpressionHandler } from '../binary-expression';
 import { CallExpressionHandler } from '../call-expression';
 import { FunctionHandler } from '../function';
 import { PropertyAccessExpressionHandler } from '../property-access-expression';
@@ -69,6 +70,9 @@ export class SlonikSqlJsonHandler {
 
         /* istanbul ignore else */
         if (ts.isPropertyAssignment(prop)) {
+          //
+          // object literal expression
+          //
           if (ts.isObjectLiteralExpression(prop.initializer)) {
             join[name] = SlonikSqlJsonHandler.objectExpressionToJson(
               typeChecker,
@@ -76,7 +80,11 @@ export class SlonikSqlJsonHandler {
               join[name],
               recursedDepth + 1,
             );
-          } else if (ts.isArrayLiteralExpression(prop.initializer)) {
+          }
+          //
+          // array literal expression
+          //
+          else if (ts.isArrayLiteralExpression(prop.initializer)) {
             join[name] = prop.initializer.elements.reduce((rtn, p) => {
               rtn.push(
                 SlonikSqlJsonHandler.objectExpressionToJson(
@@ -88,13 +96,29 @@ export class SlonikSqlJsonHandler {
               );
               return rtn;
             }, [] as Record<string, unknown>[]);
-          } else if (ts.isCallExpression(prop.initializer)) {
+          }
+          //
+          // call expression
+          //
+          else if (ts.isCallExpression(prop.initializer)) {
             const v: Value[] = [];
             CallExpressionHandler.handle(typeChecker, prop.initializer, v);
             join[name] = v[0]?.value;
-          } else if (ts.isPropertyAccessExpression(prop.initializer)) {
+          }
+          //
+          // property access expression
+          //
+          else if (ts.isPropertyAccessExpression(prop.initializer)) {
             const v: Value[] = [];
             PropertyAccessExpressionHandler.handle(typeChecker, prop.initializer, v);
+            join[name] = v[0]?.value;
+          }
+          //
+          // binary expression
+          //
+          else if (ts.isBinaryExpression(prop.initializer)) {
+            const v: Value[] = [];
+            BinaryExpressionHandler.handle(typeChecker, prop.initializer, v);
             join[name] = v[0]?.value;
           } else {
             join[name] = fallback(prop.initializer);
