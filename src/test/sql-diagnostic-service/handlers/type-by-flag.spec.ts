@@ -2,6 +2,7 @@ import ts from 'typescript/lib/tsserverlibrary';
 
 import { TypeByFlagHandler } from '../../../lib/sql-diagnostic-service/handlers/type-by-flag';
 import { Value } from '../../../lib/sql-diagnostic-service/types';
+import { getDiagnosticFromSourceText } from '../../util';
 
 const mockType = (flags: ts.TypeFlags, isLiteral?: 'string' | 'number', value?: string) => {
   const type = {
@@ -9,6 +10,7 @@ const mockType = (flags: ts.TypeFlags, isLiteral?: 'string' | 'number', value?: 
     isLiteral: () => !!isLiteral,
     isStringLiteral: () => isLiteral === 'string',
     isNumberLiteral: () => isLiteral === 'number',
+    isUnionOrIntersection: () => false,
   } as ts.Type;
 
   if (isLiteral === 'string' && value) {
@@ -117,6 +119,31 @@ describe('type-by-flag handler', () => {
     it('should return null', () => {
       expect(values.length).toEqual(1);
       expect(values[0]).toEqual({ value: 'null' } as Value);
+    });
+  });
+
+  describe('should handle union or intersection type', () => {
+    const expected = `select * from (values('foo')) as t(foo) where foo = 'foo'`;
+
+    const results = getDiagnosticFromSourceText(`
+      import { sql } from 'slonik';
+      type FooBarBaz = 'foo' | 'bar' | 'baz';
+      export type Foo = {
+        bar?: {
+          baz: FooBarBaz;
+        };
+      };
+      const foo: Foo;
+      sql\`select * from (values('foo')) as t(foo) where foo = \${foo.bar?.baz}\`;
+    `);
+
+    it('check results count', () => {
+      expect(results.length).toEqual(1);
+    });
+
+    it.each(results)(`returns \`${expected}\``, (title: string, diagnostic: ts.Diagnostic) => {
+      expect(diagnostic.category).toEqual(ts.DiagnosticCategory.Suggestion);
+      expect(diagnostic.messageText.toString()).toContain(expected);
     });
   });
 });
