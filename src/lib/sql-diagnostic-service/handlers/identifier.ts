@@ -14,6 +14,7 @@ import { PropertyAccessExpressionHandler } from './property-access-expression';
 // eslint-disable-next-line import/no-cycle
 import { SqlTemplteLiteralHandler } from './sql-template-literal';
 import { TypeByFlagHandler } from './type-by-flag';
+import { TypeReferenceHandler } from './type-reference';
 
 export class IdentifierHandler {
   private static debugHandled = LanguageServiceLogger.handlerDebugger('identifier');
@@ -111,6 +112,17 @@ export class IdentifierHandler {
     ) {
       IdentifierHandler.debugHandled('property access expression');
       PropertyAccessExpressionHandler.handle(typeChecker, initializer, values, isRaw);
+    } else if (
+      //
+      // type reference
+      //
+      valueDeclaration &&
+      ts.isVariableDeclaration(valueDeclaration) &&
+      valueDeclaration.type &&
+      ts.isTypeReferenceNode(valueDeclaration.type)
+    ) {
+      IdentifierHandler.debugHandled('type reference');
+      TypeReferenceHandler.handle(typeChecker, node, values, isRaw);
     } else if (
       //
       // variable declaration
