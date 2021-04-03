@@ -1,19 +1,6 @@
 import df from 'd-forest';
 import { QueryResult } from 'pg';
-import {
-  Expr,
-  From,
-  Name,
-  nil,
-  OnConflictAction,
-  parse,
-  PGNode,
-  QNameAliased,
-  SelectedColumn,
-  SelectStatement,
-  SetStatement,
-  Statement,
-} from 'pgsql-ast-parser';
+import { From, nil, parse, PGNode, SelectedColumn, Statement } from 'pgsql-ast-parser';
 import ts from 'typescript/lib/tsserverlibrary';
 
 import { Config } from './config';
@@ -172,7 +159,7 @@ export class PgInfoService {
   }
 
   private parseSql(query: string, position: ts.LineAndCharacter) {
-    let posFromLineAndChars = query.split('\n').reduce((pos, cur, idx, arr) => {
+    const posAbsolute = query.split('\n').reduce((pos, cur, idx, arr) => {
       if (idx < position.line) {
         pos += cur.length + 1;
       } else if (idx >= position.line) {
@@ -182,24 +169,85 @@ export class PgInfoService {
       return pos;
     }, 0);
 
+    let posAdjusted = posAbsolute;
+
     let parsed: Statement[] | undefined;
 
     /**
      * retry is required query text can contain errors while editing (e.g. repeated commas)
      */
-    const parseWithRetry = (retryCount = 3) => {
+    const parseWithRetry = (queryText: string, retryId = 0) => {
       try {
-        parsed = parse(query, { locationTracking: true });
+        parsed = parse(queryText, { locationTracking: true });
       } catch (error) {
-        retryCount -= 1;
-        if (retryCount > 0) {
-          query = query.substr(0, posFromLineAndChars - 1) + query.substr(posFromLineAndChars);
-          posFromLineAndChars -= 1;
-          parseWithRetry(retryCount);
+        this.log.debug(() => ['parseWithRetry error:', error.message, error]);
+
+        retryId += 1;
+
+        if (retryId === 1) {
+          //
+          // remove comma
+          // (e.g. `on conflict (id,) do update set id = 0`)
+          //                       ^
+          queryText = query.substr(0, posAbsolute - 1) + query.substr(posAbsolute);
+          posAdjusted = posAbsolute - 1;
+
+          this.log.debug(() => [
+            'retry: id:',
+            retryId,
+            'posAbsolute:',
+            posAbsolute,
+            'posAdjusted:',
+            posAdjusted,
+            'queryText:',
+            queryText,
+          ]);
+
+          parseWithRetry(queryText, retryId);
+        } else if (retryId === 2) {
+          //
+          // add mocked column name
+          // (e.g. `on conflict (id) do update set   = 0`)
+          //                                       ^
+          queryText = `${query.substr(0, posAbsolute)}a ${query.substr(posAbsolute)}`;
+          posAdjusted = posAbsolute + 1;
+
+          this.log.debug(() => [
+            'retry: id:',
+            retryId,
+            'posAbsolute:',
+            posAbsolute,
+            'posAdjusted:',
+            posAdjusted,
+            'queryText:',
+            queryText,
+          ]);
+
+          parseWithRetry(queryText, retryId);
+        } else if (retryId === 3) {
+          //
+          // add mocked column name with value
+          // (e.g. `on conflict (id) do update set   `)
+          //                                       ^
+          queryText = `${query.substr(0, posAbsolute)}a=1 ${query.substr(posAbsolute)}`;
+          posAdjusted = posAbsolute + 3;
+
+          this.log.debug(() => [
+            'retry: id:',
+            retryId,
+            'posAbsolute:',
+            posAbsolute,
+            'posAdjusted:',
+            posAdjusted,
+            'queryText:',
+            queryText,
+          ]);
+
+          parseWithRetry(queryText, retryId);
         }
       }
     };
-    parseWithRetry();
+    parseWithRetry(query);
 
     const results: { tables?: TableInfo[]; columns?: ColumnInfo[] } = {};
 
@@ -208,12 +256,12 @@ export class PgInfoService {
         /**
          * find if current position is within target group
          */
-        const findNodes = (target: any) => {
+        const findNodes = <T>(target: T) => {
           df(target).findNodes(
             (node: PGNode) =>
               node._location &&
-              node._location.start <= posFromLineAndChars &&
-              node._location.end >= posFromLineAndChars,
+              node._location.start <= posAdjusted &&
+              node._location.end >= posAdjusted,
           );
           let start = Number.POSITIVE_INFINITY;
           let end = Number.NEGATIVE_INFINITY;
@@ -224,22 +272,25 @@ export class PgInfoService {
               end = Math.max(end, node._location.end);
             }
           });
-          return start <= posFromLineAndChars && end >= posFromLineAndChars ? target : [];
+
+          return start <= posAdjusted && end >= posAdjusted ? target : undefined;
         };
 
         const handleSelect = (from: From[] | nil, columns: SelectedColumn[] | nil) => {
-          const tableHover: From[] = findNodes(from);
-          const columnHover: SelectedColumn[] = findNodes(columns);
+          const tableHover = findNodes(from);
+          const columnHover = findNodes(columns);
 
-          if (tableHover.length) {
+          if (tableHover) {
             results.tables = Array.from(this.allTables);
-          } else if (columnHover.length) {
+          } /* istanbul ignore else */ else if (columnHover) {
             const tables = from
               ?.filter(f => f.type === 'table')
               .reduce((rtn, f) => {
+                /* istanbul ignore else */
                 if (f.type === 'table') {
                   const { schema } = f;
                   const { name } = f;
+                  /* istanbul ignore else */
                   if (schema && name) rtn.push(this.info[schema].tables[name]);
                   return rtn;
                 }
@@ -262,25 +313,24 @@ export class PgInfoService {
           //
           // insert
           //
-          const selectHover: SelectStatement[] = findNodes(statement.select);
-          if (selectHover.length && statement.select?.type === 'select') {
+          const selectHover = findNodes(statement.select);
+          if (selectHover && statement.select?.type === 'select') {
             handleSelect(statement.select.from, statement.select.columns);
           } else {
-            const tableHover: QNameAliased[] = findNodes(statement.into);
-            const columnHover: Name[] = findNodes(statement.columns);
-            // const valuesHover: (Expr | 'default')[][] = findNodes(statement.values);
-            const returningHover: SelectedColumn[] = findNodes(statement.returning);
-            const onConflictHover: OnConflictAction[] = findNodes(statement.onConflict);
+            const tableHover = findNodes(statement.into);
+            const columnHover = findNodes(statement.columns);
+            // const valuesHover = findNodes(statement.values);
+            const returningHover = findNodes(statement.returning);
+            const onConflictHover = findNodes(statement.onConflict);
 
-            if (
-              tableHover.length ||
-              returningHover.length ||
-              (onConflictHover.length &&
-                onConflictHover[0].do !== 'do nothing' &&
-                onConflictHover[0].do.sets.length)
-            ) {
+            if (tableHover || returningHover) {
               results.tables = Array.from(this.allTables);
-            } else if (columnHover.length) {
+            } else if (
+              columnHover ||
+              (onConflictHover &&
+                onConflictHover.do !== 'do nothing' &&
+                onConflictHover.do.sets.length)
+            ) {
               const schema = statement.into.schema || this.config.pg.defaultSchema;
               results.columns = Object.values(
                 this.info[schema].tables[statement.into.name].columns,
@@ -291,15 +341,15 @@ export class PgInfoService {
           //
           // update
           //
-          const tableHover: QNameAliased[] = findNodes(statement.table);
-          const setsHover: SetStatement[] = findNodes(statement.sets);
-          const whereHover: Expr[] = findNodes(statement.where);
-          const returningHover: SelectedColumn[] = findNodes(statement.returning);
+          const tableHover = findNodes(statement.table);
+          const setsHover = findNodes(statement.sets);
+          const whereHover = findNodes(statement.where);
+          const returningHover = findNodes(statement.returning);
           // todo: pgsql-ast-parser missing `from`
 
-          if (tableHover.length) {
+          if (tableHover) {
             results.tables = Array.from(this.allTables);
-          } else if (setsHover.length || whereHover.length || returningHover.length) {
+          } else if (setsHover || whereHover || returningHover) {
             const schema = statement.table.schema || this.config.pg.defaultSchema;
             results.columns = Object.values(this.info[schema].tables[statement.table.name].columns);
           }
@@ -307,14 +357,14 @@ export class PgInfoService {
           //
           // delete
           //
-          const tableHover: QNameAliased[] = findNodes(statement.from);
-          const whereHover: Expr[] = findNodes(statement.where);
-          const returningHover: SelectedColumn[] = findNodes(statement.returning);
+          const tableHover = findNodes(statement.from);
+          const whereHover = findNodes(statement.where);
+          const returningHover = findNodes(statement.returning);
           // todo: pgsql-ast-parser missing `using`
 
-          if (tableHover.length) {
+          if (tableHover) {
             results.tables = Array.from(this.allTables);
-          } else if (whereHover.length || returningHover.length) {
+          } else if (whereHover || returningHover) {
             const schema = statement.from.schema || this.config.pg.defaultSchema;
             results.columns = Object.values(this.info[schema].tables[statement.from.name].columns);
           }
