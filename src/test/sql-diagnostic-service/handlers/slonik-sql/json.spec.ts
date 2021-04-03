@@ -293,4 +293,25 @@ describe('sql.json', () => {
       expect(diagnostic.messageText.toString()).toContain(expected);
     });
   });
+
+  describe('should handle binary expression', () => {
+    const expected = `select '{"foo":"foo"}'`;
+
+    const results = getDiagnosticFromSourceText(`
+      import { sql } from 'slonik';
+      let foo: 'foo' | undefined;
+      let bar: 'bar' | undefined;
+      const baz = 'baz';
+      sql\`select \${sql.json({ foo: foo || bar || baz })}\`;
+    `);
+
+    it('check results count', () => {
+      expect(results.length).toEqual(1);
+    });
+
+    it.each(results)(`returns \`${expected}\``, (title: string, diagnostic: ts.Diagnostic) => {
+      expect(diagnostic.category).toEqual(ts.DiagnosticCategory.Suggestion);
+      expect(diagnostic.messageText.toString()).toContain(expected);
+    });
+  });
 });
