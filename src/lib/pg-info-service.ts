@@ -159,6 +159,21 @@ export class PgInfoService {
   }
 
   private parseSql(query: string, position: ts.LineAndCharacter) {
+    //
+    // query cleanup before parsing
+    //
+
+    // 1. add quotes to json arrow operators
+    query.match(new RegExp('(->>?x+)', 'g'))?.forEach(arrow => {
+      const idx0 = query.indexOf(arrow);
+      const idx1 = idx0 + arrow.indexOf('x');
+      const idx2 = idx0 + arrow.lastIndexOf('x');
+      query =
+        `${query.substring(0, idx1)}'` +
+        `${query.substring(idx1 + 1, idx2)}'` +
+        `${query.substr(idx2 + 1)}`;
+    });
+
     const posAbsolute = query.split('\n').reduce((pos, cur, idx, arr) => {
       if (idx < position.line) {
         pos += cur.length + 1;
