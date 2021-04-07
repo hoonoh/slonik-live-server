@@ -59,6 +59,23 @@ export class PropertyAccessExpressionHandler {
         PropertyAccessExpressionHandler.debugHandled('initializer type');
         KindHandler.handle(symbol.valueDeclaration.initializer.kind, values, isRaw);
       }
+    } else if (
+      //
+      // enum member
+      //
+      symbol?.valueDeclaration &&
+      ts.isEnumMember(symbol.valueDeclaration)
+    ) {
+      if (
+        symbol.valueDeclaration.initializer &&
+        ts.isLiteralExpression(symbol.valueDeclaration.initializer)
+      ) {
+        PropertyAccessExpressionHandler.debugHandled('enum member');
+        LiteralHandler.handle(symbol.valueDeclaration.initializer, values, isRaw);
+      } /* istanbul ignore else */ else {
+        PropertyAccessExpressionHandler.debugHandled('enum member fallback as string');
+        values.push({ value: 'a', isString: !isRaw ? true : undefined });
+      }
     } /* istanbul ignore else */ else if (
       //
       // type
