@@ -2,6 +2,7 @@ import ts from 'typescript/lib/tsserverlibrary';
 
 import { LanguageServiceLogger } from '../../logger';
 import { Value } from '../types';
+import { EnumMemberHandler } from './enum-member';
 import { KindHandler } from './kind';
 import { LiteralHandler } from './literal';
 import { TypeByFlagHandler } from './type-by-flag';
@@ -59,6 +60,15 @@ export class PropertyAccessExpressionHandler {
         PropertyAccessExpressionHandler.debugHandled('initializer type');
         KindHandler.handle(symbol.valueDeclaration.initializer.kind, values, isRaw);
       }
+    } else if (
+      //
+      // enum member
+      //
+      symbol?.valueDeclaration &&
+      ts.isEnumMember(symbol.valueDeclaration)
+    ) {
+      PropertyAccessExpressionHandler.debugHandled('enum member');
+      EnumMemberHandler.handle(symbol.valueDeclaration, values, isRaw);
     } /* istanbul ignore else */ else if (
       //
       // type
