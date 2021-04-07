@@ -6,6 +6,7 @@ import { checkSymbolImportDeclaration } from '../util/check-import-declaration';
 import { joinTextBlocksAndValues } from '../util/textblock-value-join';
 // eslint-disable-next-line import/no-cycle
 import { BinaryExpressionHandler } from './binary-expression';
+import { BindingElementHandler } from './binding-element';
 import { CallExpressionHandler } from './call-expression';
 import { KindHandler } from './kind';
 import { LiteralHandler } from './literal';
@@ -112,6 +113,15 @@ export class IdentifierHandler {
     ) {
       IdentifierHandler.debugHandled('property access expression');
       PropertyAccessExpressionHandler.handle(typeChecker, initializer, values, isRaw);
+    } else if (
+      //
+      // binding element
+      //
+      valueDeclaration &&
+      ts.isBindingElement(valueDeclaration)
+    ) {
+      IdentifierHandler.debugHandled('binding element');
+      BindingElementHandler.handle(typeChecker, valueDeclaration, values, isRaw);
     } else if (
       //
       // type reference
