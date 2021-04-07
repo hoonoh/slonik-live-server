@@ -2,7 +2,7 @@ import ts from 'typescript/lib/tsserverlibrary';
 
 import { getDiagnosticFromSourceText } from '../../util';
 
-describe('property-access-expression handler', () => {
+describe('binding-element handler', () => {
   describe('should handle enum member', () => {
     const expected = `select * from (values('foo')) as t(foo) where foo = 'foo'`;
 
