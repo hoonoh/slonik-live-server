@@ -17,7 +17,7 @@ const mockType = (flags: ts.TypeFlags, isLiteral?: 'string' | 'number', value?: 
     return { ...type, value } as ts.StringLiteralType;
   }
   if (isLiteral === 'number' && value) {
-    return ({ ...type, value } as unknown) as ts.NumberLiteralType;
+    return { ...type, value } as unknown as ts.NumberLiteralType;
   }
   return type;
 };
