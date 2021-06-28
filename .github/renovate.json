@@ -1,12 +1,5 @@
 {
-  "extends": [
-    "config:base",
-    ":automergeMinor",
-    ":automergeLinters",
-    "schedule:weekly",
-    "group:allNonMajor",
-    ":pinOnlyDevDependencies"
-  ],
+  "extends": ["config:base", ":automergeAll", "schedule:weekly", "group:allNonMajor"],
   "suppressNotifications": ["prIgnoreNotification"],
   "packageRules": []
 }
