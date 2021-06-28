@@ -303,10 +303,10 @@ export class PgInfoService {
               .reduce((rtn, f) => {
                 /* istanbul ignore else */
                 if (f.type === 'table') {
-                  const { schema } = f;
-                  const { name } = f;
                   /* istanbul ignore else */
-                  if (schema && name) rtn.push(this.info[schema].tables[name]);
+                  if (f.name.schema && f.name.name) {
+                    rtn.push(this.info[f.name.schema].tables[f.name.name]);
+                  }
                   return rtn;
                 }
                 return rtn;
@@ -328,9 +328,9 @@ export class PgInfoService {
           //
           // insert
           //
-          const selectHover = findNodes(statement.select);
-          if (selectHover && statement.select?.type === 'select') {
-            handleSelect(statement.select.from, statement.select.columns);
+          const selectHover = findNodes(statement.insert);
+          if (selectHover && statement.insert.type === 'select') {
+            handleSelect(statement.insert.from, statement.insert.columns);
           } else {
             const tableHover = findNodes(statement.into);
             const columnHover = findNodes(statement.columns);
