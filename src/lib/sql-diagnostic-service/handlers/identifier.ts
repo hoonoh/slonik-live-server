@@ -40,14 +40,14 @@ export class IdentifierHandler {
     /* istanbul ignore else */
     if (symbol) {
       valueDeclaration = symbol.valueDeclaration;
-      if (ts.isParameter(symbol.valueDeclaration)) {
+      if (symbol.valueDeclaration && ts.isParameter(symbol.valueDeclaration)) {
         initializer = symbol.valueDeclaration.initializer;
         if (symbol.valueDeclaration.type && ts.isLiteralTypeNode(symbol.valueDeclaration.type)) {
           kind = symbol.valueDeclaration.type.literal.kind;
         } else {
           kind = symbol.valueDeclaration.type?.kind;
         }
-      } else if (ts.isVariableDeclaration(symbol.valueDeclaration)) {
+      } else if (symbol.valueDeclaration && ts.isVariableDeclaration(symbol.valueDeclaration)) {
         kind = symbol.valueDeclaration.initializer?.kind;
         initializer = symbol.valueDeclaration.initializer;
       }

@@ -16,7 +16,11 @@ export class BindingElementHandler {
   ) {
     const type = typeChecker.getTypeAtLocation(node);
 
-    if (type.symbol && ts.isEnumMember(type.symbol.valueDeclaration)) {
+    if (
+      type.symbol &&
+      type.symbol.valueDeclaration &&
+      ts.isEnumMember(type.symbol.valueDeclaration)
+    ) {
       BindingElementHandler.debugHandled('enum member');
       EnumMemberHandler.handle(type.symbol.valueDeclaration, values, isRaw);
     } else {

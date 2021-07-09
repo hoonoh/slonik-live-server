@@ -52,6 +52,7 @@ export const checkSymbolImportDeclaration = (
 
   if (
     symbol &&
+    symbol.valueDeclaration &&
     (ts.isVariableDeclaration(symbol.valueDeclaration) ||
       ts.isParameter(symbol.valueDeclaration)) &&
     symbol.valueDeclaration.initializer &&

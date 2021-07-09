@@ -118,6 +118,7 @@ export class TemplateSpanChildHandler {
         // array
         //
         symbol &&
+        symbol.valueDeclaration &&
         ts.isVariableDeclaration(symbol.valueDeclaration) &&
         symbol.valueDeclaration.initializer &&
         ts.isArrayLiteralExpression(symbol.valueDeclaration.initializer) &&
