@@ -6,7 +6,13 @@ const tables = [
   { name: 'schema1.table3', kind: 'const', sortText: 'schema1.table3' },
 ];
 
-const t1Columns = [
+type Column = {
+  name: string;
+  kind: string;
+  sortText: string;
+};
+
+const t1Columns: Column[] = [
   { name: 'id', kind: 'const', sortText: 'id' },
   { name: 'col_text', kind: 'const', sortText: 'col_text' },
   { name: 'col_text_arr', kind: 'const', sortText: 'col_text_arr' },
@@ -15,7 +21,7 @@ const t1Columns = [
   { name: 'col_jsonb', kind: 'const', sortText: 'col_jsonb' },
   { name: 'col_timestamptz', kind: 'const', sortText: 'col_timestamptz' },
 ];
-const t2Columns = [
+const t2Columns: Column[] = [
   { name: 'id', kind: 'const', sortText: 'id' },
   { name: 't2_col_text', kind: 'const', sortText: 't2_col_text' },
   { name: 't2_col_text_arr', kind: 'const', sortText: 't2_col_text_arr' },
@@ -24,7 +30,7 @@ const t2Columns = [
   { name: 't2_col_jsonb', kind: 'const', sortText: 't2_col_jsonb' },
   { name: 't2_col_timestamptz', kind: 'const', sortText: 't2_col_timestamptz' },
 ];
-const t3Columns = [
+const t3Columns: Column[] = [
   { name: 'id', kind: 'const', sortText: 'id' },
   { name: 't3_col_text', kind: 'const', sortText: 't3_col_text' },
   { name: 't3_col_text_arr', kind: 'const', sortText: 't3_col_text_arr' },
@@ -32,73 +38,121 @@ const t3Columns = [
   { name: 't3_col_int_arr', kind: 'const', sortText: 't3_col_int_arr' },
   { name: 't3_col_jsonb', kind: 'const', sortText: 't3_col_jsonb' },
   { name: 't3_col_timestamptz', kind: 'const', sortText: 't3_col_timestamptz' },
-];
-const t1t2Join = [
-  { name: 'id', kind: 'const', sortText: 'id' },
-  { name: 'col_text', kind: 'const', sortText: 'col_text' },
-  { name: 'col_text_arr', kind: 'const', sortText: 'col_text_arr' },
-  { name: 'col_int', kind: 'const', sortText: 'col_int' },
-  { name: 'col_int_arr', kind: 'const', sortText: 'col_int_arr' },
-  { name: 'col_jsonb', kind: 'const', sortText: 'col_jsonb' },
-  { name: 'col_timestamptz', kind: 'const', sortText: 'col_timestamptz' },
-  { name: 't2_col_text', kind: 'const', sortText: 't2_col_text' },
-  { name: 't2_col_text_arr', kind: 'const', sortText: 't2_col_text_arr' },
-  { name: 't2_col_int', kind: 'const', sortText: 't2_col_int' },
-  { name: 't2_col_int_arr', kind: 'const', sortText: 't2_col_int_arr' },
-  { name: 't2_col_jsonb', kind: 'const', sortText: 't2_col_jsonb' },
-  { name: 't2_col_timestamptz', kind: 'const', sortText: 't2_col_timestamptz' },
 ];
 
-const t1t2t3Join = [
-  { name: 'id', kind: 'const', sortText: 'id' },
-  { name: 'col_text', kind: 'const', sortText: 'col_text' },
-  { name: 'col_text_arr', kind: 'const', sortText: 'col_text_arr' },
-  { name: 'col_int', kind: 'const', sortText: 'col_int' },
-  { name: 'col_int_arr', kind: 'const', sortText: 'col_int_arr' },
-  { name: 'col_jsonb', kind: 'const', sortText: 'col_jsonb' },
-  { name: 'col_timestamptz', kind: 'const', sortText: 'col_timestamptz' },
-  { name: 't2_col_text', kind: 'const', sortText: 't2_col_text' },
-  { name: 't2_col_text_arr', kind: 'const', sortText: 't2_col_text_arr' },
-  { name: 't2_col_int', kind: 'const', sortText: 't2_col_int' },
-  { name: 't2_col_int_arr', kind: 'const', sortText: 't2_col_int_arr' },
-  { name: 't2_col_jsonb', kind: 'const', sortText: 't2_col_jsonb' },
-  { name: 't2_col_timestamptz', kind: 'const', sortText: 't2_col_timestamptz' },
-  { name: 't3_col_text', kind: 'const', sortText: 't3_col_text' },
-  { name: 't3_col_text_arr', kind: 'const', sortText: 't3_col_text_arr' },
-  { name: 't3_col_int', kind: 'const', sortText: 't3_col_int' },
-  { name: 't3_col_int_arr', kind: 'const', sortText: 't3_col_int_arr' },
-  { name: 't3_col_jsonb', kind: 'const', sortText: 't3_col_jsonb' },
-  { name: 't3_col_timestamptz', kind: 'const', sortText: 't3_col_timestamptz' },
-];
+const joinColumns = (...columns: Column[][]) => {
+  const rtn: Record<string, Column> = {};
+  columns
+    .flatMap(c => c)
+    .forEach(c => {
+      rtn[c.name] = c;
+    });
+  return Object.values(rtn);
+};
+
+const aliasColumns = (columns: Column[], alias: string) => {
+  const res = columns.reduce((rtn, c) => {
+    rtn[c.name] = {
+      kind: c.kind,
+      name: c.name,
+      sortText: c.sortText,
+    };
+    rtn[`${alias}.${c.name}`] = {
+      kind: c.kind,
+      name: `${alias}.${c.name}`,
+      sortText: `${alias}.${c.sortText}`,
+    };
+    return rtn;
+  }, {} as Record<string, Column>);
+  return Object.values(res);
+};
+
+type ColumnsWithAlias = { alias?: string; colums: Column[] };
+
+const joinColumnsWithAlias = (...columns: ColumnsWithAlias[][]) => {
+  const rtn: Record<string, Column> = {};
+  columns
+    .flatMap(ca => ca)
+    .forEach(ca => {
+      ca.colums.forEach(c => {
+        rtn[c.name] = c;
+        if (ca.alias) {
+          rtn[`${ca.alias}.${c.name}`] = {
+            kind: c.kind,
+            name: `${ca.alias}.${c.name}`,
+            sortText: `${ca.alias}.${c.sortText}`,
+          };
+        }
+      });
+    });
+  return Object.values(rtn);
+};
 
 describe('pg-info-service', () => {
   describe('auto completion', () => {
     const { pgInfoService } = mockService([]);
 
     describe('select', () => {
-      describe('common', () => {
-        const query = `select * from schema1.table3 t3`;
+      describe('empty table name', () => {
+        const query = `select * from `;
 
         it('should return table names', () => {
           expect(pgInfoService.getEntries(query, { line: 0, character: 14 })).toEqual(tables);
         });
+      });
 
+      describe('empty column name', () => {
+        const query = `select  from schema1.table3 t3`;
         it('should return column names', () => {
-          expect(pgInfoService.getEntries(query, { line: 0, character: 8 })).toEqual(t3Columns);
+          const res = pgInfoService.getEntries(query, { line: 0, character: 7 });
+          const exp = aliasColumns(t3Columns, 't3');
+          expect(res).toEqual(exp);
+        });
+      });
+
+      describe('column name from table alias', () => {
+        const query = `select t3. from schema1.table1 t1 join schema1.table3 t3 on t1.id = t3.id`;
+        it('should return column names', () => {
+          const res = pgInfoService.getEntries(query, { line: 0, character: 10 });
+          const exp = joinColumnsWithAlias([
+            { alias: 't1', colums: t1Columns },
+            { alias: 't3', colums: t3Columns },
+          ]);
+          expect(res).toEqual(exp);
         });
       });
 
       describe('select without table name', () => {
         const query = `select `;
         it('should return all column names', () => {
-          expect(pgInfoService.getEntries(query, { line: 0, character: 7 })).toEqual(t1t2t3Join);
+          const res = pgInfoService.getEntries(query, { line: 0, character: 7 });
+          const exp = joinColumns(t1Columns, t2Columns, t3Columns);
+          expect(res).toEqual(exp);
         });
       });
 
       describe('join', () => {
-        const query = `select * from schema1.table1 t1 join schema1.table2 t2 on id`;
+        const query = `select  from schema1.table1 t1 join schema1.table2 t2 on id`;
         it('should return column names', () => {
-          expect(pgInfoService.getEntries(query, { line: 0, character: 7 })).toEqual(t1t2Join);
+          const res = pgInfoService.getEntries(query, { line: 0, character: 7 });
+          const exp = joinColumnsWithAlias([
+            { alias: 't1', colums: t1Columns },
+            { alias: 't2', colums: t2Columns },
+          ]);
+          expect(res).toEqual(exp);
+        });
+      });
+
+      describe('table aliases', () => {
+        const query = `select t1. from schema1.table1 t1 join schema1.table2 t2 on t1.id = t2.id`;
+
+        it('should return t1 column names', () => {
+          const res = pgInfoService.getEntries(query, { line: 0, character: 10 });
+          const exp = joinColumnsWithAlias([
+            { alias: 't1', colums: t1Columns },
+            { alias: 't2', colums: t2Columns },
+          ]);
+          expect(res).toEqual(exp);
         });
       });
     });
