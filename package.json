@@ -1,5 +1,5 @@
 {
-  "name": "ts-slonik-plugin",
+  "name": "@hoonoh/ts-slonik-plugin",
   "version": "1.0.0",
   "description": "Typescript language service plugin for slonik.",
   "keywords": [
@@ -15,6 +15,10 @@
   },
   "author": {
     "name": "hoonoh"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "restricted"
   },
   "main": "dist/index.js",
   "files": [
