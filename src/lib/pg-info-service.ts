@@ -1,6 +1,6 @@
 import df from 'd-forest';
 import { QueryResult } from 'pg';
-import { From, nil, parse, PGNode, SelectedColumn, Statement } from 'pgsql-ast-parser';
+import { From, FromTable, nil, parse, PGNode, SelectedColumn, Statement } from 'pgsql-ast-parser';
 import ts from 'typescript/lib/tsserverlibrary';
 
 import { Config } from './config';
@@ -208,8 +208,11 @@ export class PgInfoService {
           // remove comma
           // (e.g. `on conflict (id,) do update set id = 0`)
           //                       ^
-          queryText = query.substr(0, posAbsolute - 1) + query.substr(posAbsolute);
-          posAdjusted = posAbsolute - 1;
+          const target = query.substr(posAbsolute - 1, 1);
+          if (target === ',') {
+            queryText = query.substr(0, posAbsolute - 1) + query.substr(posAbsolute);
+            posAdjusted = posAbsolute - 1;
+          }
 
           this.log.debug(() => [
             'retry: id:',
@@ -295,6 +298,24 @@ export class PgInfoService {
           return start <= posAdjusted && end >= posAdjusted ? target : undefined;
         };
 
+        // returns column info objects by names with and without aliases
+        const getFromTableColumns = (from: From[] | nil) => {
+          const rtn: Record<string, ColumnInfo> = {};
+          (from?.filter(f => f.type === 'table') as FromTable[]).forEach(f => {
+            const tableInfo = this.info[f.name.schema || 'public']?.tables[f.name.name];
+            Object.entries(tableInfo.columns).forEach(([columnName, columnInfo]) => {
+              const colInfo = { ...columnInfo };
+              rtn[columnName] = colInfo;
+              if (f.name.alias)
+                rtn[`${f.name.alias}.${columnName}`] = {
+                  ...colInfo,
+                  name: `${f.name.alias}.${columnName}`,
+                };
+            });
+          });
+          return Object.values(rtn);
+        };
+
         const handleSelect = (from: From[] | nil, columns: SelectedColumn[] | nil) => {
           const tableHover = findNodes(from);
           const columnHover = findNodes(columns);
@@ -302,24 +323,18 @@ export class PgInfoService {
           if (tableHover) {
             results.tables = Array.from(this.allTables);
           } /* istanbul ignore else */ else if (columnHover) {
-            const tables = from
-              ?.filter(f => f.type === 'table')
-              .reduce((rtn, f) => {
-                /* istanbul ignore else */
-                if (f.type === 'table') {
-                  /* istanbul ignore else */
-                  if (f.name.schema && f.name.name) {
-                    rtn.push(this.info[f.name.schema].tables[f.name.name]);
-                  }
-                  return rtn;
-                }
-                return rtn;
-              }, [] as TableInfo[]);
+            results.columns = getFromTableColumns(from);
+          }
 
-            results.columns = tables?.reduce((rtn, cur) => {
-              rtn.push(...Object.values(cur.columns));
-              return rtn;
-            }, [] as ColumnInfo[]);
+          // if no results have been found and cursor position is after select clause
+          // and there are`from`s available, (e.g. `select [POS] from`)
+          // return all columns from `from` tables
+          if (
+            !results.tables?.length &&
+            !results.columns?.length &&
+            query.substr(0, posAbsolute).trim() === 'select'
+          ) {
+            results.columns = getFromTableColumns(from);
           }
         };
 
