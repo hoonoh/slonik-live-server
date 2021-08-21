@@ -49,6 +49,28 @@ const t1t2Join = [
   { name: 't2_col_timestamptz', kind: 'const', sortText: 't2_col_timestamptz' },
 ];
 
+const t1t2t3Join = [
+  { name: 'id', kind: 'const', sortText: 'id' },
+  { name: 'col_text', kind: 'const', sortText: 'col_text' },
+  { name: 'col_text_arr', kind: 'const', sortText: 'col_text_arr' },
+  { name: 'col_int', kind: 'const', sortText: 'col_int' },
+  { name: 'col_int_arr', kind: 'const', sortText: 'col_int_arr' },
+  { name: 'col_jsonb', kind: 'const', sortText: 'col_jsonb' },
+  { name: 'col_timestamptz', kind: 'const', sortText: 'col_timestamptz' },
+  { name: 't2_col_text', kind: 'const', sortText: 't2_col_text' },
+  { name: 't2_col_text_arr', kind: 'const', sortText: 't2_col_text_arr' },
+  { name: 't2_col_int', kind: 'const', sortText: 't2_col_int' },
+  { name: 't2_col_int_arr', kind: 'const', sortText: 't2_col_int_arr' },
+  { name: 't2_col_jsonb', kind: 'const', sortText: 't2_col_jsonb' },
+  { name: 't2_col_timestamptz', kind: 'const', sortText: 't2_col_timestamptz' },
+  { name: 't3_col_text', kind: 'const', sortText: 't3_col_text' },
+  { name: 't3_col_text_arr', kind: 'const', sortText: 't3_col_text_arr' },
+  { name: 't3_col_int', kind: 'const', sortText: 't3_col_int' },
+  { name: 't3_col_int_arr', kind: 'const', sortText: 't3_col_int_arr' },
+  { name: 't3_col_jsonb', kind: 'const', sortText: 't3_col_jsonb' },
+  { name: 't3_col_timestamptz', kind: 'const', sortText: 't3_col_timestamptz' },
+];
+
 describe('pg-info-service', () => {
   describe('auto completion', () => {
     const { pgInfoService } = mockService([]);
@@ -63,6 +85,13 @@ describe('pg-info-service', () => {
 
         it('should return column names', () => {
           expect(pgInfoService.getEntries(query, { line: 0, character: 8 })).toEqual(t3Columns);
+        });
+      });
+
+      describe('select without table name', () => {
+        const query = `select `;
+        it('should return all column names', () => {
+          expect(pgInfoService.getEntries(query, { line: 0, character: 7 })).toEqual(t1t2t3Join);
         });
       });
 

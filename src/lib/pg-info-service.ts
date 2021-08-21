@@ -45,6 +45,8 @@ export class PgInfoService {
 
   private allTables: Set<TableInfo> = new Set();
 
+  private allColumns: Set<ColumnInfo> = new Set();
+
   constructor(private config: Config, private log: LanguageServiceLogger) {}
 
   loadDbInfo() {
@@ -139,7 +141,7 @@ export class PgInfoService {
       this.allTables.add(table);
 
       if (!table.columns[columnName]) {
-        table.columns[columnName] = {
+        const column: ColumnInfo = {
           name: columnName,
           schema: tableSchema,
           table: tableName,
@@ -147,6 +149,8 @@ export class PgInfoService {
           udtName,
           nullable: isNullable,
         };
+        table.columns[columnName] = column;
+        this.allColumns.add(column);
         table.columnNames.push(columnName);
       }
     });
@@ -323,7 +327,13 @@ export class PgInfoService {
           //
           // select
           //
-          handleSelect(statement.from, statement.columns);
+          if (statement.from || statement.columns) {
+            handleSelect(statement.from, statement.columns);
+          } else {
+            // for queries with `select` prefix only, return all column names.
+            results.columns = Array.from(this.allColumns);
+          }
+          // if(!results.columns?.length)
         } else if (statement.type === 'insert') {
           //
           // insert
