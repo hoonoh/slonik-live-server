@@ -206,6 +206,14 @@ describe('pg-info-service', () => {
             expect(res).toIncludeSameMembers(exp);
           });
         });
+        describe('join on column suggestion', () => {
+          const query = `select * from schema1.table1 t1 join schema1.table2 t2 on t2.`;
+          it('should return column names', () => {
+            const res = pgInfoService.getEntries(query, { line: 0, character: 61 });
+            const exp = t2Columns;
+            expect(res).toIncludeSameMembers(exp);
+          });
+        });
       });
     });
 

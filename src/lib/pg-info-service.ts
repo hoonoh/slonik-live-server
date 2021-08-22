@@ -397,6 +397,21 @@ export class PgInfoService {
               from?.forEach(f => {
                 if (f.type === 'table' && f.name.alias) results.joinOn?.push(f.name.alias);
               });
+            } else if (checkTableRef) {
+              // check if current position is after join on table alias position
+              // e.g. `select * from table1 t1 join table2 t2 on t2.
+              //                                                    ^
+              const joinOnAliasTestQuery = query.substr(0, posAbsolute).trim().split(' ');
+              const joinOnAlias = joinOnAliasTestQuery.pop()?.trim().replace('.', '');
+              const joinOnAliasStart = joinOnAliasTestQuery.pop()?.trim() === 'on';
+              if (joinOnAliasStart) {
+                const aliasFrom = from?.find(
+                  f => f.type === 'table' && f.name.alias === joinOnAlias,
+                );
+                if (aliasFrom) {
+                  results.columns = getFromTableColumns([aliasFrom], true);
+                }
+              }
             } else {
               results.tables = Array.from(this.allTables);
             }
