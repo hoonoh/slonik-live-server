@@ -192,6 +192,8 @@ export class PgInfoService {
 
     let parsed: Statement[] | undefined;
 
+    let checkTableRef = false;
+
     /**
      * retry is required query text can contain errors while editing (e.g. repeated commas)
      */
@@ -204,15 +206,18 @@ export class PgInfoService {
         retryId += 1;
 
         if (retryId === 1) {
-          //
-          // remove comma
-          // (e.g. `on conflict (id,) do update set id = 0`)
-          //                       ^
+          // remove comma or puctuation
+          // (e.g. #1 `on conflict (id,) do update set id = 0`)
+          //                          ^
+          // (e.g. #2 `select t1. from table1 t1`)
+          //                    ^
           const target = query.substr(posAbsolute - 1, 1);
-          if (target === ',') {
+          if (['.', ','].includes(target)) {
             queryText = query.substr(0, posAbsolute - 1) + query.substr(posAbsolute);
-            posAdjusted = posAbsolute - 1;
+            if (target === '.') checkTableRef = true;
           }
+
+          posAdjusted = posAbsolute - 1;
 
           this.log.debug(() => [
             'retry: id:',
@@ -305,19 +310,31 @@ export class PgInfoService {
           getTableInfo((from as FromTable).name.name, (from as FromTable).name.schema);
 
         // returns column info objects by names with and without aliases
-        const getFromTableColumns = (from: From[] | nil) => {
+        const getFromTableColumns = (from: From[] | nil, disableAlias = false) => {
           const rtn: Record<string, ColumnInfo> = {};
+          const ambiguousColumnCheck: Record<string, Set<string>> = {};
           (from?.filter(f => f.type === 'table') as FromTable[]).forEach(f => {
             const tableInfo = getTableInfoByFrom(f);
             Object.entries(tableInfo.columns).forEach(([columnName, columnInfo]) => {
               const colInfo = { ...columnInfo };
               rtn[columnName] = colInfo;
-              if (f.name.alias)
-                rtn[`${f.name.alias}.${columnName}`] = {
+              if (f.name.alias && !disableAlias) {
+                const aliasedColumnName = `${f.name.alias}.${columnName}`;
+                rtn[aliasedColumnName] = {
                   ...colInfo,
-                  name: `${f.name.alias}.${columnName}`,
+                  name: aliasedColumnName,
                 };
+                if (from && from.length > 1) {
+                  if (!ambiguousColumnCheck[columnName]) {
+                    ambiguousColumnCheck[columnName] = new Set();
+                  }
+                  ambiguousColumnCheck[columnName].add(aliasedColumnName);
+                }
+              }
             });
+          });
+          Object.entries(ambiguousColumnCheck).forEach(([columnName, names]) => {
+            if (names.size > 1) delete rtn[columnName];
           });
           return Object.values(rtn);
         };
@@ -384,7 +401,21 @@ export class PgInfoService {
               results.tables = Array.from(this.allTables);
             }
           } /* istanbul ignore else */ else if (columnHover) {
-            results.columns = getFromTableColumns(from);
+            // check if current column hover is table alias ref
+            const tableRef =
+              checkTableRef && columnHover.length === 1 && columnHover[0].expr.type === 'ref'
+                ? columnHover[0].expr
+                : undefined;
+
+            const fromRef = from
+              ? from.find(f => f.type === 'table' && f.name.alias === tableRef?.name)
+              : undefined;
+
+            if (tableRef && fromRef) {
+              results.columns = getFromTableColumns([fromRef], true);
+            } else {
+              results.columns = getFromTableColumns(from);
+            }
           }
 
           // if no results have been found and cursor position is after select clause

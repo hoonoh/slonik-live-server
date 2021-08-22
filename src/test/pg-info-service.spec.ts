@@ -137,11 +137,7 @@ describe('pg-info-service', () => {
         const query = `select t3. from schema1.table1 t1 join schema1.table3 t3 on t1.id = t3.id`;
         it('should return column names', () => {
           const res = pgInfoService.getEntries(query, { line: 0, character: 10 });
-          const exp = joinColumnsWithAlias(
-            { alias: 't1', colums: t1Columns },
-            { alias: 't3', colums: t3Columns },
-          );
-          expect(res).toEqual(exp);
+          expect(res).toEqual(t3Columns);
         });
       });
 
@@ -165,19 +161,6 @@ describe('pg-info-service', () => {
             );
             expect(sortEntriesByName(res)).toEqual(sortEntriesByName(exp));
           });
-        });
-      });
-
-      describe('table aliases', () => {
-        const query = `select t1. from schema1.table1 t1 join schema1.table2 t2 on t1.id = t2.id`;
-
-        it('should return t1 column names', () => {
-          const res = pgInfoService.getEntries(query, { line: 0, character: 10 });
-          const exp = joinColumnsWithAlias(
-            { alias: 't1', colums: t1Columns },
-            { alias: 't2', colums: t2Columns },
-          );
-          expect(res).toEqual(exp);
         });
       });
     });
