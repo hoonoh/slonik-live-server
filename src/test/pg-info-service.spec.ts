@@ -1,18 +1,18 @@
 import { mockService } from './util';
 
-const tables = [
+type CompletionEntry = {
+  name: string;
+  kind: 'const';
+  sortText: string;
+};
+
+const tables: CompletionEntry[] = [
   { name: 'schema1.table1', kind: 'const', sortText: 'schema1.table1' },
   { name: 'schema1.table2', kind: 'const', sortText: 'schema1.table2' },
   { name: 'schema1.table3', kind: 'const', sortText: 'schema1.table3' },
 ];
 
-type Column = {
-  name: string;
-  kind: string;
-  sortText: string;
-};
-
-const t1Columns: Column[] = [
+const t1Columns: CompletionEntry[] = [
   { name: 'id', kind: 'const', sortText: 'id' },
   { name: 'col_text', kind: 'const', sortText: 'col_text' },
   { name: 'col_text_arr', kind: 'const', sortText: 'col_text_arr' },
@@ -21,7 +21,7 @@ const t1Columns: Column[] = [
   { name: 'col_jsonb', kind: 'const', sortText: 'col_jsonb' },
   { name: 'col_timestamptz', kind: 'const', sortText: 'col_timestamptz' },
 ];
-const t2Columns: Column[] = [
+const t2Columns: CompletionEntry[] = [
   { name: 'id', kind: 'const', sortText: 'id' },
   { name: 't2_col_text', kind: 'const', sortText: 't2_col_text' },
   { name: 't2_col_text_arr', kind: 'const', sortText: 't2_col_text_arr' },
@@ -30,7 +30,7 @@ const t2Columns: Column[] = [
   { name: 't2_col_jsonb', kind: 'const', sortText: 't2_col_jsonb' },
   { name: 't2_col_timestamptz', kind: 'const', sortText: 't2_col_timestamptz' },
 ];
-const t3Columns: Column[] = [
+const t3Columns: CompletionEntry[] = [
   { name: 'id', kind: 'const', sortText: 'id' },
   { name: 't3_col_text', kind: 'const', sortText: 't3_col_text' },
   { name: 't3_col_text_arr', kind: 'const', sortText: 't3_col_text_arr' },
@@ -40,8 +40,8 @@ const t3Columns: Column[] = [
   { name: 't3_col_timestamptz', kind: 'const', sortText: 't3_col_timestamptz' },
 ];
 
-const joinColumns = (...columns: Column[][]) => {
-  const rtn: Record<string, Column> = {};
+const joinColumns = (...columns: CompletionEntry[][]) => {
+  const rtn: Record<string, CompletionEntry> = {};
   columns
     .flatMap(c => c)
     .forEach(c => {
@@ -50,7 +50,7 @@ const joinColumns = (...columns: Column[][]) => {
   return Object.values(rtn);
 };
 
-const aliasColumns = (columns: Column[], alias: string) => {
+const aliasColumns = (columns: CompletionEntry[], alias: string) => {
   const res = columns.reduce((rtn, c) => {
     rtn[c.name] = {
       kind: c.kind,
@@ -63,14 +63,14 @@ const aliasColumns = (columns: Column[], alias: string) => {
       sortText: `${alias}.${c.sortText}`,
     };
     return rtn;
-  }, {} as Record<string, Column>);
+  }, {} as Record<string, CompletionEntry>);
   return Object.values(res);
 };
 
-type ColumnsWithAlias = { alias?: string; colums: Column[] };
+type ColumnsWithAlias = { alias?: string; colums: CompletionEntry[] };
 
-const joinColumnsWithAlias = (...columns: ColumnsWithAlias[][]) => {
-  const rtn: Record<string, Column> = {};
+const joinColumnsWithAlias = (...columns: ColumnsWithAlias[]) => {
+  const rtn: Record<string, CompletionEntry> = {};
   columns
     .flatMap(ca => ca)
     .forEach(ca => {
@@ -87,6 +87,29 @@ const joinColumnsWithAlias = (...columns: ColumnsWithAlias[][]) => {
     });
   return Object.values(rtn);
 };
+
+const joinSuggestion = (...columns: ColumnsWithAlias[]) => {
+  const res: CompletionEntry[] = [];
+  columns
+    .flatMap(ca => ca)
+    .flatMap(c => c.alias)
+    .forEach(c => {
+      if (c) res.push({ name: c, kind: 'const', sortText: c });
+    });
+  const firstColumn = columns.shift();
+  const firstColumnNames = firstColumn?.colums.map(c => c.name);
+  columns.forEach(c => {
+    c.colums.forEach(c2 => {
+      if (firstColumnNames?.includes(c2.name)) {
+        const joinOn = `${firstColumn?.alias}.${c2.name} = ${c.alias}.${c2.name}`;
+        res.push({ name: joinOn, kind: 'const', sortText: joinOn });
+      }
+    });
+  });
+  return res;
+};
+
+const sortEntriesByName = (c: { name: string }[]) => c.sort((c1, c2) => -(c1.name < c2.name));
 
 describe('pg-info-service', () => {
   describe('auto completion', () => {
@@ -114,10 +137,10 @@ describe('pg-info-service', () => {
         const query = `select t3. from schema1.table1 t1 join schema1.table3 t3 on t1.id = t3.id`;
         it('should return column names', () => {
           const res = pgInfoService.getEntries(query, { line: 0, character: 10 });
-          const exp = joinColumnsWithAlias([
+          const exp = joinColumnsWithAlias(
             { alias: 't1', colums: t1Columns },
             { alias: 't3', colums: t3Columns },
-          ]);
+          );
           expect(res).toEqual(exp);
         });
       });
@@ -132,14 +155,16 @@ describe('pg-info-service', () => {
       });
 
       describe('join', () => {
-        const query = `select  from schema1.table1 t1 join schema1.table2 t2 on id`;
-        it('should return column names', () => {
-          const res = pgInfoService.getEntries(query, { line: 0, character: 7 });
-          const exp = joinColumnsWithAlias([
-            { alias: 't1', colums: t1Columns },
-            { alias: 't2', colums: t2Columns },
-          ]);
-          expect(res).toEqual(exp);
+        describe('join on suggestion', () => {
+          const query = `select  from schema1.table1 t1 join schema1.table2 t2 on `;
+          it('should return join on suggestions', () => {
+            const res = pgInfoService.getEntries(query, { line: 0, character: 57 });
+            const exp = joinSuggestion(
+              { alias: 't2', colums: t2Columns },
+              { alias: 't1', colums: t1Columns },
+            );
+            expect(sortEntriesByName(res)).toEqual(sortEntriesByName(exp));
+          });
         });
       });
 
@@ -148,10 +173,10 @@ describe('pg-info-service', () => {
 
         it('should return t1 column names', () => {
           const res = pgInfoService.getEntries(query, { line: 0, character: 10 });
-          const exp = joinColumnsWithAlias([
+          const exp = joinColumnsWithAlias(
             { alias: 't1', colums: t1Columns },
             { alias: 't2', colums: t2Columns },
-          ]);
+          );
           expect(res).toEqual(exp);
         });
       });

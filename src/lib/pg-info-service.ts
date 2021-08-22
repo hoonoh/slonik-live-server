@@ -271,7 +271,7 @@ export class PgInfoService {
     };
     parseWithRetry(query);
 
-    const results: { tables?: TableInfo[]; columns?: ColumnInfo[] } = {};
+    const results: { tables?: TableInfo[]; columns?: ColumnInfo[]; joinOn?: string[] } = {};
 
     if (parsed) {
       parsed.forEach(statement => {
@@ -298,11 +298,17 @@ export class PgInfoService {
           return start <= posAdjusted && end >= posAdjusted ? target : undefined;
         };
 
+        const getTableInfo = (tableName: string, schema?: string) =>
+          this.info[schema || this.config.pg.defaultSchema]?.tables[tableName];
+
+        const getTableInfoByFrom = (from: From) =>
+          getTableInfo((from as FromTable).name.name, (from as FromTable).name.schema);
+
         // returns column info objects by names with and without aliases
         const getFromTableColumns = (from: From[] | nil) => {
           const rtn: Record<string, ColumnInfo> = {};
           (from?.filter(f => f.type === 'table') as FromTable[]).forEach(f => {
-            const tableInfo = this.info[f.name.schema || 'public']?.tables[f.name.name];
+            const tableInfo = getTableInfoByFrom(f);
             Object.entries(tableInfo.columns).forEach(([columnName, columnInfo]) => {
               const colInfo = { ...columnInfo };
               rtn[columnName] = colInfo;
@@ -321,7 +327,62 @@ export class PgInfoService {
           const columnHover = findNodes(columns);
 
           if (tableHover) {
-            results.tables = Array.from(this.allTables);
+            const joinOnTestQuery = query.substr(0, posAbsolute).trim().split(' ');
+            const joinOnStart = joinOnTestQuery.pop()?.trim() === 'on';
+
+            if (joinOnStart) {
+              const joinTableNameOrAlias = joinOnTestQuery.pop()?.trim();
+              const joinTable = from?.find(f => {
+                if (f.type === 'table') {
+                  if (joinTableNameOrAlias?.includes('.')) {
+                    const [schema, table] = joinTableNameOrAlias.split('.');
+                    return f.name.schema === schema && f.name.name === table;
+                  }
+                  return f.name.alias === joinTableNameOrAlias;
+                }
+                return false;
+              });
+              if (!joinTable) return;
+              const joinTableInfo = getTableInfoByFrom(joinTable);
+              // if no alias set in from, use `${schema}.${tableName}` instead
+              const aliasTableInfo: Record<string, TableInfo> = {};
+              from?.forEach(f => {
+                if (f.type === 'table') {
+                  let tableName = f.name.name;
+                  if (f.name.alias) {
+                    tableName = f.name.alias;
+                  } else if (f.name.schema && f.name.schema !== this.config.pg.defaultSchema) {
+                    tableName = `${f.name.schema}.${f.name.name}`;
+                  }
+                  aliasTableInfo[tableName] = getTableInfoByFrom(f);
+                }
+              });
+
+              // list same column with names same as the ones in joinTable
+              const columnNamesGroup = Object.entries(aliasTableInfo).reduce(
+                (rtn, [tableName, tableInfo]) => {
+                  tableInfo.columnNames.forEach(cn => {
+                    if (joinTableInfo !== tableInfo && joinTableInfo.columnNames.includes(cn)) {
+                      const joinTableColumn = `${joinTableNameOrAlias}.${cn}`;
+                      if (!rtn[joinTableColumn]) rtn[joinTableColumn] = new Set();
+                      rtn[joinTableColumn].add(`${tableName}.${cn}`);
+                    }
+                  });
+                  return rtn;
+                },
+                {} as Record<string, Set<string>>,
+              );
+
+              results.joinOn = Object.entries(columnNamesGroup)
+                .map(([cn, cnSet]) => Array.from(cnSet).map(cnSub => `${cn} = ${cnSub}`))
+                .flatMap(c => c);
+              // add table aliases if available
+              from?.forEach(f => {
+                if (f.type === 'table' && f.name.alias) results.joinOn?.push(f.name.alias);
+              });
+            } else {
+              results.tables = Array.from(this.allTables);
+            }
           } /* istanbul ignore else */ else if (columnHover) {
             results.columns = getFromTableColumns(from);
           }
@@ -372,9 +433,7 @@ export class PgInfoService {
                 onConflictHover.do.sets.length)
             ) {
               const schema = statement.into.schema || this.config.pg.defaultSchema;
-              results.columns = Object.values(
-                this.info[schema].tables[statement.into.name].columns,
-              );
+              results.columns = Object.values(getTableInfo(statement.into.name, schema).columns);
             }
           }
         } else if (statement.type === 'update') {
@@ -391,7 +450,7 @@ export class PgInfoService {
             results.tables = Array.from(this.allTables);
           } else if (setsHover || whereHover || returningHover) {
             const schema = statement.table.schema || this.config.pg.defaultSchema;
-            results.columns = Object.values(this.info[schema].tables[statement.table.name].columns);
+            results.columns = Object.values(getTableInfo(statement.table.name, schema).columns);
           }
         } else if (statement.type === 'delete') {
           //
@@ -406,7 +465,7 @@ export class PgInfoService {
             results.tables = Array.from(this.allTables);
           } else if (whereHover || returningHover) {
             const schema = statement.from.schema || this.config.pg.defaultSchema;
-            results.columns = Object.values(this.info[schema].tables[statement.from.name].columns);
+            results.columns = Object.values(getTableInfo(statement.from.name, schema).columns);
           }
         }
       });
@@ -420,7 +479,7 @@ export class PgInfoService {
   getEntries(query: string, position: ts.LineAndCharacter) {
     const entries = new Map<string, ts.CompletionEntry>();
 
-    const { tables, columns } = this.parseSql(query, position);
+    const { tables, columns, joinOn } = this.parseSql(query, position);
 
     if (tables) {
       tables.forEach(table => {
@@ -439,6 +498,14 @@ export class PgInfoService {
           name: column.name,
           kind: ts.ScriptElementKind.constElement,
           sortText: column.name,
+        });
+      });
+    } else if (joinOn) {
+      joinOn.forEach(on => {
+        entries.set(on, {
+          name: on,
+          kind: ts.ScriptElementKind.constElement,
+          sortText: on,
         });
       });
     }
