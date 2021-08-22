@@ -10,6 +10,8 @@ const tables: CompletionEntry[] = [
   { name: 'schema1.table1', kind: 'const', sortText: 'schema1.table1' },
   { name: 'schema1.table2', kind: 'const', sortText: 'schema1.table2' },
   { name: 'schema1.table3', kind: 'const', sortText: 'schema1.table3' },
+  { name: 'schema1.inherit_parent', kind: 'const', sortText: 'schema1.inherit_parent' },
+  { name: 'schema1.inherit_child', kind: 'const', sortText: 'schema1.inherit_child' },
 ];
 
 const t1Columns: CompletionEntry[] = [
@@ -38,6 +40,17 @@ const t3Columns: CompletionEntry[] = [
   { name: 't3_col_int_arr', kind: 'const', sortText: 't3_col_int_arr' },
   { name: 't3_col_jsonb', kind: 'const', sortText: 't3_col_jsonb' },
   { name: 't3_col_timestamptz', kind: 'const', sortText: 't3_col_timestamptz' },
+];
+
+const inheritedParentColumns: CompletionEntry[] = [
+  { name: 'id', kind: 'const', sortText: 'id' },
+  { name: 'col_timestamptz', kind: 'const', sortText: 'col_timestamptz' },
+];
+const inheritedChildColumns: CompletionEntry[] = [
+  { name: 'id', kind: 'const', sortText: 'id' },
+  { name: 'col_timestamptz', kind: 'const', sortText: 'col_timestamptz' },
+  { name: 'child_col_text', kind: 'const', sortText: 'child_col_text' },
+  { name: 'child_col_text_arr', kind: 'const', sortText: 'child_col_text_arr' },
 ];
 
 const joinColumns = (...columns: CompletionEntry[][]) => {
@@ -71,20 +84,29 @@ type ColumnsWithAlias = { alias?: string; colums: CompletionEntry[] };
 
 const joinColumnsWithAlias = (...columns: ColumnsWithAlias[]) => {
   const rtn: Record<string, CompletionEntry> = {};
+  const ambiguousColumnCheck: Record<string, Set<string>> = {};
   columns
     .flatMap(ca => ca)
     .forEach(ca => {
       ca.colums.forEach(c => {
         rtn[c.name] = c;
         if (ca.alias) {
-          rtn[`${ca.alias}.${c.name}`] = {
+          const columnName = `${ca.alias}.${c.name}`;
+          rtn[columnName] = {
+            name: columnName,
             kind: c.kind,
-            name: `${ca.alias}.${c.name}`,
-            sortText: `${ca.alias}.${c.sortText}`,
+            sortText: columnName,
           };
+          if (!ambiguousColumnCheck[c.name]) {
+            ambiguousColumnCheck[c.name] = new Set();
+          }
+          ambiguousColumnCheck[c.name].add(columnName);
         }
       });
     });
+  Object.entries(ambiguousColumnCheck).forEach(([columnName, names]) => {
+    if (names.size > 1) delete rtn[columnName];
+  });
   return Object.values(rtn);
 };
 
@@ -109,7 +131,7 @@ const joinSuggestion = (...columns: ColumnsWithAlias[]) => {
   return res;
 };
 
-const sortEntriesByName = (c: { name: string }[]) => c.sort((c1, c2) => -(c1.name < c2.name));
+// const sortEntriesByName = (c: { name: string }[]) => c.sort((c1, c2) => -(c1.name < c2.name));
 
 describe('pg-info-service', () => {
   describe('auto completion', () => {
@@ -120,16 +142,32 @@ describe('pg-info-service', () => {
         const query = `select * from `;
 
         it('should return table names', () => {
-          expect(pgInfoService.getEntries(query, { line: 0, character: 14 })).toEqual(tables);
+          expect(pgInfoService.getEntries(query, { line: 0, character: 14 })).toIncludeSameMembers(
+            tables,
+          );
         });
       });
 
       describe('empty column name', () => {
-        const query = `select  from schema1.table3 t3`;
-        it('should return column names', () => {
-          const res = pgInfoService.getEntries(query, { line: 0, character: 7 });
-          const exp = aliasColumns(t3Columns, 't3');
-          expect(res).toEqual(exp);
+        describe('single from', () => {
+          const query = `select  from schema1.table3 t3`;
+          it('should return column names', () => {
+            const res = pgInfoService.getEntries(query, { line: 0, character: 7 });
+            const exp = aliasColumns(t3Columns, 't3');
+            expect(res).toEqual(exp);
+          });
+        });
+
+        describe('with joins', () => {
+          const query = `select  from schema1.inherit_parent tp join schema1.inherit_child tc on tc.id = tp.id`;
+          it('should return column names', () => {
+            const res = pgInfoService.getEntries(query, { line: 0, character: 7 });
+            const exp = joinColumnsWithAlias(
+              { alias: 'tp', colums: inheritedParentColumns },
+              { alias: 'tc', colums: inheritedChildColumns },
+            );
+            expect(res).toIncludeSameMembers(exp);
+          });
         });
       });
 
@@ -145,8 +183,14 @@ describe('pg-info-service', () => {
         const query = `select `;
         it('should return all column names', () => {
           const res = pgInfoService.getEntries(query, { line: 0, character: 7 });
-          const exp = joinColumns(t1Columns, t2Columns, t3Columns);
-          expect(res).toEqual(exp);
+          const exp = joinColumns(
+            t1Columns,
+            t2Columns,
+            t3Columns,
+            inheritedParentColumns,
+            inheritedChildColumns,
+          );
+          expect(res).toIncludeSameMembers(exp);
         });
       });
 
@@ -159,7 +203,7 @@ describe('pg-info-service', () => {
               { alias: 't2', colums: t2Columns },
               { alias: 't1', colums: t1Columns },
             );
-            expect(sortEntriesByName(res)).toEqual(sortEntriesByName(exp));
+            expect(res).toIncludeSameMembers(exp);
           });
         });
       });
@@ -175,7 +219,9 @@ describe('pg-info-service', () => {
         `;
 
         it('should return table names', () => {
-          expect(pgInfoService.getEntries(query, { line: 1, character: 23 })).toEqual(tables);
+          expect(pgInfoService.getEntries(query, { line: 1, character: 23 })).toIncludeSameMembers(
+            tables,
+          );
         });
 
         it('should return column names', () => {
@@ -217,7 +263,9 @@ describe('pg-info-service', () => {
         `;
 
         it('should return table names', () => {
-          expect(pgInfoService.getEntries(query, { line: 1, character: 17 })).toEqual(tables);
+          expect(pgInfoService.getEntries(query, { line: 1, character: 17 })).toIncludeSameMembers(
+            tables,
+          );
         });
 
         it('should return column names', () => {
@@ -259,7 +307,9 @@ describe('pg-info-service', () => {
         `;
 
         it('should return table names', () => {
-          expect(pgInfoService.getEntries(query, { line: 1, character: 23 })).toEqual(tables);
+          expect(pgInfoService.getEntries(query, { line: 1, character: 23 })).toIncludeSameMembers(
+            tables,
+          );
         });
 
         it('should return column names', () => {
