@@ -15,6 +15,14 @@ const testTable3 = {
   schema: schemaName,
   name: 'table3',
 };
+const testInheritedTableParent = {
+  schema: schemaName,
+  name: 'inherit_parent',
+};
+const testInheritedTableChild = {
+  schema: schemaName,
+  name: 'inherit_child',
+};
 
 export async function up(pgm: MigrationBuilder): Promise<void> {
   pgm.createSchema(schemaName);
@@ -93,9 +101,33 @@ export async function up(pgm: MigrationBuilder): Promise<void> {
       default: 'now()',
     },
   });
+  pgm.createTable(testInheritedTableParent, {
+    id: {
+      type: 'serial',
+      primaryKey: true,
+    },
+    col_timestamptz: {
+      type: 'timestamptz',
+      default: 'now()',
+    },
+  });
+  pgm.createTable(
+    testInheritedTableChild,
+    {
+      child_col_text: {
+        type: 'text',
+      },
+      child_col_text_arr: {
+        type: 'text[]',
+      },
+    },
+    { inherits: testInheritedTableParent },
+  );
 }
 
 export async function down(pgm: MigrationBuilder): Promise<void> {
+  pgm.dropTable(testInheritedTableChild);
+  pgm.dropTable(testInheritedTableParent);
   pgm.dropTable(testTable1);
   pgm.dropTable(testTable2);
   pgm.dropTable(testTable3);

@@ -192,6 +192,8 @@ export class PgInfoService {
 
     let parsed: Statement[] | undefined;
 
+    let checkTableRef = false;
+
     /**
      * retry is required query text can contain errors while editing (e.g. repeated commas)
      */
@@ -204,15 +206,18 @@ export class PgInfoService {
         retryId += 1;
 
         if (retryId === 1) {
-          //
-          // remove comma
-          // (e.g. `on conflict (id,) do update set id = 0`)
-          //                       ^
+          // remove comma or puctuation
+          // (e.g. #1 `on conflict (id,) do update set id = 0`)
+          //                          ^
+          // (e.g. #2 `select t1. from table1 t1`)
+          //                    ^
           const target = query.substr(posAbsolute - 1, 1);
-          if (target === ',') {
+          if (['.', ','].includes(target)) {
             queryText = query.substr(0, posAbsolute - 1) + query.substr(posAbsolute);
-            posAdjusted = posAbsolute - 1;
+            if (target === '.') checkTableRef = true;
           }
+
+          posAdjusted = posAbsolute - 1;
 
           this.log.debug(() => [
             'retry: id:',
@@ -271,7 +276,7 @@ export class PgInfoService {
     };
     parseWithRetry(query);
 
-    const results: { tables?: TableInfo[]; columns?: ColumnInfo[] } = {};
+    const results: { tables?: TableInfo[]; columns?: ColumnInfo[]; joinOn?: string[] } = {};
 
     if (parsed) {
       parsed.forEach(statement => {
@@ -298,20 +303,38 @@ export class PgInfoService {
           return start <= posAdjusted && end >= posAdjusted ? target : undefined;
         };
 
+        const getTableInfo = (tableName: string, schema?: string) =>
+          this.info[schema || this.config.pg.defaultSchema]?.tables[tableName];
+
+        const getTableInfoByFrom = (from: From) =>
+          getTableInfo((from as FromTable).name.name, (from as FromTable).name.schema);
+
         // returns column info objects by names with and without aliases
-        const getFromTableColumns = (from: From[] | nil) => {
+        const getFromTableColumns = (from: From[] | nil, disableAlias = false) => {
           const rtn: Record<string, ColumnInfo> = {};
+          const ambiguousColumnCheck: Record<string, Set<string>> = {};
           (from?.filter(f => f.type === 'table') as FromTable[]).forEach(f => {
-            const tableInfo = this.info[f.name.schema || 'public']?.tables[f.name.name];
+            const tableInfo = getTableInfoByFrom(f);
             Object.entries(tableInfo.columns).forEach(([columnName, columnInfo]) => {
               const colInfo = { ...columnInfo };
               rtn[columnName] = colInfo;
-              if (f.name.alias)
-                rtn[`${f.name.alias}.${columnName}`] = {
+              if (f.name.alias && !disableAlias) {
+                const aliasedColumnName = `${f.name.alias}.${columnName}`;
+                rtn[aliasedColumnName] = {
                   ...colInfo,
-                  name: `${f.name.alias}.${columnName}`,
+                  name: aliasedColumnName,
                 };
+                if (from && from.length > 1) {
+                  if (!ambiguousColumnCheck[columnName]) {
+                    ambiguousColumnCheck[columnName] = new Set();
+                  }
+                  ambiguousColumnCheck[columnName].add(aliasedColumnName);
+                }
+              }
             });
+          });
+          Object.entries(ambiguousColumnCheck).forEach(([columnName, names]) => {
+            if (names.size > 1) delete rtn[columnName];
           });
           return Object.values(rtn);
         };
@@ -321,9 +344,93 @@ export class PgInfoService {
           const columnHover = findNodes(columns);
 
           if (tableHover) {
-            results.tables = Array.from(this.allTables);
+            const joinOnTestQuery = query.substr(0, posAbsolute).trim().split(' ');
+            const joinOnStart = joinOnTestQuery.pop()?.trim() === 'on';
+
+            if (joinOnStart) {
+              const joinTableNameOrAlias = joinOnTestQuery.pop()?.trim();
+              const joinTable = from?.find(f => {
+                if (f.type === 'table') {
+                  if (joinTableNameOrAlias?.includes('.')) {
+                    const [schema, table] = joinTableNameOrAlias.split('.');
+                    return f.name.schema === schema && f.name.name === table;
+                  }
+                  return f.name.alias === joinTableNameOrAlias;
+                }
+                return false;
+              });
+              if (!joinTable) return;
+              const joinTableInfo = getTableInfoByFrom(joinTable);
+              // if no alias set in from, use `${schema}.${tableName}` instead
+              const aliasTableInfo: Record<string, TableInfo> = {};
+              from?.forEach(f => {
+                if (f.type === 'table') {
+                  let tableName = f.name.name;
+                  if (f.name.alias) {
+                    tableName = f.name.alias;
+                  } else if (f.name.schema && f.name.schema !== this.config.pg.defaultSchema) {
+                    tableName = `${f.name.schema}.${f.name.name}`;
+                  }
+                  aliasTableInfo[tableName] = getTableInfoByFrom(f);
+                }
+              });
+
+              // list same column with names same as the ones in joinTable
+              const columnNamesGroup = Object.entries(aliasTableInfo).reduce(
+                (rtn, [tableName, tableInfo]) => {
+                  tableInfo.columnNames.forEach(cn => {
+                    if (joinTableInfo !== tableInfo && joinTableInfo.columnNames.includes(cn)) {
+                      const joinTableColumn = `${joinTableNameOrAlias}.${cn}`;
+                      if (!rtn[joinTableColumn]) rtn[joinTableColumn] = new Set();
+                      rtn[joinTableColumn].add(`${tableName}.${cn}`);
+                    }
+                  });
+                  return rtn;
+                },
+                {} as Record<string, Set<string>>,
+              );
+
+              results.joinOn = Object.entries(columnNamesGroup)
+                .map(([cn, cnSet]) => Array.from(cnSet).map(cnSub => `${cn} = ${cnSub}`))
+                .flatMap(c => c);
+              // add table aliases if available
+              from?.forEach(f => {
+                if (f.type === 'table' && f.name.alias) results.joinOn?.push(f.name.alias);
+              });
+            } else if (checkTableRef) {
+              // check if current position is after join on table alias position
+              // e.g. `select * from table1 t1 join table2 t2 on t2.
+              //                                                    ^
+              const joinOnAliasTestQuery = query.substr(0, posAbsolute).trim().split(' ');
+              const joinOnAlias = joinOnAliasTestQuery.pop()?.trim().replace('.', '');
+              const joinOnAliasStart = joinOnAliasTestQuery.pop()?.trim() === 'on';
+              if (joinOnAliasStart) {
+                const aliasFrom = from?.find(
+                  f => f.type === 'table' && f.name.alias === joinOnAlias,
+                );
+                if (aliasFrom) {
+                  results.columns = getFromTableColumns([aliasFrom], true);
+                }
+              }
+            } else {
+              results.tables = Array.from(this.allTables);
+            }
           } /* istanbul ignore else */ else if (columnHover) {
-            results.columns = getFromTableColumns(from);
+            // check if current column hover is table alias ref
+            const tableRef =
+              checkTableRef && columnHover.length === 1 && columnHover[0].expr.type === 'ref'
+                ? columnHover[0].expr
+                : undefined;
+
+            const fromRef = from
+              ? from.find(f => f.type === 'table' && f.name.alias === tableRef?.name)
+              : undefined;
+
+            if (tableRef && fromRef) {
+              results.columns = getFromTableColumns([fromRef], true);
+            } else {
+              results.columns = getFromTableColumns(from);
+            }
           }
 
           // if no results have been found and cursor position is after select clause
@@ -372,9 +479,7 @@ export class PgInfoService {
                 onConflictHover.do.sets.length)
             ) {
               const schema = statement.into.schema || this.config.pg.defaultSchema;
-              results.columns = Object.values(
-                this.info[schema].tables[statement.into.name].columns,
-              );
+              results.columns = Object.values(getTableInfo(statement.into.name, schema).columns);
             }
           }
         } else if (statement.type === 'update') {
@@ -391,7 +496,7 @@ export class PgInfoService {
             results.tables = Array.from(this.allTables);
           } else if (setsHover || whereHover || returningHover) {
             const schema = statement.table.schema || this.config.pg.defaultSchema;
-            results.columns = Object.values(this.info[schema].tables[statement.table.name].columns);
+            results.columns = Object.values(getTableInfo(statement.table.name, schema).columns);
           }
         } else if (statement.type === 'delete') {
           //
@@ -406,7 +511,7 @@ export class PgInfoService {
             results.tables = Array.from(this.allTables);
           } else if (whereHover || returningHover) {
             const schema = statement.from.schema || this.config.pg.defaultSchema;
-            results.columns = Object.values(this.info[schema].tables[statement.from.name].columns);
+            results.columns = Object.values(getTableInfo(statement.from.name, schema).columns);
           }
         }
       });
@@ -420,7 +525,7 @@ export class PgInfoService {
   getEntries(query: string, position: ts.LineAndCharacter) {
     const entries = new Map<string, ts.CompletionEntry>();
 
-    const { tables, columns } = this.parseSql(query, position);
+    const { tables, columns, joinOn } = this.parseSql(query, position);
 
     if (tables) {
       tables.forEach(table => {
@@ -439,6 +544,14 @@ export class PgInfoService {
           name: column.name,
           kind: ts.ScriptElementKind.constElement,
           sortText: column.name,
+        });
+      });
+    } else if (joinOn) {
+      joinOn.forEach(on => {
+        entries.set(on, {
+          name: on,
+          kind: ts.ScriptElementKind.constElement,
+          sortText: on,
         });
       });
     }

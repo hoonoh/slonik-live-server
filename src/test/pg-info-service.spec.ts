@@ -1,18 +1,20 @@
 import { mockService } from './util';
 
-const tables = [
-  { name: 'schema1.table1', kind: 'const', sortText: 'schema1.table1' },
-  { name: 'schema1.table2', kind: 'const', sortText: 'schema1.table2' },
-  { name: 'schema1.table3', kind: 'const', sortText: 'schema1.table3' },
-];
-
-type Column = {
+type CompletionEntry = {
   name: string;
-  kind: string;
+  kind: 'const';
   sortText: string;
 };
 
-const t1Columns: Column[] = [
+const tables: CompletionEntry[] = [
+  { name: 'schema1.table1', kind: 'const', sortText: 'schema1.table1' },
+  { name: 'schema1.table2', kind: 'const', sortText: 'schema1.table2' },
+  { name: 'schema1.table3', kind: 'const', sortText: 'schema1.table3' },
+  { name: 'schema1.inherit_parent', kind: 'const', sortText: 'schema1.inherit_parent' },
+  { name: 'schema1.inherit_child', kind: 'const', sortText: 'schema1.inherit_child' },
+];
+
+const t1Columns: CompletionEntry[] = [
   { name: 'id', kind: 'const', sortText: 'id' },
   { name: 'col_text', kind: 'const', sortText: 'col_text' },
   { name: 'col_text_arr', kind: 'const', sortText: 'col_text_arr' },
@@ -21,7 +23,7 @@ const t1Columns: Column[] = [
   { name: 'col_jsonb', kind: 'const', sortText: 'col_jsonb' },
   { name: 'col_timestamptz', kind: 'const', sortText: 'col_timestamptz' },
 ];
-const t2Columns: Column[] = [
+const t2Columns: CompletionEntry[] = [
   { name: 'id', kind: 'const', sortText: 'id' },
   { name: 't2_col_text', kind: 'const', sortText: 't2_col_text' },
   { name: 't2_col_text_arr', kind: 'const', sortText: 't2_col_text_arr' },
@@ -30,7 +32,7 @@ const t2Columns: Column[] = [
   { name: 't2_col_jsonb', kind: 'const', sortText: 't2_col_jsonb' },
   { name: 't2_col_timestamptz', kind: 'const', sortText: 't2_col_timestamptz' },
 ];
-const t3Columns: Column[] = [
+const t3Columns: CompletionEntry[] = [
   { name: 'id', kind: 'const', sortText: 'id' },
   { name: 't3_col_text', kind: 'const', sortText: 't3_col_text' },
   { name: 't3_col_text_arr', kind: 'const', sortText: 't3_col_text_arr' },
@@ -40,8 +42,19 @@ const t3Columns: Column[] = [
   { name: 't3_col_timestamptz', kind: 'const', sortText: 't3_col_timestamptz' },
 ];
 
-const joinColumns = (...columns: Column[][]) => {
-  const rtn: Record<string, Column> = {};
+const inheritedParentColumns: CompletionEntry[] = [
+  { name: 'id', kind: 'const', sortText: 'id' },
+  { name: 'col_timestamptz', kind: 'const', sortText: 'col_timestamptz' },
+];
+const inheritedChildColumns: CompletionEntry[] = [
+  { name: 'id', kind: 'const', sortText: 'id' },
+  { name: 'col_timestamptz', kind: 'const', sortText: 'col_timestamptz' },
+  { name: 'child_col_text', kind: 'const', sortText: 'child_col_text' },
+  { name: 'child_col_text_arr', kind: 'const', sortText: 'child_col_text_arr' },
+];
+
+const joinColumns = (...columns: CompletionEntry[][]) => {
+  const rtn: Record<string, CompletionEntry> = {};
   columns
     .flatMap(c => c)
     .forEach(c => {
@@ -50,7 +63,7 @@ const joinColumns = (...columns: Column[][]) => {
   return Object.values(rtn);
 };
 
-const aliasColumns = (columns: Column[], alias: string) => {
+const aliasColumns = (columns: CompletionEntry[], alias: string) => {
   const res = columns.reduce((rtn, c) => {
     rtn[c.name] = {
       kind: c.kind,
@@ -63,30 +76,62 @@ const aliasColumns = (columns: Column[], alias: string) => {
       sortText: `${alias}.${c.sortText}`,
     };
     return rtn;
-  }, {} as Record<string, Column>);
+  }, {} as Record<string, CompletionEntry>);
   return Object.values(res);
 };
 
-type ColumnsWithAlias = { alias?: string; colums: Column[] };
+type ColumnsWithAlias = { alias?: string; colums: CompletionEntry[] };
 
-const joinColumnsWithAlias = (...columns: ColumnsWithAlias[][]) => {
-  const rtn: Record<string, Column> = {};
+const joinColumnsWithAlias = (...columns: ColumnsWithAlias[]) => {
+  const rtn: Record<string, CompletionEntry> = {};
+  const ambiguousColumnCheck: Record<string, Set<string>> = {};
   columns
     .flatMap(ca => ca)
     .forEach(ca => {
       ca.colums.forEach(c => {
         rtn[c.name] = c;
         if (ca.alias) {
-          rtn[`${ca.alias}.${c.name}`] = {
+          const columnName = `${ca.alias}.${c.name}`;
+          rtn[columnName] = {
+            name: columnName,
             kind: c.kind,
-            name: `${ca.alias}.${c.name}`,
-            sortText: `${ca.alias}.${c.sortText}`,
+            sortText: columnName,
           };
+          if (!ambiguousColumnCheck[c.name]) {
+            ambiguousColumnCheck[c.name] = new Set();
+          }
+          ambiguousColumnCheck[c.name].add(columnName);
         }
       });
     });
+  Object.entries(ambiguousColumnCheck).forEach(([columnName, names]) => {
+    if (names.size > 1) delete rtn[columnName];
+  });
   return Object.values(rtn);
 };
+
+const joinSuggestion = (...columns: ColumnsWithAlias[]) => {
+  const res: CompletionEntry[] = [];
+  columns
+    .flatMap(ca => ca)
+    .flatMap(c => c.alias)
+    .forEach(c => {
+      if (c) res.push({ name: c, kind: 'const', sortText: c });
+    });
+  const firstColumn = columns.shift();
+  const firstColumnNames = firstColumn?.colums.map(c => c.name);
+  columns.forEach(c => {
+    c.colums.forEach(c2 => {
+      if (firstColumnNames?.includes(c2.name)) {
+        const joinOn = `${firstColumn?.alias}.${c2.name} = ${c.alias}.${c2.name}`;
+        res.push({ name: joinOn, kind: 'const', sortText: joinOn });
+      }
+    });
+  });
+  return res;
+};
+
+// const sortEntriesByName = (c: { name: string }[]) => c.sort((c1, c2) => -(c1.name < c2.name));
 
 describe('pg-info-service', () => {
   describe('auto completion', () => {
@@ -97,16 +142,32 @@ describe('pg-info-service', () => {
         const query = `select * from `;
 
         it('should return table names', () => {
-          expect(pgInfoService.getEntries(query, { line: 0, character: 14 })).toEqual(tables);
+          expect(pgInfoService.getEntries(query, { line: 0, character: 14 })).toIncludeSameMembers(
+            tables,
+          );
         });
       });
 
       describe('empty column name', () => {
-        const query = `select  from schema1.table3 t3`;
-        it('should return column names', () => {
-          const res = pgInfoService.getEntries(query, { line: 0, character: 7 });
-          const exp = aliasColumns(t3Columns, 't3');
-          expect(res).toEqual(exp);
+        describe('single from', () => {
+          const query = `select  from schema1.table3 t3`;
+          it('should return column names', () => {
+            const res = pgInfoService.getEntries(query, { line: 0, character: 7 });
+            const exp = aliasColumns(t3Columns, 't3');
+            expect(res).toEqual(exp);
+          });
+        });
+
+        describe('with joins', () => {
+          const query = `select  from schema1.inherit_parent tp join schema1.inherit_child tc on tc.id = tp.id`;
+          it('should return column names', () => {
+            const res = pgInfoService.getEntries(query, { line: 0, character: 7 });
+            const exp = joinColumnsWithAlias(
+              { alias: 'tp', colums: inheritedParentColumns },
+              { alias: 'tc', colums: inheritedChildColumns },
+            );
+            expect(res).toIncludeSameMembers(exp);
+          });
         });
       });
 
@@ -114,11 +175,7 @@ describe('pg-info-service', () => {
         const query = `select t3. from schema1.table1 t1 join schema1.table3 t3 on t1.id = t3.id`;
         it('should return column names', () => {
           const res = pgInfoService.getEntries(query, { line: 0, character: 10 });
-          const exp = joinColumnsWithAlias([
-            { alias: 't1', colums: t1Columns },
-            { alias: 't3', colums: t3Columns },
-          ]);
-          expect(res).toEqual(exp);
+          expect(res).toEqual(t3Columns);
         });
       });
 
@@ -126,33 +183,36 @@ describe('pg-info-service', () => {
         const query = `select `;
         it('should return all column names', () => {
           const res = pgInfoService.getEntries(query, { line: 0, character: 7 });
-          const exp = joinColumns(t1Columns, t2Columns, t3Columns);
-          expect(res).toEqual(exp);
+          const exp = joinColumns(
+            t1Columns,
+            t2Columns,
+            t3Columns,
+            inheritedParentColumns,
+            inheritedChildColumns,
+          );
+          expect(res).toIncludeSameMembers(exp);
         });
       });
 
       describe('join', () => {
-        const query = `select  from schema1.table1 t1 join schema1.table2 t2 on id`;
-        it('should return column names', () => {
-          const res = pgInfoService.getEntries(query, { line: 0, character: 7 });
-          const exp = joinColumnsWithAlias([
-            { alias: 't1', colums: t1Columns },
-            { alias: 't2', colums: t2Columns },
-          ]);
-          expect(res).toEqual(exp);
+        describe('join on suggestion', () => {
+          const query = `select  from schema1.table1 t1 join schema1.table2 t2 on `;
+          it('should return join on suggestions', () => {
+            const res = pgInfoService.getEntries(query, { line: 0, character: 57 });
+            const exp = joinSuggestion(
+              { alias: 't2', colums: t2Columns },
+              { alias: 't1', colums: t1Columns },
+            );
+            expect(res).toIncludeSameMembers(exp);
+          });
         });
-      });
-
-      describe('table aliases', () => {
-        const query = `select t1. from schema1.table1 t1 join schema1.table2 t2 on t1.id = t2.id`;
-
-        it('should return t1 column names', () => {
-          const res = pgInfoService.getEntries(query, { line: 0, character: 10 });
-          const exp = joinColumnsWithAlias([
-            { alias: 't1', colums: t1Columns },
-            { alias: 't2', colums: t2Columns },
-          ]);
-          expect(res).toEqual(exp);
+        describe('join on column suggestion', () => {
+          const query = `select * from schema1.table1 t1 join schema1.table2 t2 on t2.`;
+          it('should return column names', () => {
+            const res = pgInfoService.getEntries(query, { line: 0, character: 61 });
+            const exp = t2Columns;
+            expect(res).toIncludeSameMembers(exp);
+          });
         });
       });
     });
@@ -167,7 +227,9 @@ describe('pg-info-service', () => {
         `;
 
         it('should return table names', () => {
-          expect(pgInfoService.getEntries(query, { line: 1, character: 23 })).toEqual(tables);
+          expect(pgInfoService.getEntries(query, { line: 1, character: 23 })).toIncludeSameMembers(
+            tables,
+          );
         });
 
         it('should return column names', () => {
@@ -209,7 +271,9 @@ describe('pg-info-service', () => {
         `;
 
         it('should return table names', () => {
-          expect(pgInfoService.getEntries(query, { line: 1, character: 17 })).toEqual(tables);
+          expect(pgInfoService.getEntries(query, { line: 1, character: 17 })).toIncludeSameMembers(
+            tables,
+          );
         });
 
         it('should return column names', () => {
@@ -251,7 +315,9 @@ describe('pg-info-service', () => {
         `;
 
         it('should return table names', () => {
-          expect(pgInfoService.getEntries(query, { line: 1, character: 23 })).toEqual(tables);
+          expect(pgInfoService.getEntries(query, { line: 1, character: 23 })).toIncludeSameMembers(
+            tables,
+          );
         });
 
         it('should return column names', () => {

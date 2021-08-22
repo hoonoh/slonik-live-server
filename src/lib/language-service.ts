@@ -47,7 +47,7 @@ export class SqlLanguageService implements TemplateLanguageService {
       entries,
       isGlobalCompletion: false,
       isMemberCompletion: false,
-      isNewIdentifierLocation: false,
+      isNewIdentifierLocation: true,
     };
   }
 
