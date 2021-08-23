@@ -140,7 +140,7 @@ export class SqlDiagnosticService {
       return rtn;
     }, [] as string[]);
 
-    const raw = joinTextBlocksAndValues(sqlInfo);
+    let raw = joinTextBlocksAndValues(sqlInfo);
 
     // skip empty sql fragments
     if (
@@ -152,7 +152,7 @@ export class SqlDiagnosticService {
       return undefined;
     }
 
-    const explain = `explain\n${raw}`;
+    let explain = `explain\n${raw}`;
 
     // check for cached result
     const cached = this.getCachedupdateCachedDiagnostic(sqlInfo, costErrorEnabled);
@@ -227,11 +227,21 @@ export class SqlDiagnosticService {
     let queryRes: QueryResult<any> | undefined;
     let pgError: PgError | undefined;
 
-    try {
-      queryRes = pgQuery(this.config, explain);
-    } catch (error) {
-      pgError = error;
-    }
+    const queryWithRetry = () => {
+      try {
+        queryRes = pgQuery(this.config, explain);
+      } catch (error) {
+        pgError = error;
+      }
+      if (pgError?.message.includes('invalid input syntax for type uuid')) {
+        // retry for uuid type error
+        pgError = undefined;
+        explain = explain.replace(/'a'/g, `'00000000-0000-0000-0000-000000000000'`);
+        raw = raw.replace(/'a'/g, `'00000000-0000-0000-0000-000000000000'`);
+        queryWithRetry();
+      }
+    };
+    queryWithRetry();
 
     const queryResStr = queryRes?.rows.map(r => Object.values(r).join('\n')).join('') || '';
 

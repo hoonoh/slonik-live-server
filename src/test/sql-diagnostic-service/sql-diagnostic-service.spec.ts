@@ -50,4 +50,33 @@ describe('diagnostic service', () => {
       });
     });
   });
+
+  describe('should handle unexpected type errors', () => {
+    describe('uuid', () => {
+      const expected = `
+          select *
+          from (values('00000000-0000-0000-0000-000000000000'::uuid)) as t(id)
+          where id = '00000000-0000-0000-0000-000000000000'
+      `;
+
+      const results = getDiagnosticFromSourceText(`
+        import { sql } from 'slonik';
+        const id: string;
+        sql\`
+          select *
+          from (values('00000000-0000-0000-0000-000000000000'::uuid)) as t(id)
+          where id = \${id}
+        \`;
+      `);
+
+      it('check results count', () => {
+        expect(results.length).toEqual(1);
+      });
+
+      it.each(results)(`returns \`${expected}\``, (title: string, diagnostic: ts.Diagnostic) => {
+        expect(diagnostic.category).toEqual(ts.DiagnosticCategory.Suggestion);
+        expect(diagnostic.messageText.toString()).toContain(expected);
+      });
+    });
+  });
 });
