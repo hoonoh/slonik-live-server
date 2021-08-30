@@ -140,7 +140,7 @@
   "dependencies": {
     "d-forest": "^1.4.2",
     "dotenv": "^10.0.0",
-    "pgsql-ast-parser": "^8.0.0",
+    "pgsql-ast-parser": "^9.0.0",
     "safe-stable-stringify": "^1.1.1",
     "typescript-template-language-service-decorator": "^2.2.0"
   }
