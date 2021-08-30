@@ -132,7 +132,7 @@
     "semantic-release": "17.4.5",
     "slonik": "24.0.0",
     "slonik-sql-tag-raw": "1.1.1",
-    "ts-essentials": "7.0.3",
+    "ts-essentials": "8.1.0",
     "ts-jest": "27.0.5",
     "ts-node": "10.2.1",
     "typescript": "4.3.5"
