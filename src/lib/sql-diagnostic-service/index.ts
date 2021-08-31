@@ -230,7 +230,7 @@ export class SqlDiagnosticService {
     const queryWithRetry = () => {
       try {
         queryRes = pgQuery(this.config, explain);
-      } catch (error) {
+      } catch (error: any) {
         pgError = error;
       }
       if (pgError?.message.includes('invalid input syntax for type uuid')) {
