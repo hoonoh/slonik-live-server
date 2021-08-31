@@ -106,7 +106,7 @@ export class PgInfoService {
 
     try {
       queryResult = pgQuery(this.config, query);
-    } catch (error) {
+    } catch (error: any) {
       pgError = error;
     }
 
@@ -200,7 +200,7 @@ export class PgInfoService {
     const parseWithRetry = (queryText: string, retryId = 0) => {
       try {
         parsed = parse(queryText, { locationTracking: true });
-      } catch (error) {
+      } catch (error: any) {
         this.log.debug(() => ['parseWithRetry error:', error.message, error]);
 
         retryId += 1;
