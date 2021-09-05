@@ -127,7 +127,9 @@ export class Config implements DeepReadonly<PluginConfig> {
             this.log?.info('PGPORT environment variable is not set. will default to `5432`');
             pgConfig.PGPORT = '5432';
           }
-          pgUri = `postgresql://${pgConfig.PGUSER}:${pgConfig.PGPASSWORD}@${pgConfig.PGHOST}:${pgConfig.PGPORT}/${pgConfig.PGDATABASE}`;
+          pgUri =
+            `postgresql://${pgConfig.PGUSER}:${encodeURIComponent(pgConfig.PGPASSWORD)}@` +
+            `${pgConfig.PGHOST}:${pgConfig.PGPORT}/${pgConfig.PGDATABASE}`;
         }
       }
     }
