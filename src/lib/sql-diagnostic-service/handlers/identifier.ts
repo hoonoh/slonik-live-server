@@ -182,6 +182,19 @@ export class IdentifierHandler {
     ) {
       IdentifierHandler.debugHandled('prefix unary expression');
       values.push({ value: 'true' });
+    } else if (
+      //
+      // template expression
+      //
+      initializer &&
+      ts.isTemplateExpression(initializer)
+    ) {
+      IdentifierHandler.debugHandled('template expression');
+      skipAtPosition.push(initializer.pos);
+      values.push({
+        isString: true,
+        value: joinTextBlocksAndValues(SqlTemplteLiteralHandler.handle(typeChecker, initializer)),
+      });
     } /* istanbul ignore else */ else if (
       //
       // fallback
