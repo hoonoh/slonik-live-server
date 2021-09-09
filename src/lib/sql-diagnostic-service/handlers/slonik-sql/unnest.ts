@@ -12,6 +12,18 @@ export class SlonikSqlUnnestHandler {
         arg.elements.forEach(e => {
           /* istanbul ignore else */
           if (ts.isStringLiteral(e)) types.push(e.text);
+          else if (ts.isArrayLiteralExpression(e)) {
+            const identifiers: string[] = [];
+            const getTextValues = (n: ts.Node) => {
+              if (n.getChildCount() > 0) {
+                n.forEachChild(c => getTextValues(c));
+              } else if (ts.isStringLiteral(n)) {
+                identifiers.push(n.text);
+              }
+            };
+            getTextValues(e);
+            if (identifiers.length) types.push(`"${identifiers.join(`"."`)}"`);
+          }
         });
       }
     });
