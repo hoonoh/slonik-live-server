@@ -28,6 +28,7 @@ export class SqlTemplteLiteralHandler {
       `[node info]`,
       `kind:`,
       traceKind(node.kind),
+      `(${node.kind})`,
       `text:`,
       `>>>${node.getText()}<<<`,
     ]);
