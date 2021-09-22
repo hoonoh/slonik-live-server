@@ -85,7 +85,7 @@ describe('type-by-flag handler', () => {
 
     it('should return number', () => {
       expect(values.length).toEqual(1);
-      expect(values[0]).toEqual({ value: 'a498110c' } as Value);
+      expect(values[0]).toEqual({ value: '8408' } as Value);
     });
   });
 
