@@ -32,8 +32,8 @@ export class LanguageServiceLogger implements Logger {
 
   private static logger: ts.server.Logger | undefined;
 
-  constructor(private readonly createInfo?: ts.server.PluginCreateInfo) {
-    this.logger = this.createInfo?.project.projectService.logger;
+  constructor(readonly targetLogger?: ts.server.Logger) {
+    this.logger = targetLogger;
     if (process.env.NODE_ENV === 'dev') {
       this.logger = {
         close: () => {},

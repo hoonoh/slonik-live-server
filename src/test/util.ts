@@ -14,7 +14,7 @@ export type File = {
   text: string;
 };
 
-export const mockService = (files: Readonly<File[]>) => {
+export const mockService = (files: Readonly<File[]>, debug?: boolean) => {
   const host: ts.LanguageServiceHost = {
     getCompilationSettings: () => ({
       // add node.js typing lib
@@ -46,7 +46,37 @@ export const mockService = (files: Readonly<File[]>) => {
 
   const languageService = ts.createLanguageService(host);
 
-  const log = new LanguageServiceLogger();
+  const logger: ts.server.Logger = {
+    close: function (): void {
+      //
+    },
+    hasLevel: function (): boolean {
+      return true;
+    },
+    loggingEnabled: function (): boolean {
+      return true;
+    },
+    perftrc: function (s: string): void {
+      console.log(s);
+    },
+    info: function (s: string): void {
+      console.log(s);
+    },
+    startGroup: function (): void {
+      console.group();
+    },
+    endGroup: function (): void {
+      console.groupEnd();
+    },
+    msg: function (s: string, type?: ts.server.Msg): void {
+      console.log(`[${type}] ${s}`);
+    },
+    getLogFileName: function (): string | undefined {
+      return undefined;
+    },
+  };
+
+  const log = new LanguageServiceLogger(debug ? logger : undefined);
   const config = new Config();
   config.load({
     pg: {
