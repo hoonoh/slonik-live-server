@@ -14,7 +14,13 @@ import { getErrorPosition } from './util/error-position';
 import { joinTextBlocksAndValues } from './util/textblock-value-join';
 
 export class SqlDiagnosticService {
-  private readonly handleQuerriesStartingWith = ['select', 'update', 'delete', 'insert into'];
+  private readonly handleQuerriesStartingWith = [
+    'select',
+    'update',
+    'delete',
+    'insert into',
+    'with',
+  ];
 
   constructor(
     private config: Config,
