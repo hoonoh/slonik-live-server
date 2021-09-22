@@ -50,6 +50,27 @@ describe('identifier handler', () => {
     });
   });
 
+  describe('should handle nested template expression', () => {
+    const expected = `select 'foo_bar_baz'`;
+
+    const results = getDiagnosticFromSourceText(`
+      import { sql } from 'slonik';
+      const bar = 'bar';
+      const baz = 'baz';
+      const foo = \`foo_\${bar}_\${baz}\`;
+      sql\`select \${foo}\`;
+    `);
+
+    it('check results count', () => {
+      expect(results.length).toEqual(1);
+    });
+
+    it.each(results)(`returns \`${expected}\``, (title: string, diagnostic: ts.Diagnostic) => {
+      expect(diagnostic.messageText.toString()).toContain(expected);
+      expect(diagnostic.category).toEqual(ts.DiagnosticCategory.Suggestion);
+    });
+  });
+
   describe('should handle call expression from', () => {
     const expected = `select 'a498110c'`;
 
