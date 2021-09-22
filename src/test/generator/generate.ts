@@ -3,8 +3,10 @@ import { resolve } from 'path';
 
 import { getFiles, getTestTargets, mockService } from '../util';
 
+const debug = process.env.DEBUG === 'true';
+
 const files = getFiles([resolve(__dirname, './target-src.ts')]);
-const { languageService, sqlDiagnosticService } = mockService(files);
+const { languageService, sqlDiagnosticService } = mockService(files, debug);
 const testTargets = getTestTargets(languageService, sqlDiagnosticService, files);
 
 testTargets.forEach(target => {

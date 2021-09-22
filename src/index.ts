@@ -25,7 +25,7 @@ class TsSlonikPlugin {
       return info.languageService;
     }
 
-    this.log = new LanguageServiceLogger(info);
+    this.log = new LanguageServiceLogger(info.project.projectService.logger);
     this.config = new Config(info, this.log);
     LanguageServiceLogger.debugEnabled(this.config.debug);
 

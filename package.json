@@ -36,6 +36,7 @@
     "test:db:down": "docker stop ts-slonik-plugin",
     "test:pre": "yarn test:db:up && yarn test:db:wait && yarn test:db:migrate:up",
     "test:generate": "nodemon -w ./src/test/generator/target-src.ts -x \"ts-node -T ./src/test/generator/generate.ts\"",
+    "test:generate:debug": "nodemon -w ./src/test/generator/target-src.ts -x \"DEBUG=true ts-node -T ./src/test/generator/generate.ts\"",
     "test": "jest",
     "test:post": "yarn test:db:down",
     "test:ci": "yarn test:pre && yarn test && yarn test:post",
