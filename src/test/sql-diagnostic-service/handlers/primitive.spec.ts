@@ -97,6 +97,28 @@ describe('primitive handler', () => {
     });
   });
 
+  describe('should handle union types', () => {
+    const expected = `select 'aa26ca00'`;
+
+    const results = getDiagnosticFromSourceText(`
+      import { sql } from 'slonik';
+      (() => {
+        let foo: string | undefined;
+        if (!foo) return;
+        sql\`select \${foo}\`;
+      })();
+    `);
+
+    it('check results count', () => {
+      expect(results.length).toEqual(1);
+    });
+
+    it.each(results)(`returns \`${expected}\``, (title: string, diagnostic: ts.Diagnostic) => {
+      expect(diagnostic.category).toEqual(ts.DiagnosticCategory.Suggestion);
+      expect(diagnostic.messageText.toString()).toContain(expected);
+    });
+  });
+
   describe('should handle number keyword', () => {
     const expected = `select 6220`;
 
