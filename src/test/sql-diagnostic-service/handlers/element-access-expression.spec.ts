@@ -27,4 +27,39 @@ describe('element-access-expression handler', () => {
       expect(diagnostic.messageText.toString()).toContain(expected);
     });
   });
+
+  describe('should handle template expression array partially', () => {
+    const expected = `select 1 where true `;
+
+    const results = getDiagnosticFromSourceText(`
+      import { sql } from 'slonik';
+      const foo = [sql\`where true\`];
+      foo.push(sql\`and 1 = 1\`);
+      sql\`select 1 \${foo[0]} \${foo[1]}\`;
+    `);
+
+    it('check results count', () => {
+      expect(results.length).toEqual(3);
+    });
+
+    it.each(results)(
+      `returns \`${expected}\``,
+      (title: string, diagnostic: ts.Diagnostic, idx: number) => {
+        if (idx === 0) {
+          expect(diagnostic.messageText.toString()).toContain(
+            'fragment starting with `where` are not diagnosed',
+          );
+          expect(diagnostic.category).toEqual(ts.DiagnosticCategory.Suggestion);
+        } else if (idx === 1) {
+          expect(diagnostic.messageText.toString()).toContain(
+            'fragment starting with `and` are not diagnosed',
+          );
+          expect(diagnostic.category).toEqual(ts.DiagnosticCategory.Suggestion);
+        } else if (idx === 2) {
+          expect(diagnostic.messageText.toString()).toContain(expected);
+          expect(diagnostic.category).toEqual(ts.DiagnosticCategory.Suggestion);
+        }
+      },
+    );
+  });
 });

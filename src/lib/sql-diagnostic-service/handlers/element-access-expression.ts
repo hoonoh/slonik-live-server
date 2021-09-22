@@ -3,7 +3,9 @@ import ts from 'typescript/lib/tsserverlibrary';
 import { LanguageServiceLogger } from '../../logger';
 import { Value } from '../types';
 import { skipSiblings } from '../util/skip-siblings';
+import { joinTextBlocksAndValues } from '../util/textblock-value-join';
 import { PrimitiveHandler } from './primitive';
+import { SqlTemplteLiteralHandler } from './sql-template-literal';
 import { TypeByFlagHandler } from './type-by-flag';
 
 export class ElementAccessExpressionHandler {
@@ -32,12 +34,28 @@ export class ElementAccessExpressionHandler {
     ) {
       const idx = parseInt(node.argumentExpression.text, 10);
       const arrayValueNode = symbol.valueDeclaration.initializer.elements[idx];
-      if (ts.isStringLiteral(arrayValueNode)) {
-        values.push({ value: arrayValueNode.text, isString: isRaw ? undefined : true });
-      } else if (ts.isNumericLiteral(arrayValueNode)) {
-        values.push({ value: arrayValueNode.text });
-      } else {
-        PrimitiveHandler.handle(arrayValueNode, values);
+      if (arrayValueNode) {
+        if (
+          ts.isTaggedTemplateExpression(arrayValueNode) &&
+          arrayValueNode.tag.getText() === 'sql'
+        ) {
+          if (ts.isTemplateExpression(arrayValueNode.template)) {
+            values.push({
+              value: joinTextBlocksAndValues(
+                SqlTemplteLiteralHandler.handle(typeChecker, arrayValueNode.template),
+              ),
+            });
+          } else if (ts.isNoSubstitutionTemplateLiteral(arrayValueNode.template)) {
+            values.push({ value: arrayValueNode.template.text });
+          }
+          //
+        } else if (ts.isStringLiteral(arrayValueNode)) {
+          values.push({ value: arrayValueNode.text, isString: isRaw ? undefined : true });
+        } else if (ts.isNumericLiteral(arrayValueNode)) {
+          values.push({ value: arrayValueNode.text });
+        } else {
+          PrimitiveHandler.handle(arrayValueNode, values);
+        }
       }
       skipSiblings(node, skipAtPosition);
       handled = true;
