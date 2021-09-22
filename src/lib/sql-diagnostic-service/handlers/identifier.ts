@@ -194,7 +194,10 @@ export class IdentifierHandler {
       skipAtPosition.push(initializer.pos);
       values.push({
         isString: true,
-        value: joinTextBlocksAndValues(SqlTemplteLiteralHandler.handle(typeChecker, initializer)),
+        value: joinTextBlocksAndValues(
+          SqlTemplteLiteralHandler.handle(typeChecker, initializer),
+          true,
+        ),
       });
     } else if (
       //

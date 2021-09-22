@@ -2,6 +2,7 @@ import { SqlInfo } from '../types';
 
 export const joinTextBlocksAndValues = (
   info: Pick<SqlInfo, 'textBlocks' | 'values' | 'nodeText'>,
+  noQuotes = false,
 ) => {
   if (info.textBlocks.length > 0 && info.textBlocks.length - 1 !== info.values.length) {
     const escapeAndJoin = (str: string[]) =>
@@ -16,6 +17,8 @@ export const joinTextBlocksAndValues = (
   return info.textBlocks.reduce((rtn, text, idx) => {
     const isTableName = text.match(/(from|into|update|join)[\s\n\r]+?$/i);
     const value = info.values[idx] || { value: '' };
-    return `${rtn}${text}${!isTableName && value.isString ? `'${value.value}'` : value.value}`;
+    return `${rtn}${text}${
+      !noQuotes && !isTableName && value.isString ? `'${value.value}'` : value.value
+    }`;
   }, '');
 };
