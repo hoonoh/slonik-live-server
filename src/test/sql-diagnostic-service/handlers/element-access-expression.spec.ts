@@ -27,4 +27,24 @@ describe('element-access-expression handler', () => {
       expect(diagnostic.messageText.toString()).toContain(expected);
     });
   });
+
+  describe('should handle template expression array partially', () => {
+    const expected = `select 1 where true `;
+
+    const results = getDiagnosticFromSourceText(`
+      import { sql } from 'slonik';
+      const foo = [sql\`where true\`];
+      foo.push(sql\`and 1 = 1\`);
+      sql\`select 1 \${foo[0]} \${foo[1]}\`;
+    `);
+
+    it('check results count', () => {
+      expect(results.length).toEqual(1);
+    });
+
+    it.each(results)(`returns \`${expected}\``, (title: string, diagnostic: ts.Diagnostic) => {
+      expect(diagnostic.category).toEqual(ts.DiagnosticCategory.Suggestion);
+      expect(diagnostic.messageText.toString()).toContain(expected);
+    });
+  });
 });
