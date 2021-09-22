@@ -8,6 +8,7 @@ import { joinTextBlocksAndValues } from '../util/textblock-value-join';
 import { BinaryExpressionHandler } from './binary-expression';
 import { BindingElementHandler } from './binding-element';
 import { CallExpressionHandler } from './call-expression';
+import { ElementAccessExpressionHandler } from './element-access-expression';
 import { KindHandler } from './kind';
 import { LiteralHandler } from './literal';
 import { PrimitiveHandler } from './primitive';
@@ -195,6 +196,21 @@ export class IdentifierHandler {
         isString: true,
         value: joinTextBlocksAndValues(SqlTemplteLiteralHandler.handle(typeChecker, initializer)),
       });
+    } else if (
+      //
+      // element access expression
+      //
+      initializer &&
+      ts.isElementAccessExpression(initializer)
+    ) {
+      IdentifierHandler.debugHandled('element access expression');
+      ElementAccessExpressionHandler.handle(
+        typeChecker,
+        initializer,
+        values,
+        skipAtPosition,
+        isRaw,
+      );
     } /* istanbul ignore else */ else if (
       //
       // fallback
