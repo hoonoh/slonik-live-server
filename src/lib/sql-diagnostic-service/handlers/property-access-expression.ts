@@ -5,6 +5,7 @@ import { Value } from '../types';
 import { EnumMemberHandler } from './enum-member';
 import { KindHandler } from './kind';
 import { LiteralHandler } from './literal';
+import { PropertySignatureHandler } from './property-signature';
 import { TypeByFlagHandler } from './type-by-flag';
 
 export class PropertyAccessExpressionHandler {
@@ -18,27 +19,8 @@ export class PropertyAccessExpressionHandler {
   ) {
     const symbol = typeChecker.getSymbolAtLocation(node);
     if (symbol?.valueDeclaration && ts.isPropertySignature(symbol.valueDeclaration)) {
-      if (
-        //
-        // property signature union / intersection type
-        //
-        symbol.valueDeclaration.type &&
-        (ts.isUnionTypeNode(symbol.valueDeclaration.type) ||
-          ts.isIntersectionTypeNode(symbol.valueDeclaration.type)) &&
-        symbol.valueDeclaration.type.types.length
-      ) {
-        // choose left most type
-        PropertyAccessExpressionHandler.debugHandled('property signature union / intersection');
-        const t = typeChecker.getTypeAtLocation(symbol.valueDeclaration.type.types[0]);
-        TypeByFlagHandler.handle(t, values, isRaw);
-      } /* istanbul ignore else */ else if (symbol.valueDeclaration.type) {
-        //
-        // property signature type
-        //
-        PropertyAccessExpressionHandler.debugHandled('property signature type');
-        const t = typeChecker.getTypeAtLocation(symbol.valueDeclaration.type);
-        TypeByFlagHandler.handle(t, values, isRaw);
-      }
+      PropertyAccessExpressionHandler.debugHandled('property signature');
+      PropertySignatureHandler.handle(typeChecker, symbol.valueDeclaration, values, isRaw);
     } else if (
       symbol?.valueDeclaration &&
       (ts.isPropertyDeclaration(symbol.valueDeclaration) ||
@@ -80,6 +62,15 @@ export class PropertyAccessExpressionHandler {
       PropertyAccessExpressionHandler.debugHandled('value declaration type');
       const t = typeChecker.getTypeAtLocation(symbol.valueDeclaration.type);
       TypeByFlagHandler.handle(t, values, isRaw);
+    } else if (symbol?.declarations) {
+      PropertyAccessExpressionHandler.debugHandled('symbol declarations');
+      const subValues: Value[] = [];
+      symbol.declarations.forEach(dec => {
+        if (subValues.length === 0 && ts.isPropertySignature(dec)) {
+          PropertySignatureHandler.handle(typeChecker, dec, subValues, isRaw);
+        }
+      });
+      if (subValues.length) values.push(...subValues);
     }
   }
 }
