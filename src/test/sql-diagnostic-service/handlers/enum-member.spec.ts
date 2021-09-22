@@ -28,7 +28,7 @@ describe('enum-member handler', () => {
   });
 
   describe('should handle enum member with fallback', () => {
-    const expected = `select * from (values('foo')) as t(foo) where foo = 'a'`;
+    const expected = `select * from (values('foo')) as t(foo) where foo = 'aadae394'`;
 
     const results = getDiagnosticFromSourceText(`
       import { sql } from 'slonik';

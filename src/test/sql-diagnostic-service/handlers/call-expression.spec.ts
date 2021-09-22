@@ -25,7 +25,7 @@ describe('call-expression handler', () => {
   });
 
   describe('should handle call expression', () => {
-    const expected = `select 'a'`;
+    const expected = `select 'a498110c'`;
 
     const results = getDiagnosticFromSourceText(`
       import { sql } from 'slonik';
@@ -64,7 +64,7 @@ describe('call-expression handler', () => {
   });
 
   describe('should handle method signature', () => {
-    const expected = `select * from (values('bar')) as t(foo) where foo = 'a'`;
+    const expected = `select * from (values('bar')) as t(foo) where foo = 'a498110c'`;
 
     const results = getDiagnosticFromSourceText(`
       import { sql } from 'slonik';

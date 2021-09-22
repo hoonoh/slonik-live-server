@@ -1,6 +1,7 @@
 import ts from 'typescript/lib/tsserverlibrary';
 
 import { LanguageServiceLogger } from '../../logger';
+import { generatePlaceholder } from '../../util';
 import { Value } from '../types';
 
 export class KindHandler {
@@ -9,10 +10,10 @@ export class KindHandler {
   static handle(kind: ts.SyntaxKind, values: Value[], isRaw = false) {
     if (kind === ts.SyntaxKind.NumberKeyword) {
       KindHandler.debugHandled('number');
-      values.push({ value: '1' });
+      values.push({ value: generatePlaceholder(values, undefined, true) });
     } else if (kind === ts.SyntaxKind.StringKeyword) {
       KindHandler.debugHandled('string');
-      values.push({ value: 'a', isString: isRaw ? undefined : true });
+      values.push({ value: generatePlaceholder(values), isString: isRaw ? undefined : true });
     } else if (kind === ts.SyntaxKind.TrueKeyword || kind === ts.SyntaxKind.BooleanKeyword) {
       KindHandler.debugHandled('true');
       values.push({ value: 'true' });

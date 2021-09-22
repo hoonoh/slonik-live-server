@@ -1,6 +1,7 @@
 import ts from 'typescript/lib/tsserverlibrary';
 
 import { LanguageServiceLogger } from '../../logger';
+import { generatePlaceholder } from '../../util';
 import { Value } from '../types';
 
 export class TypeByFlagHandler {
@@ -38,28 +39,28 @@ export class TypeByFlagHandler {
       }
     } else if (type.isStringLiteral()) {
       TypeByFlagHandler.debugHandled('string literal');
-      values.push({ value: type.value, isString: isRaw ? undefined : true } as Value);
+      values.push({ value: type.value, isString: isRaw ? undefined : true });
     } else if (type.isLiteral()) {
       TypeByFlagHandler.debugHandled('literal');
-      values.push({ value: type.value } as Value);
+      values.push({ value: typeof type.value === 'string' ? type.value : type.value.toString() });
     } else {
       const flagNames = TypeByFlagHandler.getFlagNames(type);
 
       if (flagNames.includes('String')) {
         TypeByFlagHandler.debugHandled('string');
-        values.push({ value: 'a', isString: isRaw ? undefined : true } as Value);
+        values.push({ value: generatePlaceholder(values), isString: isRaw ? undefined : true });
       } else if (flagNames.includes('Number')) {
         TypeByFlagHandler.debugHandled('number');
-        values.push({ value: '1' } as Value);
+        values.push({ value: generatePlaceholder(values) });
       } else if (flagNames.includes('Boolean')) {
         TypeByFlagHandler.debugHandled('boolean');
-        values.push({ value: 'true' } as Value);
+        values.push({ value: 'true' });
       } /* istanbul ignore else */ else if (
         flagNames.includes('Null') ||
         flagNames.includes('Undefined')
       ) {
         TypeByFlagHandler.debugHandled('null or undefined');
-        values.push({ value: 'null' } as Value);
+        values.push({ value: 'null' });
       }
     }
   }

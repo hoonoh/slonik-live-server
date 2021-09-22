@@ -253,7 +253,7 @@ describe('sql.json', () => {
   });
 
   describe('should handle value from call expression', () => {
-    const expected = `select * from (values('{"foo":"a"}'::jsonb)) as t(foo)`;
+    const expected = `select * from (values('{"foo":"a498110c\"}'::jsonb)) as t(foo)`;
 
     const results = getDiagnosticFromSourceText(`
       import { sql } from 'slonik';
@@ -272,7 +272,7 @@ describe('sql.json', () => {
   });
 
   describe('should handle value from property access expression', () => {
-    const expected = `select * from (values('{"foo":"a","barBaz":"baz"}'::jsonb)) as t(foo)`;
+    const expected = `select * from (values('{"foo":"a498110c","barBaz":"baz"}'::jsonb)) as t(foo)`;
 
     const results = getDiagnosticFromSourceText(`
       import { sql } from 'slonik';

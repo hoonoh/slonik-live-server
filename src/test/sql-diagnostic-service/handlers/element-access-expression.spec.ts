@@ -4,7 +4,7 @@ import { getDiagnosticFromSourceText } from '../../util';
 
 describe('element-access-expression handler', () => {
   describe('should handle element access expression from arrays', () => {
-    const expected = `select 'a'`;
+    const expected = `select 'a498110c'`;
 
     const results = getDiagnosticFromSourceText(`
       import { sql } from 'slonik';

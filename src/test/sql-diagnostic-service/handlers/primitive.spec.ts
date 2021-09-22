@@ -41,7 +41,7 @@ describe('primitive handler', () => {
   });
 
   describe('should handle string keyword', () => {
-    const expected = `select 'a'`;
+    const expected = `select 'ad4577b0'`;
 
     const results = getDiagnosticFromSourceText(`
       import { sql } from 'slonik';
@@ -60,13 +60,13 @@ describe('primitive handler', () => {
   });
 
   describe('should handle string keyword as raw', () => {
-    const expected = `select a from (values('foo')) as t(a) where a = 'foo'`;
+    const expected = `select a8c00b1a from (values('foo')) as t(a8c00b1a) where a8c00b1a = 'foo'`;
 
     const results = getDiagnosticFromSourceText(`
       import { sql } from 'slonik';
       import { raw } from 'slonik-sql-tag-raw';
       const foo: string;
-      sql\`select a from (values('foo')) as t(a) where \${raw(foo)} = 'foo'\`;
+      sql\`select a8c00b1a from (values('foo')) as t(a8c00b1a) where \${raw(foo)} = 'foo'\`;
     `);
 
     it('check results count', () => {
@@ -98,7 +98,7 @@ describe('primitive handler', () => {
   });
 
   describe('should handle number keyword', () => {
-    const expected = `select 1`;
+    const expected = `select 6220`;
 
     const results = getDiagnosticFromSourceText(`
       import { sql } from 'slonik';

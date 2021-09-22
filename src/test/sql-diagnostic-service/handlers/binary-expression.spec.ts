@@ -73,7 +73,7 @@ describe('binary-expression handler', () => {
   });
 
   describe('should handle by type', () => {
-    const expected = `select * from (values('bar')) as t(bar) where bar = 'a'`;
+    const expected = `select * from (values('bar')) as t(bar) where bar = 'a498110c'`;
 
     const results = getDiagnosticFromSourceText(`
       import { sql } from 'slonik';
