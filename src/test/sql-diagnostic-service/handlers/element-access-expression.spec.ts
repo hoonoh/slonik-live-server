@@ -39,12 +39,27 @@ describe('element-access-expression handler', () => {
     `);
 
     it('check results count', () => {
-      expect(results.length).toEqual(1);
+      expect(results.length).toEqual(3);
     });
 
-    it.each(results)(`returns \`${expected}\``, (title: string, diagnostic: ts.Diagnostic) => {
-      expect(diagnostic.category).toEqual(ts.DiagnosticCategory.Suggestion);
-      expect(diagnostic.messageText.toString()).toContain(expected);
-    });
+    it.each(results)(
+      `returns \`${expected}\``,
+      (title: string, diagnostic: ts.Diagnostic, idx: number) => {
+        if (idx === 0) {
+          expect(diagnostic.messageText.toString()).toContain(
+            'fragment starting with `where` are not diagnosed',
+          );
+          expect(diagnostic.category).toEqual(ts.DiagnosticCategory.Suggestion);
+        } else if (idx === 1) {
+          expect(diagnostic.messageText.toString()).toContain(
+            'fragment starting with `and` are not diagnosed',
+          );
+          expect(diagnostic.category).toEqual(ts.DiagnosticCategory.Suggestion);
+        } else if (idx === 2) {
+          expect(diagnostic.messageText.toString()).toContain(expected);
+          expect(diagnostic.category).toEqual(ts.DiagnosticCategory.Suggestion);
+        }
+      },
+    );
   });
 });
