@@ -98,7 +98,7 @@ describe('primitive handler', () => {
   });
 
   describe('should handle union types', () => {
-    const expected = `select 'aa26ca00'`;
+    const expected = `select 'a2a0e01b'`;
 
     const results = getDiagnosticFromSourceText(`
       import { sql } from 'slonik';
