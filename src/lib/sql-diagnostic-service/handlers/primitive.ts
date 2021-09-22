@@ -1,6 +1,7 @@
 /* eslint-disable class-methods-use-this */
 import ts from 'typescript/lib/tsserverlibrary';
 
+import { generatePlaceholder } from '../../util';
 import { Value } from '../types';
 
 export class PrimitiveHandler {
@@ -10,9 +11,9 @@ export class PrimitiveHandler {
     } else if (ts.isNumericLiteral(node)) {
       values.push({ value: node.text });
     } else if (node.kind === ts.SyntaxKind.StringKeyword) {
-      values.push({ value: 'a', isString: isRaw ? undefined : true });
+      values.push({ value: generatePlaceholder(values, node), isString: isRaw ? undefined : true });
     } else if (node.kind === ts.SyntaxKind.NumberKeyword) {
-      values.push({ value: '1' });
+      values.push({ value: generatePlaceholder(values, node, true) });
     } else if (node.kind === ts.SyntaxKind.UndefinedKeyword) {
       values.push({ value: 'null' });
     } /* istanbul ignore else */ else if (

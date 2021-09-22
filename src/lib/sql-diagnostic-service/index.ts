@@ -235,10 +235,16 @@ export class SqlDiagnosticService {
       }
       if (pgError?.message.includes('invalid input syntax for type uuid')) {
         // retry for uuid type error
+        const replaceTarg = pgError.message.match(
+          /invalid input syntax for type uuid: \"(.+)\"/,
+        )?.[1];
+        const replaceRegex = replaceTarg ? new RegExp(replaceTarg, 'g') : undefined;
         pgError = undefined;
-        explain = explain.replace(/'a'/g, `'00000000-0000-0000-0000-000000000000'`);
-        raw = raw.replace(/'a'/g, `'00000000-0000-0000-0000-000000000000'`);
-        queryWithRetry();
+        if (replaceRegex) {
+          explain = explain.replace(replaceRegex, `00000000-0000-0000-0000-000000000000`);
+          raw = raw.replace(replaceRegex, `00000000-0000-0000-0000-000000000000`);
+          queryWithRetry();
+        }
       }
     };
     queryWithRetry();

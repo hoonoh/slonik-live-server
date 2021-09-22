@@ -27,7 +27,7 @@ describe('function handler', () => {
   });
 
   describe('should handle function from method signature', () => {
-    const expected = `select * from (values('bar')) as t(foo) where foo = 'a'`;
+    const expected = `select * from (values('bar')) as t(foo) where foo = 'a498110c'`;
 
     const results = getDiagnosticFromSourceText(`
       import { sql } from 'slonik';
@@ -99,7 +99,7 @@ describe('function handler', () => {
   });
 
   describe('should handle handle function by method return body as template expression', () => {
-    const expected = `select 'a'`;
+    const expected = `select 'a79dc8d4'`;
 
     const results = getDiagnosticFromSourceText(`
       import { sql } from 'slonik';
@@ -118,13 +118,13 @@ describe('function handler', () => {
   });
 
   describe('should handle handle function by method return body as template expression (raw)', () => {
-    const expected = `select * from (values('bar')) as t(a) where a = 'bar'`;
+    const expected = `select * from (values('bar')) as t(af5afdc8) where af5afdc8 = 'bar'`;
 
     const results = getDiagnosticFromSourceText(`
       import { sql } from 'slonik';
       import { raw } from 'slonik-sql-tag-raw';
       const foo = () => \`\${'foo'}\`;
-      sql\`select * from (values('bar')) as t(a) where \${raw(foo())} = 'bar'\`;
+      sql\`select * from (values('bar')) as t(af5afdc8) where \${raw(foo())} = 'bar'\`;
     `);
 
     it('check results count', () => {

@@ -63,7 +63,7 @@ describe('type-by-flag handler', () => {
 
     it('should return string value', () => {
       expect(values.length).toEqual(1);
-      expect(values[0]).toEqual({ value: 'a', isString: true } as Value);
+      expect(values[0]).toEqual({ value: 'a498110c', isString: true } as Value);
     });
   });
 
@@ -74,7 +74,7 @@ describe('type-by-flag handler', () => {
 
     it('should return string value', () => {
       expect(values.length).toEqual(1);
-      expect(values[0]).toEqual({ value: 'a' } as Value);
+      expect(values[0]).toEqual({ value: 'a498110c' } as Value);
     });
   });
 
@@ -85,7 +85,7 @@ describe('type-by-flag handler', () => {
 
     it('should return number', () => {
       expect(values.length).toEqual(1);
-      expect(values[0]).toEqual({ value: '1' } as Value);
+      expect(values[0]).toEqual({ value: 'a498110c' } as Value);
     });
   });
 

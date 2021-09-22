@@ -51,7 +51,7 @@ describe('identifier handler', () => {
   });
 
   describe('should handle call expression from', () => {
-    const expected = `select 'a'`;
+    const expected = `select 'a498110c'`;
 
     const results = getDiagnosticFromSourceText(`
       import { sql } from 'slonik';
@@ -179,7 +179,7 @@ describe('identifier handler', () => {
   });
 
   describe('should handle from value type', () => {
-    const expected = `select 'a'`;
+    const expected = `select 'ad4577b0'`;
 
     const results = getDiagnosticFromSourceText(`
       import { sql } from 'slonik';
@@ -332,7 +332,7 @@ describe('identifier handler', () => {
   });
 
   describe('should handle from parameter', () => {
-    const expected = `select 'a'`;
+    const expected = `select 'a498110c'`;
 
     const results = getDiagnosticFromSourceText(`
       import { sql } from 'slonik';
@@ -368,7 +368,7 @@ describe('identifier handler', () => {
   });
 
   describe('should handle parameter type', () => {
-    const expected = `select 'a'`;
+    const expected = `select 'a498110c'`;
 
     const results = getDiagnosticFromSourceText(`
       import { sql } from 'slonik';

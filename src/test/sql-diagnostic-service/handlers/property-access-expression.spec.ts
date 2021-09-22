@@ -27,7 +27,7 @@ describe('property-access-expression handler', () => {
   });
 
   describe('should handle by value declaration type', () => {
-    const expected = `select foo from (values('foo')) as t(foo) where foo = 'a'`;
+    const expected = `select foo from (values('foo')) as t(foo) where foo = 'a498110c'`;
 
     const results = getDiagnosticFromSourceText(`
       import { sql } from 'slonik';
@@ -69,7 +69,7 @@ describe('property-access-expression handler', () => {
   });
 
   describe('should handle property signature union', () => {
-    const expected = `select foo from (values('foo')) as t(foo) where foo = 'a'`;
+    const expected = `select foo from (values('foo')) as t(foo) where foo = 'a498110c'`;
 
     const results = getDiagnosticFromSourceText(`
       import { sql } from 'slonik';
@@ -91,7 +91,7 @@ describe('property-access-expression handler', () => {
   });
 
   describe('should handle property signature intersection', () => {
-    const expected = `select foo from (values('foo')) as t(foo) where foo = 'a'`;
+    const expected = `select foo from (values('foo')) as t(foo) where foo = 'a498110c'`;
 
     const results = getDiagnosticFromSourceText(`
       import { sql } from 'slonik';
@@ -113,7 +113,7 @@ describe('property-access-expression handler', () => {
   });
 
   describe('should handle property signature type', () => {
-    const expected = `select foo from (values('foo')) as t(foo) where foo = 'a'`;
+    const expected = `select foo from (values('foo')) as t(foo) where foo = 'a498110c'`;
 
     const results = getDiagnosticFromSourceText(`
       import { sql } from 'slonik';

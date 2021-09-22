@@ -28,7 +28,7 @@ describe('binding-element handler', () => {
   });
 
   describe('should handle enum member', () => {
-    const expected = `select * from (values('foo')) as t(foo) where foo = 'a'`;
+    const expected = `select * from (values('foo')) as t(foo) where foo = 'a498110c'`;
 
     const results = getDiagnosticFromSourceText(`
       import { sql } from 'slonik';

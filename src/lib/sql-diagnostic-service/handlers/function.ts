@@ -1,6 +1,7 @@
 import ts from 'typescript/lib/tsserverlibrary';
 
 import { LanguageServiceLogger } from '../../logger';
+import { generatePlaceholder } from '../../util';
 import { Value } from '../types';
 import { KindHandler } from './kind';
 import { PrimitiveHandler } from './primitive';
@@ -73,7 +74,10 @@ export class FunctionHandler {
         ts.isTemplateExpression(body)
       ) {
         FunctionHandler.debugHandled('template expression');
-        values.push({ value: 'a', isString: isRaw ? undefined : true });
+        values.push({
+          value: generatePlaceholder(values, declaration),
+          isString: isRaw ? undefined : true,
+        });
       } else {
         //
         // primitive value
