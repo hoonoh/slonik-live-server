@@ -8,13 +8,13 @@ import { joinTextBlocksAndValues } from '../util/textblock-value-join';
 // eslint-disable-next-line import/no-cycle
 import { BinaryExpressionHandler } from './binary-expression';
 import { CallExpressionHandler } from './call-expression';
+import { ElementAccessExpressionHandler } from './element-access-expression';
 // eslint-disable-next-line import/no-cycle
 import { IdentifierHandler } from './identifier';
 import { PrimitiveHandler } from './primitive';
 import { PropertyAccessExpressionHandler } from './property-access-expression';
 // eslint-disable-next-line import/no-cycle
 import { SqlTemplteLiteralHandler } from './sql-template-literal';
-import { TypeByFlagHandler } from './type-by-flag';
 
 export class TemplateSpanChildHandler {
   private static debugHandled = LanguageServiceLogger.handlerDebugger('template span child');
@@ -110,40 +110,7 @@ export class TemplateSpanChildHandler {
       ts.isIdentifier(node.expression)
     ) {
       TemplateSpanChildHandler.debugHandled('element access expression');
-      let handled = false;
-      const symbol = typeChecker.getSymbolAtLocation(node.expression);
-      /* istanbul ignore else */
-      if (
-        //
-        // array
-        //
-        symbol &&
-        symbol.valueDeclaration &&
-        ts.isVariableDeclaration(symbol.valueDeclaration) &&
-        symbol.valueDeclaration.initializer &&
-        ts.isArrayLiteralExpression(symbol.valueDeclaration.initializer) &&
-        ts.isNumericLiteral(node.argumentExpression)
-      ) {
-        const idx = parseInt(node.argumentExpression.text, 10);
-        const arrayValueNode = symbol.valueDeclaration.initializer.elements[idx];
-        if (ts.isStringLiteral(arrayValueNode)) {
-          values.push({ value: arrayValueNode.text, isString: isRaw ? undefined : true });
-        } else if (ts.isNumericLiteral(arrayValueNode)) {
-          values.push({ value: arrayValueNode.text });
-        } else {
-          PrimitiveHandler.handle(arrayValueNode, values);
-        }
-        skipSiblings(node, skipAtPosition);
-        handled = true;
-      }
-      if (!handled) {
-        //
-        // fallback to type value
-        //
-        const t = typeChecker.getTypeAtLocation(node);
-        TypeByFlagHandler.handle(t, values, isRaw);
-        skipSiblings(node, skipAtPosition);
-      }
+      ElementAccessExpressionHandler.handle(typeChecker, node, values, skipAtPosition, isRaw);
     } /* istanbul ignore else */ else if (
       //
       // conditional expression
