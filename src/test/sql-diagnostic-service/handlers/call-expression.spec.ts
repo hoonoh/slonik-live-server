@@ -103,4 +103,23 @@ describe('call-expression handler', () => {
       expect(diagnostic.messageText.toString()).toContain(expected);
     });
   });
+
+  describe('should handle type by flag', () => {
+    const expected = `select 8408`;
+
+    const results = getDiagnosticFromSourceText(`
+      import { sql } from 'slonik';
+      const foo = parseInt('123', 10);
+      sql\`select \${foo}\`;
+    `);
+
+    it('check results count', () => {
+      expect(results.length).toEqual(1);
+    });
+
+    it.each(results)(`returns \`${expected}\``, (title: string, diagnostic: ts.Diagnostic) => {
+      expect(diagnostic.messageText.toString()).toContain(expected);
+      expect(diagnostic.category).toEqual(ts.DiagnosticCategory.Suggestion);
+    });
+  });
 });

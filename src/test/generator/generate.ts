@@ -73,8 +73,8 @@ describe('should handle UPDATE_SUBJECT', () => { // ! UPDATE_SUBJECT
   });
 
   it.each(results)(\`returns \\\`\${expected}\\\`\`, (title: string, diagnostic: ts.Diagnostic) => {
-    expect(diagnostic.category).toEqual(ts.DiagnosticCategory.Suggestion);
     expect(diagnostic.messageText.toString()).toContain(expected);
+    expect(diagnostic.category).toEqual(ts.DiagnosticCategory.Suggestion);
     // ! ADDITIONAL_EXPECTS
   });
 });
