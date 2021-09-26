@@ -94,16 +94,29 @@ export class IdentifierHandler {
       valueDeclaration &&
       ts.isParameter(valueDeclaration)
     ) {
-      IdentifierHandler.debugHandled('parameter');
       if (
         valueDeclaration.type &&
         ts.isLiteralTypeNode(valueDeclaration.type) &&
         ts.isLiteralExpression(valueDeclaration.type.literal)
       ) {
+        IdentifierHandler.debugHandled('parameter as literal');
         LiteralHandler.handle(valueDeclaration.type.literal, values, isRaw);
       } else if (valueDeclaration.type) {
+        IdentifierHandler.debugHandled('parameter type by flag');
         const t = typeChecker.getTypeAtLocation(valueDeclaration.type);
         TypeByFlagHandler.handle(t, values, isRaw);
+      } else {
+        const type = typeChecker.getTypeAtLocation(valueDeclaration);
+        const subValues: Value[] = [];
+        if (TypeByFlagHandler.handlable(type)) {
+          IdentifierHandler.debugHandled('parameter as type by flag');
+          TypeByFlagHandler.handle(type, subValues, isRaw);
+          if (subValues.length) {
+            values.push(...subValues);
+          }
+        } else {
+          IdentifierHandler.debugHandled('parameter [unhandled]');
+        }
       }
     } else if (
       //

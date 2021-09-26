@@ -30,37 +30,44 @@ export class TypeByFlagHandler {
   }
 
   static handle(type: ts.Type, values: Value[], isRaw = false) {
+    let handled = false;
+
     if (type.isUnionOrIntersection()) {
       const handlableByTypeflag = type.types.find(t => TypeByFlagHandler.handlable(t));
       /* istanbul ignore else */
       if (handlableByTypeflag) {
+        handled = true;
         TypeByFlagHandler.debugHandled('union or intersection');
         TypeByFlagHandler.handle(handlableByTypeflag, values, isRaw);
       }
-    } else if (type.isStringLiteral()) {
-      TypeByFlagHandler.debugHandled('string literal');
-      values.push({ value: type.value, isString: isRaw ? undefined : true });
-    } else if (type.isLiteral()) {
-      TypeByFlagHandler.debugHandled('literal');
-      values.push({ value: typeof type.value === 'string' ? type.value : type.value.toString() });
-    } else {
-      const flagNames = TypeByFlagHandler.getFlagNames(type);
+    }
 
-      if (flagNames.includes('String')) {
-        TypeByFlagHandler.debugHandled('string');
-        values.push({ value: generatePlaceholder(values), isString: isRaw ? undefined : true });
-      } else if (flagNames.includes('Number')) {
-        TypeByFlagHandler.debugHandled('number');
-        values.push({ value: generatePlaceholder(values, undefined, true) });
-      } else if (flagNames.includes('Boolean')) {
-        TypeByFlagHandler.debugHandled('boolean');
-        values.push({ value: 'true' });
-      } /* istanbul ignore else */ else if (
-        flagNames.includes('Null') ||
-        flagNames.includes('Undefined')
-      ) {
-        TypeByFlagHandler.debugHandled('null or undefined');
-        values.push({ value: 'null' });
+    if (!handled) {
+      if (type.isStringLiteral()) {
+        TypeByFlagHandler.debugHandled('string literal');
+        values.push({ value: type.value, isString: isRaw ? undefined : true });
+      } else if (type.isLiteral()) {
+        TypeByFlagHandler.debugHandled('literal');
+        values.push({ value: typeof type.value === 'string' ? type.value : type.value.toString() });
+      } else {
+        const flagNames = TypeByFlagHandler.getFlagNames(type);
+
+        if (flagNames.includes('String')) {
+          TypeByFlagHandler.debugHandled('string');
+          values.push({ value: generatePlaceholder(values), isString: isRaw ? undefined : true });
+        } else if (flagNames.includes('Number')) {
+          TypeByFlagHandler.debugHandled('number');
+          values.push({ value: generatePlaceholder(values, undefined, true) });
+        } else if (flagNames.includes('Boolean')) {
+          TypeByFlagHandler.debugHandled('boolean');
+          values.push({ value: 'true' });
+        } /* istanbul ignore else */ else if (
+          flagNames.includes('Null') ||
+          flagNames.includes('Undefined')
+        ) {
+          TypeByFlagHandler.debugHandled('null or undefined');
+          values.push({ value: 'null' });
+        }
       }
     }
   }
