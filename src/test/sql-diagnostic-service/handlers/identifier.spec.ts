@@ -406,6 +406,26 @@ describe('identifier handler', () => {
     });
   });
 
+  describe('should handle parameter type as type by flag', () => {
+    const expected = `select true`;
+
+    const results = getDiagnosticFromSourceText(`
+      import { sql } from 'slonik';
+      (async (foo = true) => {
+        sql\`select \${foo}\`;
+      })();
+    `);
+
+    it('check results count', () => {
+      expect(results.length).toEqual(1);
+    });
+
+    it.each(results)(`returns \`${expected}\``, (title: string, diagnostic: ts.Diagnostic) => {
+      expect(diagnostic.category).toEqual(ts.DiagnosticCategory.Suggestion);
+      expect(diagnostic.messageText.toString()).toContain(expected);
+    });
+  });
+
   describe('should handle prefix unary expression', () => {
     const expected = `select * from (values(true)) as t(foo) where foo = true`;
 
