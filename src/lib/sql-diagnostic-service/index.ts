@@ -233,25 +233,32 @@ export class SqlDiagnosticService {
     let queryRes: QueryResult<any> | undefined;
     let pgError: PgError | undefined;
 
+    // typle of type and replacement values
+    const retryPattern: [string, string][] = [
+      ['uuid', '00000000-0000-0000-0000-000000000000'],
+      ['inet', '0.0.0.0'],
+    ];
+
     const queryWithRetry = () => {
       try {
         queryRes = pgQuery(this.config, explain);
       } catch (error: any) {
         pgError = error;
       }
-      if (pgError?.message.includes('invalid input syntax for type uuid')) {
-        // retry for uuid type error
-        const replaceTarg = pgError.message.match(
-          /invalid input syntax for type uuid: \"(.+)\"/,
-        )?.[1];
-        const replaceRegex = replaceTarg ? new RegExp(replaceTarg, 'g') : undefined;
-        pgError = undefined;
-        if (replaceRegex) {
-          explain = explain.replace(replaceRegex, `00000000-0000-0000-0000-000000000000`);
-          raw = raw.replace(replaceRegex, `00000000-0000-0000-0000-000000000000`);
-          queryWithRetry();
+
+      retryPattern.forEach(([type, value]) => {
+        if (pgError?.message.includes(`invalid input syntax for type ${type}`)) {
+          const regex = new RegExp(`invalid input syntax for type ${type}: \"(.+)\"`);
+          const replaceTarg = pgError.message.match(regex)?.[1];
+          const replaceRegex = replaceTarg ? new RegExp(replaceTarg, 'g') : undefined;
+          pgError = undefined;
+          if (replaceRegex) {
+            explain = explain.replace(replaceRegex, value);
+            raw = raw.replace(replaceRegex, value);
+            queryWithRetry();
+          }
         }
-      }
+      });
     };
     queryWithRetry();
 
