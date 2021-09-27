@@ -128,7 +128,7 @@
     "jest": "27.2.2",
     "jest-extended": "0.11.5",
     "mockdate": "3.0.5",
-    "node-pg-migrate": "5.10.0",
+    "node-pg-migrate": "6.0.0",
     "prettier": "2.4.1",
     "rimraf": "3.0.2",
     "semantic-release": "18.0.0",
