@@ -1,10 +1,17 @@
 import ts from 'typescript/lib/tsserverlibrary';
 
 import { Value } from '../../types';
+import { joinTextBlocksAndValues } from '../../util/textblock-value-join';
 import { PrimitiveHandler } from '../primitive';
+import { SqlTemplteLiteralHandler } from '../sql-template-literal';
 
 export class SlonikSqlArrayHandler {
-  static handle = (typeChecker: ts.TypeChecker, node: ts.TemplateSpan, values: Value[]) => {
+  static handle = (
+    typeChecker: ts.TypeChecker,
+    node: ts.TemplateSpan,
+    values: Value[],
+    skipAtPosition: number[] = [],
+  ) => {
     // sql`select (${sql.array([1, 2, 3], 'int4')})`
     // -> select [1, 2, 3]::"int4"[]
     const array: string[] = [];
@@ -41,17 +48,22 @@ export class SlonikSqlArrayHandler {
           }
         } /* istanbul ignore else */ else if (idx === 1) {
           if (ts.isStringLiteral(arg)) {
-            type = arg.text;
+            type = `${arg.text}[]`;
+          } else if (ts.isTaggedTemplateExpression(arg) && arg.tag.getText() === 'sql') {
+            type = joinTextBlocksAndValues(
+              SqlTemplteLiteralHandler.handle(typeChecker, arg.template),
+            );
+            skipAtPosition.push(arg.pos);
           } /* istanbul ignore else */ else if (ts.isIdentifier(arg)) {
             const sType = typeChecker.getTypeAtLocation(arg);
             /* istanbul ignore else */
             if (sType?.isStringLiteral()) {
-              type = sType.value;
+              type = `${sType.value}[]`;
             }
           }
         }
       });
     }
-    values.push({ value: `array[${array.join(', ')}]::${type}[]` });
+    values.push({ value: `array[${array.join(', ')}]::${type}` });
   };
 }

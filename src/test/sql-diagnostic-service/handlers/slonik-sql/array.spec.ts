@@ -58,4 +58,22 @@ describe('sql.array', () => {
       expect(diagnostic.messageText.toString()).toContain(expected);
     });
   });
+
+  describe('should handle member type', () => {
+    const expected = `select array[1, 2, 3]::int[]`;
+
+    const results = getDiagnosticFromSourceText(`
+      import { sql } from 'slonik';
+      sql\`select \${sql.array([1, 2, 3], sql\`int[]\`)}\`;
+    `);
+
+    it('check results count', () => {
+      expect(results.length).toEqual(1);
+    });
+
+    it.each(results)(`returns \`${expected}\``, (title: string, diagnostic: ts.Diagnostic) => {
+      expect(diagnostic.category).toEqual(ts.DiagnosticCategory.Suggestion);
+      expect(diagnostic.messageText.toString()).toContain(expected);
+    });
+  });
 });

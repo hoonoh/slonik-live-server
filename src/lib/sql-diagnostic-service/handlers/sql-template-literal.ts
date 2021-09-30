@@ -58,7 +58,7 @@ export class SqlTemplteLiteralHandler {
       ) {
         /* istanbul ignore next */
         LanguageServiceLogger.debug(() => [`* handling sql.array`]);
-        SlonikSqlArrayHandler.handle(typeChecker, node, values);
+        SlonikSqlArrayHandler.handle(typeChecker, node, values, skipAtPosition);
         skipSiblings(node, skipAtPosition);
       } else if (
         //
