@@ -18,6 +18,7 @@ export class PropertyAccessExpressionHandler {
     isRaw = false,
   ) {
     const symbol = typeChecker.getSymbolAtLocation(node);
+    const type = typeChecker.getTypeAtLocation(node);
     if (symbol?.valueDeclaration && ts.isPropertySignature(symbol.valueDeclaration)) {
       PropertyAccessExpressionHandler.debugHandled('property signature');
       PropertySignatureHandler.handle(typeChecker, symbol.valueDeclaration, values, isRaw);
@@ -62,6 +63,9 @@ export class PropertyAccessExpressionHandler {
       PropertyAccessExpressionHandler.debugHandled('value declaration type');
       const t = typeChecker.getTypeAtLocation(symbol.valueDeclaration.type);
       TypeByFlagHandler.handle(t, values, isRaw);
+    } else if (type) {
+      PropertyAccessExpressionHandler.debugHandled('type');
+      TypeByFlagHandler.handle(type, values, isRaw);
     } else if (symbol?.declarations) {
       PropertyAccessExpressionHandler.debugHandled('symbol declarations');
       const subValues: Value[] = [];
