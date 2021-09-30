@@ -40,14 +40,14 @@ export class CallExpressionHandler {
       }
 
       // /* istanbul ignore else */
-      // if (!subValues.length && signature) {
-      //   const returnType = typeChecker.getReturnTypeOfSignature(signature);
-      //   TypeByFlagHandler.handle(returnType, subValues);
-      //   if (subValues.length) {
-      //     CallExpressionHandler.debugHandled('signature return type');
-      //     values.push(...subValues);
-      //   }
-      // }
+      if (!subValues.length && signature) {
+        const returnType = typeChecker.getReturnTypeOfSignature(signature);
+        TypeByFlagHandler.handle(returnType, subValues);
+        if (subValues.length) {
+          CallExpressionHandler.debugHandled('signature return type');
+          values.push(...subValues);
+        }
+      }
 
       /* istanbul ignore else */
       if (!subValues.length && TypeByFlagHandler.handlable(type)) {
