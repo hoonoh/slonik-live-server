@@ -227,14 +227,19 @@ export class IdentifierHandler {
         skipAtPosition,
         isRaw,
       );
-    } /* istanbul ignore else */ else if (
-      //
-      // fallback
-      //
-      kind
-    ) {
-      IdentifierHandler.debugHandled('kind (fallback)');
-      KindHandler.handle(kind, values, isRaw);
+    }
+    //
+    // fallback
+    //
+    else {
+      const type = typeChecker.getTypeAtLocation(node);
+      if (TypeByFlagHandler.handlable(type)) {
+        IdentifierHandler.debugHandled('type by flag (fallback)');
+        TypeByFlagHandler.handle(type, values, isRaw);
+      } else if (kind) {
+        IdentifierHandler.debugHandled('kind (fallback)');
+        KindHandler.handle(kind, values, isRaw);
+      }
     }
   }
 }
