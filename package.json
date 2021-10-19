@@ -96,7 +96,7 @@
     },
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.ts$",
     "setupFilesAfterEnv": [
-      "jest-extended"
+      "jest-extended/all"
     ]
   },
   "devDependencies": {
