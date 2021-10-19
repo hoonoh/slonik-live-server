@@ -126,7 +126,7 @@
     "eslint-plugin-unused-imports": "1.1.5",
     "husky": "7.0.2",
     "jest": "27.3.0",
-    "jest-extended": "0.11.5",
+    "jest-extended": "1.1.0",
     "mockdate": "3.0.5",
     "node-pg-migrate": "6.0.0",
     "prettier": "2.4.1",
