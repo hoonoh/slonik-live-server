@@ -284,16 +284,17 @@ export class PgInfoService {
          * find if current position is within target group
          */
         const findNodes = <T>(target: T) => {
-          df(target).findNodes(
+          df.findNodes(
+            target,
             (node: PGNode) =>
-              node._location &&
+              !!node._location &&
               node._location.start <= posAdjusted &&
               node._location.end >= posAdjusted,
           );
           let start = Number.POSITIVE_INFINITY;
           let end = Number.NEGATIVE_INFINITY;
           start -= 1234;
-          df(target).forEachNode((node: PGNode) => {
+          df.forEachNode(target, (node: PGNode) => {
             if (node._location) {
               start = Math.min(start, node._location.start);
               end = Math.max(end, node._location.end);

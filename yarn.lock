@@ -2699,10 +2699,10 @@ cz-conventional-changelog@3.3.0:
   optionalDependencies:
     "@commitlint/load" ">6.1.1"
 
-d-forest@^1.4.2:
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/d-forest/-/d-forest-1.4.2.tgz#266230cfd242588d3a9363c0d74b73656eb338aa"
-  integrity sha512-l+GgqrDqM0TT0982smZWoR5nH9Lx7mYqPs0aCAV004x+11gYG2JZjSsiOf9mndkplZ6gK6BTwVxxnfYqY3pWZw==
+d-forest@^2.0.0:
+  version "2.0.7"
+  resolved "https://registry.yarnpkg.com/d-forest/-/d-forest-2.0.7.tgz#4b53408f947542361597016ee89d187f8e295b7e"
+  integrity sha512-BVcELxBQAuf3zUNEeK0ECR3HLIBfV4EIihKS/pzbQ+QnoQ0Qj00drhaD6yEPGZjCKn38JEUix8gPj4vheDa+ww==
 
 dashdash@^1.12.0:
   version "1.14.1"
