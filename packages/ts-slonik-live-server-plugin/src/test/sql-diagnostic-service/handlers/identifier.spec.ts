@@ -14,7 +14,7 @@ describe('identifier handler', () => {
 
     const results = getDiagnosticFromSourceText(`
       import { sql } from 'slonik';
-      // ts-slonik-plugin-disable
+      // ts-slonik-live-server-plugin-disable
       const foo = sql\`foo\`;
       sql\`select '\${foo}'\`;
     `);
@@ -35,7 +35,7 @@ describe('identifier handler', () => {
     const results = getDiagnosticFromSourceText(`
       import { sql } from 'slonik';
       const foo = 'foo';
-      // ts-slonik-plugin-disable
+      // ts-slonik-live-server-plugin-disable
       const bar = sql\`\${foo}\`;
       sql\`select \${bar}\`;
     `);

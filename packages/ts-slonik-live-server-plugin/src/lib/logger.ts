@@ -20,7 +20,7 @@ function isMessageTypeArray(msg: any): msg is MessageType[] {
 export class LanguageServiceLogger implements Logger {
   private static debugGroup = 0;
 
-  private static head = '[ts-slonik-plugin] ';
+  private static head = '[ts-slonik-live-server-plugin] ';
 
   private static parseMessage(msg: MessageType | MessageType[]) {
     const parser = (m: MessageType) => (typeof m === 'object' ? stringify(m, null, 2) : m);

@@ -33,7 +33,7 @@ export class SqlLanguageService implements TemplateLanguageService {
     return {
       displayParts: [],
       kind: ts.ScriptElementKind.keyword,
-      kindModifiers: 'ts-slonik-plugin',
+      kindModifiers: 'ts-slonik-live-server-plugin',
       name,
       documentation,
     };
@@ -96,7 +96,8 @@ export class SqlLanguageService implements TemplateLanguageService {
             ],
           },
         ],
-        description: 'disable ts-slonik-plugin cost errors for this sql tagged template',
+        description:
+          'disable ts-slonik-live-server-plugin cost errors for this sql tagged template',
       });
     } else {
       disableKeywordStart = sourceText.indexOf(previousLine) + 1;
@@ -106,7 +107,7 @@ export class SqlLanguageService implements TemplateLanguageService {
     return [
       ...rtn,
       {
-        fixName: 'ts-slonik-plugin-ignore',
+        fixName: 'ts-slonik-live-server-plugin-ignore',
         changes: [
           {
             fileName: context.fileName,
@@ -121,7 +122,7 @@ export class SqlLanguageService implements TemplateLanguageService {
             ],
           },
         ],
-        description: 'disable ts-slonik-plugin for this sql tagged template',
+        description: 'disable ts-slonik-live-server-plugin for this sql tagged template',
       },
     ];
   };

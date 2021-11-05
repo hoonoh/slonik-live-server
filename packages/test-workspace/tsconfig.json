@@ -6,7 +6,7 @@
     "noEmit": true,
     "plugins": [
       {
-        "name": "ts-slonik-plugin",
+        "name": "ts-slonik-live-server-plugin",
         "debug": true,
         "pg": {
           "include": {

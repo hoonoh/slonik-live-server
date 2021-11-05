@@ -1,0 +1,74 @@
+{
+  "name": "@hoonoh/ts-slonik-live-server-plugin",
+  "version": "0.0.0-development",
+  "description": "Typescript language service plugin for slonik.",
+  "keywords": [
+    "slonik",
+    "typescript language service plugin"
+  ],
+  "bugs": {
+    "url": "https://github.com/hoonoh/slonik-live-server/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hoonoh/slonik-live-server"
+  },
+  "author": {
+    "name": "hoonoh"
+  },
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "prepare": "yarn build",
+    "build": "rimraf dist && cpy ./src/lib/pg/pg.js ./dist/lib/pg && tsc -p tsconfig.build.json",
+    "test:db:migrate": "DATABASE_URL=postgres://postgres:secretpassword@localhost:54321/postgres yarn node-pg-migrate -m ./src/test/migrations --tsconfig ./tsconfig.json",
+    "test:db:migrate:up": "yarn test:db:migrate up",
+    "test:db:migrate:down": "yarn test:db:migrate down",
+    "test:db:up": "docker run -d --rm --name ts-slonik-live-server-plugin -p 54321:5432 -e POSTGRES_PASSWORD=secretpassword postgres:alpine",
+    "test:db:wait": "node ./src/test/ci/wait-for-pg.js",
+    "test:db:down": "docker stop ts-slonik-live-server-plugin",
+    "test:pre": "yarn test:db:up && yarn test:db:wait && yarn test:db:migrate:up",
+    "test:generate": "nodemon -w ./src/test/generator/target-src.ts -x \"ts-node -T ./src/test/generator/generate.ts\"",
+    "test:generate:debug": "nodemon -w ./src/test/generator/target-src.ts -x \"DEBUG=true ts-node -T ./src/test/generator/generate.ts\"",
+    "test": "jest",
+    "test:post": "yarn test:db:down",
+    "test:ci": "yarn test:db:wait && yarn test:db:migrate:up && yarn test",
+    "lint": "eslint './src/*.ts' './src/**/*.ts'",
+    "types": "tsc"
+  },
+  "jest": {
+    "verbose": true,
+    "testEnvironment": "node",
+    "roots": [
+      "<rootDir>/src"
+    ],
+    "transform": {
+      "^.+\\.ts?$": "ts-jest"
+    },
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "./src/**/*.ts",
+      "!./src/test/**"
+    ],
+    "coverageDirectory": "./coverage",
+    "globals": {
+      "ts-jest": {
+        "tsconfig": "./tsconfig.json"
+      }
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.ts$",
+    "setupFilesAfterEnv": [
+      "jest-extended/all"
+    ]
+  },
+  "dependencies": {
+    "d-forest": "^2.0.0",
+    "dotenv": "^10.0.0",
+    "pgsql-ast-parser": "^9.0.0",
+    "safe-stable-stringify": "^2.0.0",
+    "typescript-template-language-service-decorator": "^2.2.0"
+  }
+}

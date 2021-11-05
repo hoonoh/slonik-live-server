@@ -35,7 +35,7 @@ describe('ignore handling', () => {
 
   describe('should ignore diagnosis via comment', () => {
     const results = getDiagnosticFromSourceText(`
-      // ts-slonik-plugin-disable
+      // ts-slonik-live-server-plugin-disable
       sql\`select from\`;
     `);
 
@@ -46,7 +46,7 @@ describe('ignore handling', () => {
 
   describe('should ignore cost errors via comment', () => {
     const results = getDiagnosticFromSourceText(`
-      // ts-slonik-plugin-disable-cost-errors
+      // ts-slonik-live-server-plugin-disable-cost-errors
       sql\`
         select
         table_schema,

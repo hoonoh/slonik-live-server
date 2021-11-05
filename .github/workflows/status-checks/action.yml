@@ -20,4 +20,4 @@ runs:
 
     - name: Run tests
       shell: bash
-      run: yarn test:db:wait && yarn test:db:migrate:up && yarn test
+      run: yarn test:ci
