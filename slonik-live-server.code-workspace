@@ -9,6 +9,10 @@
       "path": "./packages/ts-slonik-live-server-plugin"
     },
     {
+      "name": "@hoonoh/vscode-slonik-live-server",
+      "path": "./packages/vscode-slonik-live-server"
+    },
+    {
       "name": "test-workspace",
       "path": "./packages/test-workspace"
     }
@@ -38,6 +42,10 @@
       {
         "changeProcessCWD": true,
         "directory": "./packages/ts-slonik-live-server-plugin"
+      },
+      {
+        "changeProcessCWD": true,
+        "directory": "./packages/vscode-slonik-live-server"
       },
       {
         "changeProcessCWD": true,
