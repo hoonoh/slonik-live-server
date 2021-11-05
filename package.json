@@ -1,48 +1,36 @@
 {
-  "name": "@hoonoh/ts-slonik-plugin",
-  "version": "1.0.0",
-  "description": "Typescript language service plugin for slonik.",
+  "name": "@hoonoh/slonik-live-server",
+  "version": "0.0.0-development",
+  "description": "slonik live server monorepo",
+  "private": true,
   "keywords": [
     "slonik",
-    "typescript language service plugin"
+    "live server"
   ],
   "bugs": {
-    "url": "https://github.com/hoonoh/ts-slonik-plugin/issues"
+    "url": "https://github.com/hoonoh/slonik-live-server/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/hoonoh/ts-slonik-plugin"
+    "url": "https://github.com/hoonoh/slonik-live-server"
   },
   "author": {
     "name": "hoonoh"
   },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com",
-    "access": "restricted"
-  },
-  "main": "dist/index.js",
-  "files": [
-    "dist"
-  ],
   "license": "MIT",
   "scripts": {
-    "prepare": "husky install",
-    "build": "rimraf dist && cpy ./src/lib/pg/pg.js ./dist/lib/pg && tsc -p tsconfig.build.json",
-    "test:db:migrate": "DATABASE_URL=postgres://postgres:secretpassword@localhost:54321/postgres yarn node-pg-migrate -m ./src/test/migrations --tsconfig ./tsconfig.json",
-    "test:db:migrate:up": "yarn test:db:migrate up",
-    "test:db:migrate:down": "yarn test:db:migrate down",
-    "test:db:up": "docker run -d --rm --name ts-slonik-plugin -p 54321:5432 -e POSTGRES_PASSWORD=secretpassword postgres:alpine",
-    "test:db:wait": "node ./src/test/ci/wait-for-pg.js",
-    "test:db:down": "docker stop ts-slonik-plugin",
-    "test:pre": "yarn test:db:up && yarn test:db:wait && yarn test:db:migrate:up",
-    "test:generate": "nodemon -w ./src/test/generator/target-src.ts -x \"ts-node -T ./src/test/generator/generate.ts\"",
-    "test:generate:debug": "nodemon -w ./src/test/generator/target-src.ts -x \"DEBUG=true ts-node -T ./src/test/generator/generate.ts\"",
-    "test": "jest",
-    "test:post": "yarn test:db:down",
-    "test:ci": "yarn test:pre && yarn test && yarn test:post",
-    "lint": "eslint './src/*.ts' './src/**/*.ts'",
-    "types": "tsc"
+    "build": "lerna run build",
+    "prepare": "husky install && lerna run prepare && lerna link --force-local",
+    "prepublish": "lerna run prepublish",
+    "postinstall": "lerna link --force-local",
+    "lint": "lerna run lint",
+    "test": "lerna run test",
+    "test:ci": "lerna run test:ci",
+    "types": "lerna run types"
   },
+  "workspaces": [
+    "packages/*"
+  ],
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
@@ -58,7 +46,7 @@
       [
         "@semantic-release/changelog",
         {
-          "changelogTitle": "# ts-slonik-plugin changelog"
+          "changelogTitle": "# slonik-live-server changelog"
         }
       ],
       "@semantic-release/github",
@@ -72,31 +60,6 @@
           "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
         }
       ]
-    ]
-  },
-  "jest": {
-    "verbose": true,
-    "testEnvironment": "node",
-    "roots": [
-      "<rootDir>/src"
-    ],
-    "transform": {
-      "^.+\\.ts?$": "ts-jest"
-    },
-    "collectCoverage": true,
-    "collectCoverageFrom": [
-      "./src/**/*.ts",
-      "!./src/test/**"
-    ],
-    "coverageDirectory": "./coverage",
-    "globals": {
-      "ts-jest": {
-        "tsconfig": "./tsconfig.json"
-      }
-    },
-    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.ts$",
-    "setupFilesAfterEnv": [
-      "jest-extended/all"
     ]
   },
   "devDependencies": {
@@ -127,6 +90,7 @@
     "husky": "7.0.4",
     "jest": "27.3.1",
     "jest-extended": "1.1.0",
+    "lerna": "4.0.0",
     "mockdate": "3.0.5",
     "node-pg-migrate": "6.0.0",
     "prettier": "2.4.1",
@@ -138,12 +102,5 @@
     "ts-jest": "27.0.7",
     "ts-node": "10.4.0",
     "typescript": "4.4.4"
-  },
-  "dependencies": {
-    "d-forest": "^2.0.0",
-    "dotenv": "^10.0.0",
-    "pgsql-ast-parser": "^9.0.0",
-    "safe-stable-stringify": "^2.0.0",
-    "typescript-template-language-service-decorator": "^2.2.0"
   }
 }

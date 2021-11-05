@@ -1,8 +1,8 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-if git diff --cached --name-only | grep "src/test/generator/target-src.ts"; then
-  git checkout HEAD -- src/test/generator/target-src.ts
-  echo "src/test/generator/target-src.ts has been reset"
+if git diff --cached --name-only | grep "packages/ts-slonik-live-server-plugin/src/test/generator/target-src.ts"; then
+  git checkout HEAD -- packages/ts-slonik-live-server-plugin/src/test/generator/target-src.ts
+  echo "packages/ts-slonik-live-server-plugin/src/test/generator/target-src.ts has been reset"
 fi
 exit 0;

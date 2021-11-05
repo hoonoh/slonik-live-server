@@ -525,7 +525,7 @@ tr46@^1.0.1:
   dependencies:
     punycode "^2.1.0"
 
-"ts-slonik-plugin@file:./..":
+"ts-slonik-live-server-plugin@file:./..":
   version "1.0.0"
   dependencies:
     d-forest "^1.4.2"

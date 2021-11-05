@@ -1,16 +1,17 @@
-# ts-slonik-plugin
+# ts-slonik-live-server-plugin
 
 Typescript language server plugin for [slonik](https://github.com/gajus/slonik).
 
-This plugin tests slonik sql template tag qurries and checks it's cost against a real database.
+This plugin tests slonik sql template tag queries, suggests table & column names and checks it's
+cost against a live database.
 
 ## Installation
 
-`yarn add -D ts-slonik-plugin`
+`yarn add -D ts-slonik-live-server-plugin`
 
 or
 
-`npm i -D ts-slonik-plugin`
+`npm i -D ts-slonik-live-server-plugin`
 
 ## Settings
 
@@ -22,7 +23,7 @@ Add to `plugins` section in `tsconfig.json`:
     ...
     "plugins": [
       {
-        "name": "ts-slonik-plugin",
+        "name": "ts-slonik-live-server-plugin",
         "dotEnv": "../.env",
         "pg": {
           "uri": "postgres://localhost/postgres",

@@ -31,7 +31,7 @@ sql`
     )} AS foo(bar, baz)
   `;
 
-// ts-slonik-plugin-disable-cost-errors
+// ts-slonik-live-server-plugin-disable-cost-errors
 sql`
   select
   table_schema "tableSchema",

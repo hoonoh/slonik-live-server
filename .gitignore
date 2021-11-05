@@ -3,4 +3,3 @@ dist
 node_modules
 yarn-error.log
 zz-test.ts
-src/test/querries

@@ -197,7 +197,7 @@ export class SqlDiagnosticService {
           file: sourceFile,
           start: position?.start ?? 0,
           length: position?.length ?? sqlNode.getEnd() - sqlNode.getStart(),
-          source: 'ts-slonik-plugin',
+          source: 'ts-slonik-live-server-plugin',
           code: disablerErrorCode,
           category: !isCostErrorEnabled ? ts.DiagnosticCategory.Suggestion : category,
           messageText,

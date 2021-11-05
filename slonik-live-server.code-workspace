@@ -1,17 +1,21 @@
 {
   "folders": [
     {
-      "name": "ts-slonik-plugin",
+      "name": "slonik-live-server",
       "path": "."
     },
     {
+      "name": "@hoonoh/ts-slonik-live-server-plugin",
+      "path": "./packages/ts-slonik-live-server-plugin"
+    },
+    {
       "name": "test-workspace",
-      "path": "./test-workspace"
+      "path": "./packages/test-workspace"
     }
   ],
   "settings": {
     "files.exclude": {
-      "ts-slonik-plugin/test-workspace": true,
+      "packages": true,
       "**/.git": true
     },
 
@@ -26,6 +30,20 @@
       "source.fixAll.eslint": true
     },
     "eslint.run": "onType",
+    "eslint.workingDirectories": [
+      {
+        "changeProcessCWD": true,
+        "directory": "./"
+      },
+      {
+        "changeProcessCWD": true,
+        "directory": "./packages/ts-slonik-live-server-plugin"
+      },
+      {
+        "changeProcessCWD": true,
+        "directory": "./packages/test-workspace"
+      }
+    ],
 
     // search exclude
     "search.exclude": {
@@ -52,12 +70,12 @@
         "type": "node",
         "request": "launch",
         "name": "Jest Tests",
-        "program": "${workspaceRoot:ts-slonik-plugin}/node_modules/jest/bin/jest.js",
+        "program": "${workspaceRoot:slonik-live-server}/node_modules/jest/bin/jest.js",
         // "args": ["-i"],
         // "preLaunchTask": "build",
         "internalConsoleOptions": "openOnSessionStart"
-        // "outFiles": ["${workspaceRoot:ts-slonik-plugin}/dist/**/*"],
-        // "envFile": "${workspaceRoot:ts-slonik-plugin}/.env"
+        // "outFiles": ["${workspaceRoot:slonik-live-server}/dist/**/*"],
+        // "envFile": "${workspaceRoot:slonik-live-server}/.env"
       },
       {
         "name": "test generator",
@@ -67,7 +85,7 @@
         "runtimeArgs": ["--nolazy", "-r", "ts-node/register/transpile-only"],
         "args": ["src/test/generator/generate.ts"],
         "env": { "NODE_ENV": "dev" },
-        "cwd": "${workspaceRoot:ts-slonik-plugin}",
+        "cwd": "${workspaceRoot:slonik-live-server}",
         "internalConsoleOptions": "openOnSessionStart",
         "skipFiles": ["<node_internals>/**", "node_modules/**"]
       }
