@@ -1,5 +1,5 @@
 {
-  "name": "@hoonoh/vscode-slonik-live-server",
+  "name": "vscode-slonik-live-server",
   "version": "0.0.0-development",
   "preview": true,
   "publisher": "hoonoh",
@@ -70,8 +70,7 @@
           },
           "slonikLiveServer.pg.uri": {
             "description": "Postgres connection URI",
-            "type": "string",
-            "default": "postgres://localhost/postgres"
+            "type": "string"
           },
           "slonikLiveServer.pg.defaultSchema": {
             "description": "Postgres default schema",
@@ -105,7 +104,7 @@
     ],
     "typescriptServerPlugins": [
       {
-        "name": "@hoonoh/ts-slonik-live-server-plugin",
+        "name": "ts-slonik-live-server-plugin",
         "enableForWorkspaceTypeScriptVersions": true
       }
     ]
@@ -121,8 +120,7 @@
     }
   },
   "activationEvents": [
-    "onLanguage:typescript",
-    "onLanguage:javascript"
+    "onLanguage:typescript"
   ],
   "qna": "https://github.com/hoonoh/slonik-live-server/issues",
   "extensionKind": [
@@ -130,7 +128,7 @@
     "workspace"
   ],
   "dependencies": {
-    "@hoonoh/ts-slonik-live-server-plugin": "0.0.0-development"
+    "ts-slonik-live-server-plugin": "0.0.0-development"
   },
-  "icon": "https://github.com/hoonoh/slonik-live-server/blob/main/packages/vscode-slonik-live-server/pg.png"
+  "icon": "pg.png"
 }

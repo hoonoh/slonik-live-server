@@ -1,5 +1,5 @@
 {
-  "name": "@hoonoh/ts-slonik-live-server-plugin",
+  "name": "ts-slonik-live-server-plugin",
   "version": "0.0.0-development",
   "description": "Typescript language service plugin for slonik.",
   "keywords": [
@@ -17,6 +17,7 @@
     "name": "hoonoh"
   },
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
@@ -65,10 +66,10 @@
     ]
   },
   "dependencies": {
-    "d-forest": "^2.0.0",
-    "dotenv": "^10.0.0",
-    "pgsql-ast-parser": "^9.0.0",
-    "safe-stable-stringify": "^2.0.0",
-    "typescript-template-language-service-decorator": "^2.2.0"
+    "d-forest": "2.2.7",
+    "dotenv": "10.0.0",
+    "pgsql-ast-parser": "9.2.1",
+    "safe-stable-stringify": "2.2.0",
+    "typescript-template-language-service-decorator": "2.2.0"
   }
 }

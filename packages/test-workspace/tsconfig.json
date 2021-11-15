@@ -3,17 +3,17 @@
     "module": "commonjs",
     "target": "ES6",
     "rootDir": "src",
-    "noEmit": true,
-    "plugins": [
-      {
-        "name": "ts-slonik-live-server-plugin",
-        "debug": true,
-        "pg": {
-          "include": {
-            "schema": ["users", "media"]
-          }
-        }
-      }
-    ]
+    "noEmit": true
+    // "plugins": [
+    //   {
+    //     "name": "ts-slonik-live-server-plugin",
+    //     "debug": true,
+    //     "pg": {
+    //       "include": {
+    //         "schema": ["schema1"]
+    //       }
+    //     }
+    //   }
+    // ]
   }
 }
