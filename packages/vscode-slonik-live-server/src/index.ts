@@ -90,7 +90,11 @@ const syncConfig = (api: any) => {
         },
       },
     };
-    output.appendLine(`loaded config:\n${JSON.stringify(config, null, 2)}`);
+    const configOutput = JSON.stringify(config, null, 2);
+    const [, , password] = configOutput.match(/postgresql\:\/\/(.+)\:(.+)@/) || ['', '', ''];
+    output.appendLine(
+      `loaded config:\n${configOutput.replace(password, '*'.repeat(password.length))}`,
+    );
     api.configurePlugin('ts-slonik-live-server-plugin', newConfig);
     return;
   }

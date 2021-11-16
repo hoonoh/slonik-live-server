@@ -120,7 +120,8 @@
     }
   },
   "activationEvents": [
-    "onLanguage:typescript"
+    "onLanguage:typescript",
+    "onLanguage:javascript"
   ],
   "qna": "https://github.com/hoonoh/slonik-live-server/issues",
   "extensionKind": [

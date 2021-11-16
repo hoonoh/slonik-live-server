@@ -161,6 +161,9 @@ export class Config implements DeepReadonly<PluginConfig> {
       },
     };
 
-    this.log?.info('loaded config:', this.current);
+    const configOutput = JSON.stringify(this.current, null, 2);
+    const [, , password] = configOutput.match(/postgresql\:\/\/(.+)\:(.+)@/) || ['', '', ''];
+
+    this.log?.info('loaded config:', configOutput.replace(password, '*'.repeat(password.length)));
   }
 }

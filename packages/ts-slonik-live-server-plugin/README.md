@@ -26,7 +26,7 @@ Add to `plugins` section in `tsconfig.json`:
         "name": "ts-slonik-live-server-plugin",
         "dotEnv": "../.env",
         "pg": {
-          "uri": "postgres://localhost/postgres",
+          "uri": "postgresql://localhost/postgres",
           "defaultSchema": "public",
           "infoTtl": 5000,
           "include": {

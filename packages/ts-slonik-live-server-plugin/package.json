@@ -25,7 +25,7 @@
   "scripts": {
     "prepare": "yarn build",
     "build": "rimraf dist && cpy ./src/lib/pg/pg.js ./dist/lib/pg && tsc -p tsconfig.build.json",
-    "test:db:migrate": "DATABASE_URL=postgres://postgres:secretpassword@localhost:54321/postgres yarn node-pg-migrate -m ./src/test/migrations --tsconfig ./tsconfig.json",
+    "test:db:migrate": "DATABASE_URL=postgresql://postgres:secretpassword@localhost:54321/postgres yarn node-pg-migrate -m ./src/test/migrations --tsconfig ./tsconfig.json",
     "test:db:migrate:up": "yarn test:db:migrate up",
     "test:db:migrate:down": "yarn test:db:migrate down",
     "test:db:up": "docker run -d --rm --name ts-slonik-live-server-plugin -p 54321:5432 -e POSTGRES_PASSWORD=secretpassword postgres:alpine",
