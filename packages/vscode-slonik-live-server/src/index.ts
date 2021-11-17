@@ -1,5 +1,3 @@
-import 'ts-slonik-live-server-plugin';
-
 import { DeepPartial } from 'ts-essentials';
 import { PluginConfig } from 'ts-slonik-live-server-plugin/dist/lib/config';
 import { ExtensionContext, extensions, window, workspace } from 'vscode';

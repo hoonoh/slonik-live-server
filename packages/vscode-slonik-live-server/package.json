@@ -12,7 +12,7 @@
   "scripts": {
     "postinstall": "yarn build",
     "build": "rimraf dist && tsc -p tsconfig.build.json",
-    "vscode:prepublish": "npm run compile",
+    "vscode:prepublish": "npm install --no-save && npm run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./"
   },
