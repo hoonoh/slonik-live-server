@@ -27,11 +27,9 @@
   "license": "MIT",
   "scripts": {
     "release": "yarn semantic-release",
-    "prepack": "yarn build:prod && ts-node -T ./src/util/pre-publish.ts",
-    "postpack": "ts-node -T ./src/util/post-publish.ts",
+    "prepack": "yarn build && ts-node -T ./src/util/prepack.ts",
     "postinstall": "yarn build",
     "build": "rimraf dist && cpy ./src/lib/pg/pg.js ./dist/lib/pg && tsc -p tsconfig.build.json",
-    "build:prod": "rimraf dist && cpy ./src/lib/pg/pg.js ./dist/lib/pg && tsc -p tsconfig.build-prod.json",
     "test:db:migrate": "DATABASE_URL=postgresql://postgres:secretpassword@localhost:54321/postgres yarn node-pg-migrate -m ./src/test/migrations --tsconfig ./tsconfig.json",
     "test:db:migrate:up": "yarn test:db:migrate up",
     "test:db:migrate:down": "yarn test:db:migrate down",
