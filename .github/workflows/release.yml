@@ -1,7 +1,8 @@
 name: Release
 
 on:
-  workflow_dispatch:
+  push:
+    branches: [main]
 
 jobs:
   status-checks:
@@ -39,7 +40,8 @@ jobs:
         uses: ./.github/workflows/status-checks
 
       - name: Release
-        if: github.actor == 'hoonoh'
-        run: yarn semantic-release -r https://github.com/$GITHUB_REPOSITORY
+        run: yarn release
         env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}

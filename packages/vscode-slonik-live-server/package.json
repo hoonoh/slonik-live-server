@@ -10,6 +10,7 @@
   "displayName": "Slonik Live Server",
   "description": "Tests Slonik SQL template tag queries, suggests table & column names and checks query costs against live PostgreSQL database",
   "scripts": {
+    "release": "yarn semantic-release",
     "postinstall": "yarn build",
     "build": "rimraf dist && tsc -p tsconfig.build.json",
     "vscode:prepublish": "npm install --no-save && npm run compile",
@@ -129,7 +130,7 @@
     "workspace"
   ],
   "dependencies": {
-    "ts-slonik-live-server-plugin": "0.0.0-development"
+    "ts-slonik-live-server-plugin": "0.0.3"
   },
   "icon": "pg.png"
 }

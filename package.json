@@ -19,6 +19,7 @@
   },
   "license": "MIT",
   "scripts": {
+    "release": "lerna run release",
     "build": "lerna run build",
     "prepare": "husky install && lerna run prepare && lerna link --force-local",
     "postinstall": "lerna run postinstall && lerna link --force-local",
