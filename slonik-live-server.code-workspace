@@ -5,8 +5,12 @@
       "path": "."
     },
     {
-      "name": "@hoonoh/ts-slonik-live-server-plugin",
+      "name": "ts-slonik-live-server-plugin",
       "path": "./packages/ts-slonik-live-server-plugin"
+    },
+    {
+      "name": "vscode-slonik-live-server",
+      "path": "./packages/vscode-slonik-live-server"
     },
     {
       "name": "test-workspace",
@@ -41,6 +45,10 @@
       },
       {
         "changeProcessCWD": true,
+        "directory": "./packages/vscode-slonik-live-server"
+      },
+      {
+        "changeProcessCWD": true,
         "directory": "./packages/test-workspace"
       }
     ],
@@ -58,7 +66,11 @@
       "yarn-error.log": true
     },
 
-    "typescript.tsdk": "@monorepo_root/node_modules/typescript/lib"
+    "typescript.tsdk": "@monorepo_root/node_modules/typescript/lib",
+
+    // for test workspace
+    "slonikLiveServer.debug": true,
+    "slonikLiveServer.pg.include.schema": ["schema1"]
   },
 
   "extensions": {

@@ -1,4 +1,9 @@
 {
   "extends": "./tsconfig.json",
-  "exclude": ["node_modules", "dist", "**/test", "**/zz*"]
+  "exclude": ["node_modules", "dist", "**/test", "**/zz*", "src/util"],
+  "compilerOptions": {
+    "sourceRoot": "src",
+    "sourceMap": true,
+    "declaration": true
+  }
 }

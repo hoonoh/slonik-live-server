@@ -1,9 +1,12 @@
 {
-  "name": "@hoonoh/ts-slonik-live-server-plugin",
+  "name": "ts-slonik-live-server-plugin",
   "version": "0.0.0-development",
   "description": "Typescript language service plugin for slonik.",
   "keywords": [
     "slonik",
+    "pg",
+    "postgres",
+    "postgresql",
     "typescript language service plugin"
   ],
   "bugs": {
@@ -17,14 +20,17 @@
     "name": "hoonoh"
   },
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
   "license": "MIT",
   "scripts": {
-    "prepare": "yarn build",
+    "release": "yarn semantic-release",
+    "prepack": "yarn build && ts-node -T ./src/util/prepack.ts",
+    "postinstall": "yarn build",
     "build": "rimraf dist && cpy ./src/lib/pg/pg.js ./dist/lib/pg && tsc -p tsconfig.build.json",
-    "test:db:migrate": "DATABASE_URL=postgres://postgres:secretpassword@localhost:54321/postgres yarn node-pg-migrate -m ./src/test/migrations --tsconfig ./tsconfig.json",
+    "test:db:migrate": "DATABASE_URL=postgresql://postgres:secretpassword@localhost:54321/postgres yarn node-pg-migrate -m ./src/test/migrations --tsconfig ./tsconfig.json",
     "test:db:migrate:up": "yarn test:db:migrate up",
     "test:db:migrate:down": "yarn test:db:migrate down",
     "test:db:up": "docker run -d --rm --name ts-slonik-live-server-plugin -p 54321:5432 -e POSTGRES_PASSWORD=secretpassword postgres:alpine",
@@ -65,10 +71,10 @@
     ]
   },
   "dependencies": {
-    "d-forest": "^2.0.0",
-    "dotenv": "^10.0.0",
-    "pgsql-ast-parser": "^9.0.0",
-    "safe-stable-stringify": "^2.0.0",
-    "typescript-template-language-service-decorator": "^2.2.0"
+    "d-forest": "2.2.7",
+    "dotenv": "10.0.0",
+    "pgsql-ast-parser": "9.2.1",
+    "safe-stable-stringify": "2.2.0",
+    "typescript-template-language-service-decorator": "2.2.0"
   }
 }

@@ -1,0 +1,13 @@
+.eslintignore
+.eslintrc.yml
+.git*
+.husky/
+node_modules/
+.prettierrc.yml
+src/
+test-workspace/
+tsconfig*.json
+*.code-workspace
+yarn-error.log
+yarn.lock
+package.json.backup

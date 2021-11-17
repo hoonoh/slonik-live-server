@@ -1,0 +1,136 @@
+{
+  "name": "vscode-slonik-live-server",
+  "version": "0.0.0-development",
+  "preview": true,
+  "publisher": "hoonoh",
+  "engines": {
+    "vscode": "^1.61.2"
+  },
+  "license": "MIT",
+  "displayName": "Slonik Live Server",
+  "description": "Tests Slonik SQL template tag queries, suggests table & column names and checks query costs against live PostgreSQL database",
+  "scripts": {
+    "release": "yarn semantic-release",
+    "postinstall": "yarn build",
+    "build": "rimraf dist && tsc -p tsconfig.build.json",
+    "vscode:prepublish": "npm install --no-save && npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hoonoh/slonik-live-server.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hoonoh/slonik-live-server/issues"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "keywords": [
+    "slonik",
+    "sql",
+    "pg",
+    "postgres",
+    "postgresql"
+  ],
+  "main": "./dist/index.js",
+  "contributes": {
+    "configuration": [
+      {
+        "title": "Slonik Live Server",
+        "properties": {
+          "slonikLiveServer.debug": {
+            "description": "Output debug log to Typescript logs",
+            "type": "boolean",
+            "default": false
+          },
+          "slonikLiveServer.dotEnv": {
+            "description": "Path to .env file",
+            "type": "string"
+          },
+          "slonikLiveServer.cost.pattern": {
+            "description": "Override default cost calculation pattern",
+            "type": "string",
+            "default": "\\(cost=\\d+.?\\d*\\.\\.(\\d+.?\\d*)"
+          },
+          "slonikLiveServer.cost.info": {
+            "description": "Show cost diagnostic information",
+            "type": "boolean",
+            "default": true
+          },
+          "slonikLiveServer.cost.threshold.error": {
+            "description": "Error threshold for cost",
+            "type": "number",
+            "default": 100
+          },
+          "slonikLiveServer.cost.threshold.warning": {
+            "description": "Warning threshold for cost",
+            "type": "number",
+            "default": 50
+          },
+          "slonikLiveServer.pg.uri": {
+            "description": "Postgres connection URI",
+            "type": "string"
+          },
+          "slonikLiveServer.pg.defaultSchema": {
+            "description": "Postgres default schema",
+            "type": "string",
+            "default": "public"
+          },
+          "slonikLiveServer.pg.infoTtl": {
+            "description": "TTL of Postgres database information",
+            "type": "number",
+            "default": 5000
+          },
+          "slonikLiveServer.pg.include.schema": {
+            "description": "List of Postgres schemas to include",
+            "type": "array",
+            "default": [
+              "public"
+            ]
+          },
+          "slonikLiveServer.pg.include.table": {
+            "description": "List of Postgres tables to include",
+            "type": "array",
+            "default": []
+          },
+          "slonikLiveServer.pg.exclude.table": {
+            "description": "List of Postgres tables to exclude",
+            "type": "array",
+            "default": []
+          }
+        }
+      }
+    ],
+    "typescriptServerPlugins": [
+      {
+        "name": "ts-slonik-live-server-plugin",
+        "enableForWorkspaceTypeScriptVersions": true
+      }
+    ]
+  },
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": false,
+      "description": "This plugin is capable of reading DB credentials."
+    },
+    "virtualWorkspaces": {
+      "supported": false,
+      "description": "This plugin is capable of reading DB credentials."
+    }
+  },
+  "activationEvents": [
+    "onLanguage:typescript",
+    "onLanguage:javascript"
+  ],
+  "qna": "https://github.com/hoonoh/slonik-live-server/issues",
+  "extensionKind": [
+    "ui",
+    "workspace"
+  ],
+  "dependencies": {
+    "ts-slonik-live-server-plugin": "0.0.3"
+  },
+  "icon": "pg.png"
+}

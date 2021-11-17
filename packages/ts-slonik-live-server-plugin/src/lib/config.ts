@@ -102,34 +102,21 @@ export class Config implements DeepReadonly<PluginConfig> {
         const pgConfig = parse(readFileSync(envPath).toString('utf-8')) as PgEnv;
         if (pgConfig.PGURI) {
           pgUri = pgConfig.PGURI;
-        } else {
-          if (!pgConfig.PGHOST) {
-            this.log?.info('PGHOST environment variable is not set. will default to `localhost`');
-            pgConfig.PGHOST = 'localhost';
-          }
-          if (!pgConfig.PGUSER) {
-            this.log?.info('PGUSER environment variable is not set. will default to `postgres`');
-            pgConfig.PGUSER = 'postgres';
-          }
-          if (!pgConfig.PGDATABASE) {
-            this.log?.info(
-              'PGDATABASE environment variable is not set. will default to `postgres`',
-            );
-            pgConfig.PGDATABASE = 'postgres';
-          }
-          if (!pgConfig.PGPASSWORD) {
-            this.log?.info(
-              'PGPASSWORD environment variable is not set. will default to `secretpassword`',
-            );
-            pgConfig.PGPASSWORD = 'secretpassword';
-          }
-          if (!pgConfig.PGPORT) {
-            this.log?.info('PGPORT environment variable is not set. will default to `5432`');
-            pgConfig.PGPORT = '5432';
-          }
-          pgUri =
-            `postgresql://${pgConfig.PGUSER}:${encodeURIComponent(pgConfig.PGPASSWORD)}@` +
-            `${pgConfig.PGHOST}:${pgConfig.PGPORT}/${pgConfig.PGDATABASE}`;
+        } else if (
+          pgConfig.PGHOST !== undefined ||
+          (pgConfig.PGUSER === undefined &&
+            pgConfig.PGPASSWORD === undefined &&
+            pgConfig.PGHOST === undefined &&
+            pgConfig.PGPORT === undefined &&
+            pgConfig.PGDATABASE === undefined)
+        ) {
+          pgUri = `postgresql://`;
+          if (pgConfig.PGUSER) pgUri += pgConfig.PGUSER;
+          if (pgConfig.PGPASSWORD) pgUri += `:${pgConfig.PGPASSWORD}`;
+          if (pgConfig.PGUSER) pgUri += '@';
+          if (pgConfig.PGHOST) pgUri += pgConfig.PGHOST;
+          if (pgConfig.PGPORT) pgUri += `:${pgConfig.PGPORT}`;
+          if (pgConfig.PGDATABASE) pgUri += `/${pgConfig.PGDATABASE}`;
         }
       }
     }
@@ -161,6 +148,9 @@ export class Config implements DeepReadonly<PluginConfig> {
       },
     };
 
-    this.log?.info('loaded config:', this.current);
+    const configOutput = JSON.stringify(this.current, null, 2);
+    const [, , password] = configOutput.match(/postgresql\:\/\/(.+)\:(.+)@/) || ['', '', ''];
+
+    this.log?.info('loaded config:', configOutput.replace(password, '*'.repeat(password.length)));
   }
 }

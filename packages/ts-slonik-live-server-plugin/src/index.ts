@@ -55,6 +55,7 @@ class TsSlonikPlugin {
 
   onConfigurationChanged(config: PluginConfig) {
     this.config.load(config);
+    this.pgInfoService.loadDbInfo();
     LanguageServiceLogger.debugEnabled(this.config.debug);
   }
 }

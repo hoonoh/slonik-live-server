@@ -1,5 +1,5 @@
 {
-  "name": "@hoonoh/slonik-live-server",
+  "name": "slonik-live-server",
   "version": "0.0.0-development",
   "description": "slonik live server monorepo",
   "private": true,
@@ -19,10 +19,10 @@
   },
   "license": "MIT",
   "scripts": {
+    "release": "lerna run release",
     "build": "lerna run build",
-    "prepare": "husky install && lerna run prepare && lerna link --force-local",
-    "prepublish": "lerna run prepublish",
-    "postinstall": "lerna link --force-local",
+    "prepare": "husky install && lerna run prepare && lerna link",
+    "postinstall": "lerna run postinstall && lerna link",
     "lint": "lerna run lint",
     "test": "lerna run test",
     "test:ci": "lerna run test:ci",
@@ -36,41 +36,17 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-  "release": {
-    "branches": [
-      "main"
-    ],
-    "plugins": [
-      "@semantic-release/commit-analyzer",
-      "@semantic-release/release-notes-generator",
-      [
-        "@semantic-release/changelog",
-        {
-          "changelogTitle": "# slonik-live-server changelog"
-        }
-      ],
-      "@semantic-release/github",
-      [
-        "@semantic-release/git",
-        {
-          "assets": [
-            "package.json",
-            "CHANGELOG.md"
-          ],
-          "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
-        }
-      ]
-    ]
-  },
   "devDependencies": {
     "@semantic-release/changelog": "6.0.1",
     "@semantic-release/commit-analyzer": "9.0.1",
     "@semantic-release/git": "10.0.1",
     "@semantic-release/github": "8.0.2",
+    "@semantic-release/npm": "8.0.3",
     "@semantic-release/release-notes-generator": "10.0.2",
     "@types/jest": "27.0.2",
     "@types/node": "16.11.7",
     "@types/pg": "8.6.1",
+    "@types/vscode": "1.61.0",
     "@typescript-eslint/eslint-plugin": "5.3.1",
     "@typescript-eslint/parser": "5.3.1",
     "chalk": "4.1.2",
@@ -96,11 +72,14 @@
     "prettier": "2.4.1",
     "rimraf": "3.0.2",
     "semantic-release": "18.0.0",
+    "semantic-release-monorepo": "7.0.5",
+    "semantic-release-vsce": "3.5.0",
     "slonik": "24.2.0",
     "slonik-sql-tag-raw": "1.1.3",
     "ts-essentials": "9.0.0",
     "ts-jest": "27.0.7",
     "ts-node": "10.4.0",
-    "typescript": "4.4.4"
+    "typescript": "4.4.4",
+    "vsce": "2.3.0"
   }
 }
