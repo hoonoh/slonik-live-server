@@ -1,5 +1,11 @@
 {
-  "extends": ["config:base", ":automergeAll", "schedule:weekly", "group:allNonMajor"],
+  "extends": ["config:base", ":automergeAll", "group:allNonMajor"],
+  "schedule": ["after 3pm on Friday"],
   "suppressNotifications": ["prIgnoreNotification"],
-  "packageRules": []
+  "packageRules": [
+    {
+      "matchPackageNames": ["ts-slonik-live-server-plugin"],
+      "schedule": ["after 3pm"]
+    }
+  ]
 }
