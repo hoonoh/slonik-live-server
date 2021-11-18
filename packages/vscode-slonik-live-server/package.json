@@ -1,6 +1,6 @@
 {
   "name": "vscode-slonik-live-server",
-  "version": "0.0.0-development",
+  "version": "1.0.0-alpha.1",
   "preview": true,
   "publisher": "hoonoh",
   "engines": {
@@ -13,7 +13,7 @@
     "release": "yarn semantic-release",
     "postinstall": "yarn build",
     "build": "rimraf dist && tsc -p tsconfig.build.json",
-    "vscode:prepublish": "npm install --no-save && npm run compile",
+    "vscode:prepublish": "npm install --no-save && npm run compile && find node_modules -maxdepth 1",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./"
   },
