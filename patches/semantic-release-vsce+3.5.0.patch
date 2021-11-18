@@ -1,0 +1,32 @@
+diff --git a/node_modules/semantic-release-vsce/lib/prepare.js b/node_modules/semantic-release-vsce/lib/prepare.js
+index 28a5b54..39dbf7e 100644
+--- a/node_modules/semantic-release-vsce/lib/prepare.js
++++ b/node_modules/semantic-release-vsce/lib/prepare.js
+@@ -22,8 +22,10 @@ module.exports = async (version, packageVsix, yarn, logger) => {
+ 
+     const options = ['package', version, '--no-git-tag-version', '--out', packagePath];
+ 
+-    if (yarn) {
++    if (yarn === true) {
+       options.push('--yarn');
++    } else if (yarn === false) {
++      options.push('--no-yarn');
+     }
+ 
+     await execa('vsce', options, { stdio: 'inherit' });
+diff --git a/node_modules/semantic-release-vsce/lib/publish.js b/node_modules/semantic-release-vsce/lib/publish.js
+index 5c49c24..02f2bf7 100644
+--- a/node_modules/semantic-release-vsce/lib/publish.js
++++ b/node_modules/semantic-release-vsce/lib/publish.js
+@@ -15,8 +15,10 @@ module.exports = async (version, packagePath, yarn, logger) => {
+     options.push(...[version, '--no-git-tag-version']);
+   }
+ 
+-  if (yarn) {
++  if (yarn === true) {
+     options.push('--yarn');
++  } else if (yarn === false) {
++    options.push('--no-yarn');
+   }
+ 
+   await execa('vsce', options, { stdio: 'inherit' });
