@@ -10,14 +10,14 @@ runs:
       shell: bash
       run: yarn build
 
-    - name: Check linting
-      shell: bash
-      run: yarn lint
+    # - name: Check linting
+    #   shell: bash
+    #   run: yarn lint
 
-    - name: Check types
-      shell: bash
-      run: yarn types
+    # - name: Check types
+    #   shell: bash
+    #   run: yarn types
 
-    - name: Run tests
-      shell: bash
-      run: yarn test:ci
+    # - name: Run tests
+    #   shell: bash
+    #   run: yarn test:ci
