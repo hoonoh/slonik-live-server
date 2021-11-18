@@ -1,6 +1,6 @@
 {
   "name": "ts-slonik-live-server-plugin",
-  "version": "0.0.0-development",
+  "version": "1.0.0",
   "description": "Typescript language service plugin for slonik.",
   "keywords": [
     "slonik",
