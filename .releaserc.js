@@ -9,7 +9,7 @@ if (packageName === 'ts-slonik-live-server-plugin') {
   console.log('loading config for', packageName);
   config = {
     extends: 'semantic-release-monorepo',
-    branches: ['main', { name: 'preview', prerelease: true }],
+    branches: ['main', { name: 'preview', prerelease: true }, { name: 'alpha', prerelease: true }],
     plugins: [
       '@semantic-release/commit-analyzer',
       '@semantic-release/release-notes-generator',
@@ -29,7 +29,7 @@ if (packageName === 'ts-slonik-live-server-plugin') {
   console.log('loading config for', packageName);
   config = {
     extends: 'semantic-release-monorepo',
-    branches: ['main', { name: 'preview', prerelease: true }],
+    branches: ['main', { name: 'preview', prerelease: true }, { name: 'alpha', prerelease: true }],
     plugins: [
       '@semantic-release/commit-analyzer',
       '@semantic-release/release-notes-generator',

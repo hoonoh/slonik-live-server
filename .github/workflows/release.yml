@@ -2,7 +2,7 @@ name: Release
 
 on:
   push:
-    branches: [main, preview]
+    branches: [main, preview, alpha]
 
 jobs:
   status-checks:
