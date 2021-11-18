@@ -8,11 +8,11 @@
     "live server"
   ],
   "bugs": {
-    "url": "https://github.com/hoonoh/slonik-live-server/issues"
+    "url": "https://github.com/hoonoh/slonik-live-server-dev/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/hoonoh/slonik-live-server"
+    "url": "https://github.com/hoonoh/slonik-live-server-dev"
   },
   "author": {
     "name": "hoonoh"

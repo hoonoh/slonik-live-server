@@ -19,10 +19,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/hoonoh/slonik-live-server.git"
+    "url": "https://github.com/hoonoh/slonik-live-server-dev.git"
   },
   "bugs": {
-    "url": "https://github.com/hoonoh/slonik-live-server/issues"
+    "url": "https://github.com/hoonoh/slonik-live-server-dev/issues"
   },
   "categories": [
     "Programming Languages"
@@ -124,7 +124,7 @@
     "onLanguage:typescript",
     "onLanguage:javascript"
   ],
-  "qna": "https://github.com/hoonoh/slonik-live-server/issues",
+  "qna": "https://github.com/hoonoh/slonik-live-server-dev/issues",
   "extensionKind": [
     "ui",
     "workspace"
