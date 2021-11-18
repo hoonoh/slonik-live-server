@@ -47,6 +47,7 @@ if (packageName === 'ts-slonik-live-server-plugin') {
     prepare: {
       path: 'semantic-release-vsce',
       packageVsix: true,
+      yarn: false,
     },
     publish: [
       'semantic-release-vsce',
