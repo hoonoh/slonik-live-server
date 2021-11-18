@@ -13,9 +13,7 @@
     "release": "yarn semantic-release",
     "postinstall": "yarn build",
     "build": "rimraf dist && tsc -p tsconfig.build.json",
-    "vscode:prepublish": "npm install --no-save && npm run compile && find node_modules -maxdepth 1",
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./"
+    "vscode:prepublish": "rimraf node_modules && npm install --no-save && npm run build && find node_modules -maxdepth 1"
   },
   "repository": {
     "type": "git",
