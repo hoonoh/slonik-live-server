@@ -13,12 +13,7 @@ if (packageName === 'ts-slonik-live-server-plugin') {
     plugins: [
       '@semantic-release/commit-analyzer',
       '@semantic-release/release-notes-generator',
-      [
-        '@semantic-release/changelog',
-        {
-          changelogTitle: `# ${packageName} changelog`,
-        },
-      ],
+      '@semantic-release/changelog',
       '@semantic-release/npm',
       '@semantic-release/github',
       [
@@ -38,13 +33,19 @@ if (packageName === 'ts-slonik-live-server-plugin') {
     plugins: [
       '@semantic-release/commit-analyzer',
       '@semantic-release/release-notes-generator',
+      '@semantic-release/changelog',
       [
-        '@semantic-release/changelog',
+        'semantic-release-vsce',
         {
-          changelogTitle: `# ${packageName} changelog`,
+          packageVsix: true,
         },
       ],
-      '@semantic-release/github',
+      [
+        '@semantic-release/github',
+        {
+          assets: [{ path: './*.vsix' }],
+        },
+      ],
       [
         '@semantic-release/git',
         {
@@ -52,18 +53,6 @@ if (packageName === 'ts-slonik-live-server-plugin') {
           message: 'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}',
         },
       ],
-    ],
-    verifyConditions: ['semantic-release-vsce', '@semantic-release/github'],
-    prepare: {
-      path: 'semantic-release-vsce',
-      packageVsix: true,
-    },
-    publish: [
-      'semantic-release-vsce',
-      {
-        path: '@semantic-release/github',
-        assets: '*.vsix',
-      },
     ],
   };
 } else {

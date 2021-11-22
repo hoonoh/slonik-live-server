@@ -5,7 +5,7 @@
   "license": "MIT",
   "dependencies": {
     "slonik": "^24.0.0",
-    "ts-slonik-live-server-plugin": "0.0.0-development",
+    "ts-slonik-live-server-plugin": "*",
     "typescript": "^4.2.3"
   }
 }
