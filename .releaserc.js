@@ -34,11 +34,16 @@ if (packageName === 'ts-slonik-live-server-plugin') {
       '@semantic-release/commit-analyzer',
       '@semantic-release/release-notes-generator',
       '@semantic-release/changelog',
-      '@semantic-release/github',
+      [
+        '@semantic-release/github',
+        {
+          path: './*.vsix',
+        },
+      ],
       [
         '@semantic-release/git',
         {
-          assets: ['package.json', 'CHANGELOG.md', '*.vsix'],
+          assets: ['package.json', 'CHANGELOG.md'],
           message: 'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}',
         },
       ],
@@ -47,7 +52,6 @@ if (packageName === 'ts-slonik-live-server-plugin') {
     prepare: {
       path: 'semantic-release-vsce',
       packageVsix: true,
-      yarn: false,
     },
     publish: [
       'semantic-release-vsce',
