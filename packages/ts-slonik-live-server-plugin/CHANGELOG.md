@@ -5,6 +5,13 @@
 
 * test patch version ([06ff2f1](https://github.com/hoonoh/slonik-live-server-dev/commit/06ff2f1b32f3b97a62c020e76e3767c3791ed441))
 
+# [ts-slonik-live-server-plugin-v1.1.0-alpha.2](https://github.com/hoonoh/slonik-live-server-dev/compare/ts-slonik-live-server-plugin-v1.1.0-alpha.1...ts-slonik-live-server-plugin-v1.1.0-alpha.2) (2021-11-22)
+
+
+### Bug Fixes
+
+* test patch version ([06ff2f1](https://github.com/hoonoh/slonik-live-server-dev/commit/06ff2f1b32f3b97a62c020e76e3767c3791ed441))
+
 # [ts-slonik-live-server-plugin-v1.1.0-alpha.1](https://github.com/hoonoh/slonik-live-server-dev/compare/ts-slonik-live-server-plugin-v1.0.0...ts-slonik-live-server-plugin-v1.1.0-alpha.1) (2021-11-18)
 
 
