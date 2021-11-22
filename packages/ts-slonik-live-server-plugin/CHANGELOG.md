@@ -1,3 +1,10 @@
+# [ts-slonik-live-server-plugin-v1.1.1](https://github.com/hoonoh/slonik-live-server/compare/ts-slonik-live-server-plugin-v1.1.0...ts-slonik-live-server-plugin-v1.1.1) (2021-11-22)
+
+
+### Bug Fixes
+
+* **deps:** update dependency d-forest to v3 ([#98](https://github.com/hoonoh/slonik-live-server/issues/98)) ([e83740e](https://github.com/hoonoh/slonik-live-server/commit/e83740eeb1940559feda33212c0275d95c1d6f03))
+
 # [ts-slonik-live-server-plugin-v1.1.0](https://github.com/hoonoh/slonik-live-server/compare/ts-slonik-live-server-plugin-v1.0.0...ts-slonik-live-server-plugin-v1.1.0) (2021-11-22)
 
 
