@@ -29,11 +29,17 @@ if (packageName === 'ts-slonik-live-server-plugin') {
   console.log('loading config for', packageName);
   config = {
     extends: 'semantic-release-monorepo',
-    branches: ['main', { name: 'preview', prerelease: true }, { name: 'alpha', prerelease: true }],
+    branches: ['main'],
     plugins: [
       '@semantic-release/commit-analyzer',
       '@semantic-release/release-notes-generator',
       '@semantic-release/changelog',
+      [
+        'semantic-release-vsce',
+        {
+          packageVsix: true,
+        },
+      ],
       [
         '@semantic-release/github',
         {
@@ -47,18 +53,6 @@ if (packageName === 'ts-slonik-live-server-plugin') {
           message: 'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}',
         },
       ],
-    ],
-    verifyConditions: ['semantic-release-vsce', '@semantic-release/github'],
-    prepare: {
-      path: 'semantic-release-vsce',
-      packageVsix: true,
-    },
-    publish: [
-      'semantic-release-vsce',
-      {
-        path: '@semantic-release/github',
-        assets: '*.vsix',
-      },
     ],
   };
 } else {
