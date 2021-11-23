@@ -1,3 +1,10 @@
+# [ts-slonik-live-server-plugin-v1.1.3](https://github.com/hoonoh/slonik-live-server/compare/ts-slonik-live-server-plugin-v1.1.2...ts-slonik-live-server-plugin-v1.1.3) (2021-11-23)
+
+
+### Bug Fixes
+
+* add missing pg deps ([#107](https://github.com/hoonoh/slonik-live-server/issues/107)) ([424e831](https://github.com/hoonoh/slonik-live-server/commit/424e8310b73e2988e4313c0cce7a0524aa1b6aa3))
+
 # [ts-slonik-live-server-plugin-v1.1.2](https://github.com/hoonoh/slonik-live-server/compare/ts-slonik-live-server-plugin-v1.1.1...ts-slonik-live-server-plugin-v1.1.2) (2021-11-23)
 
 
