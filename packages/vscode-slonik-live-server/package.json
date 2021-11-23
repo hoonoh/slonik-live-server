@@ -1,6 +1,6 @@
 {
   "name": "vscode-slonik-live-server",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "publisher": "hoonoh",
   "engines": {
     "vscode": "^1.61.2"
