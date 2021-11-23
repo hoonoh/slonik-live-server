@@ -41,7 +41,7 @@ describe('primitive handler', () => {
   });
 
   describe('should handle string keyword', () => {
-    const expected = `select 'ad4577b0'`;
+    const expected = `select 'a74a206b'`;
 
     const results = getDiagnosticFromSourceText(`
       import { sql } from 'slonik';
@@ -60,13 +60,13 @@ describe('primitive handler', () => {
   });
 
   describe('should handle string keyword as raw', () => {
-    const expected = `select a8c00b1a from (values('foo')) as t(a8c00b1a) where a8c00b1a = 'foo'`;
+    const expected = `select a52af533 from (values('foo')) as t(a52af533) where a52af533 = 'foo'`;
 
     const results = getDiagnosticFromSourceText(`
       import { sql } from 'slonik';
       import { raw } from 'slonik-sql-tag-raw';
       const foo: string;
-      sql\`select a8c00b1a from (values('foo')) as t(a8c00b1a) where \${raw(foo)} = 'foo'\`;
+      sql\`select a52af533 from (values('foo')) as t(a52af533) where \${raw(foo)} = 'foo'\`;
     `);
 
     it('check results count', () => {
@@ -74,8 +74,8 @@ describe('primitive handler', () => {
     });
 
     it.each(results)(`returns \`${expected}\``, (title: string, diagnostic: ts.Diagnostic) => {
-      expect(diagnostic.category).toEqual(ts.DiagnosticCategory.Suggestion);
       expect(diagnostic.messageText.toString()).toContain(expected);
+      expect(diagnostic.category).toEqual(ts.DiagnosticCategory.Suggestion);
     });
   });
 
@@ -98,7 +98,7 @@ describe('primitive handler', () => {
   });
 
   describe('should handle union types', () => {
-    const expected = `select 'a2a0e01b'`;
+    const expected = `select 'ad9317d8'`;
 
     const results = getDiagnosticFromSourceText(`
       import { sql } from 'slonik';
@@ -120,7 +120,7 @@ describe('primitive handler', () => {
   });
 
   describe('should handle number keyword', () => {
-    const expected = `select 6220`;
+    const expected = `select 29713`;
 
     const results = getDiagnosticFromSourceText(`
       import { sql } from 'slonik';
