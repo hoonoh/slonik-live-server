@@ -31,14 +31,12 @@ export const generatePlaceholder = (values: Value[], node?: ts.Node, returnNumbe
   if (node) {
     src = JSON.stringify({
       node: {
-        flags: node.flags,
         childCount: node.getChildCount(),
         fullText: node.getFullText(),
         fullWidth: node.getFullWidth(),
         pos: node.pos,
         leadingTriviaWidth: node.getLeadingTriviaWidth(),
         start: node.getStart(),
-        kind: node.kind,
       },
       values,
     });

@@ -200,7 +200,7 @@ describe('identifier handler', () => {
   });
 
   describe('should handle from value type', () => {
-    const expected = `select 'ad4577b0'`;
+    const expected = `select 'a74a206b'`;
 
     const results = getDiagnosticFromSourceText(`
       import { sql } from 'slonik';
