@@ -3741,11 +3741,6 @@ cz-conventional-changelog@3.3.0:
   optionalDependencies:
     "@commitlint/load" ">6.1.1"
 
-d-forest@2.2.7:
-  version "2.2.7"
-  resolved "https://registry.yarnpkg.com/d-forest/-/d-forest-2.2.7.tgz#af4648b6596300e342d82a7b8ef731bfa66652a4"
-  integrity sha512-32c/nQVJzHh0nyhtLAb0iCE1QO7HHMwZavXTkp1ozspkMDGJgg4JalCAB1H+TB1HGpAnh/Z+M307IBun+cnBtA==
-
 d-forest@3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/d-forest/-/d-forest-3.1.0.tgz#3c3374dbaa531d194a5df3a535aab0e1ec1510d5"
@@ -10309,17 +10304,6 @@ ts-node@10.4.0:
     diff "^4.0.1"
     make-error "^1.1.1"
     yn "3.1.1"
-
-ts-slonik-live-server-plugin@0.0.3:
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/ts-slonik-live-server-plugin/-/ts-slonik-live-server-plugin-0.0.3.tgz#504dd1d84cde7075eb5cc79c6266ef9101e38742"
-  integrity sha512-dn+vePNusHr8pFvePes1jGUZvbhXuKZ5NS7KEWrmpwqcU7bIr7q61VNmKxHeTp8cYn6rOcPhot8bzCEGFnWMWA==
-  dependencies:
-    d-forest "2.2.7"
-    dotenv "10.0.0"
-    pgsql-ast-parser "9.2.1"
-    safe-stable-stringify "2.2.0"
-    typescript-template-language-service-decorator "2.2.0"
 
 tsconfig-paths@^3.11.0:
   version "3.11.0"
