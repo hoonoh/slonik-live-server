@@ -1,3 +1,10 @@
+# [ts-slonik-live-server-plugin-v1.1.2](https://github.com/hoonoh/slonik-live-server/compare/ts-slonik-live-server-plugin-v1.1.1...ts-slonik-live-server-plugin-v1.1.2) (2021-11-23)
+
+
+### Bug Fixes
+
+* generatePlaceholder ([#102](https://github.com/hoonoh/slonik-live-server/issues/102)) ([bcb0835](https://github.com/hoonoh/slonik-live-server/commit/bcb0835d0aa7119014ce9c56315faf7d1434a83e))
+
 # [ts-slonik-live-server-plugin-v1.1.1](https://github.com/hoonoh/slonik-live-server/compare/ts-slonik-live-server-plugin-v1.1.0...ts-slonik-live-server-plugin-v1.1.1) (2021-11-22)
 
 
