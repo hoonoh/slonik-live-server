@@ -1,12 +1,12 @@
 {
   "extends": ["config:base", ":automergeAll", "group:allNonMajor"],
   "schedule": ["after 3pm on Friday"],
+  "updateInternalDeps": true,
   "suppressNotifications": ["prIgnoreNotification"],
   "packageRules": [
     {
       "matchPackageNames": ["ts-slonik-live-server-plugin"],
-      "schedule": [],
-      "updateInternalDeps": true
+      "schedule": []
     }
   ]
 }
