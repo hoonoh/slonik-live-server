@@ -5,7 +5,8 @@
   "packageRules": [
     {
       "matchPackageNames": ["ts-slonik-live-server-plugin"],
-      "schedule": ["after 3pm"]
+      "schedule": [],
+      "updateInternalDeps": true
     }
   ]
 }
