@@ -7,7 +7,6 @@ import { Config } from '../config';
 import { LanguageServiceLogger } from '../logger';
 import { PgError, pgQuery } from '../pg/query';
 import { getPreviousLine } from '../util';
-import { disableCostErrorKeyword, disableKeyword, disablerErrorCode } from './constants';
 import { SqlTemplteLiteralHandler } from './handlers/sql-template-literal';
 import { SqlDiagnostic, SqlInfo } from './types';
 import { getErrorPosition } from './util/error-position';
@@ -79,14 +78,15 @@ export class SqlDiagnosticService {
 
   findSqlNodes = (sourceFile: ts.SourceFile, includeAll = false) => {
     const result: ts.Node[] = [];
+    const config = this.config;
     function recurse(node: ts.Node) {
       if (ts.isTaggedTemplateExpression(node) && node.tag.getText() === 'sql') {
         // check if previous line includes disable statment
         const lastLine = getPreviousLine(sourceFile.text, node.getStart());
         if (
           includeAll ||
-          lastLine.includes(disableCostErrorKeyword) ||
-          !lastLine.includes(disableKeyword)
+          lastLine.includes(config.disableCostErrorKeyword) ||
+          !lastLine.includes(config.disableKeyword)
         ) {
           result.push(node);
         }
@@ -106,8 +106,8 @@ export class SqlDiagnosticService {
     if (!typeChecker) throw new Error('typechecker not found?');
 
     const previousLine = getPreviousLine(sourceFile.text, sqlNode.getStart());
-    const costErrorEnabled = !previousLine.includes(disableCostErrorKeyword);
-    const checkEnabled = !costErrorEnabled || !previousLine.includes(disableKeyword);
+    const costErrorEnabled = !previousLine.includes(this.config.disableCostErrorKeyword);
+    const checkEnabled = !costErrorEnabled || !previousLine.includes(this.config.disableKeyword);
     if (!checkEnabled) return undefined;
 
     this.log.debug(() => [`checkSqlNodes start`]);
@@ -198,7 +198,7 @@ export class SqlDiagnosticService {
           start: position?.start ?? 0,
           length: position?.length ?? sqlNode.getEnd() - sqlNode.getStart(),
           source: 'ts-slonik-live-server-plugin',
-          code: disablerErrorCode,
+          code: 1110,
           category: !isCostErrorEnabled ? ts.DiagnosticCategory.Suggestion : category,
           messageText,
         },

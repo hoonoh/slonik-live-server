@@ -38,15 +38,20 @@ type CostConfig = {
   threshold: CostThreshold;
 };
 
+type DisableKeywords = {
+  disableKeyword: string;
+  disableCostErrorKeyword: string;
+};
+
 export type PluginConfig = {
   dotEnv?: string;
   debug?: boolean;
   pg: PgConfig;
   cost: CostConfig;
-};
+} & Partial<DisableKeywords>;
 
 export class Config implements DeepReadonly<PluginConfig> {
-  private defaultConfig: DeepReadonly<PluginConfig> = {
+  private defaultConfig: DeepReadonly<PluginConfig & DisableKeywords> = {
     debug: false,
     pg: {
       uri: 'postgres://localhost/postgres',
@@ -68,9 +73,11 @@ export class Config implements DeepReadonly<PluginConfig> {
         warning: 50,
       },
     },
+    disableKeyword: 'ts-slonik-live-server-plugin-disable',
+    disableCostErrorKeyword: 'ts-slonik-live-server-plugin-disable-cost-errors',
   };
 
-  private current: DeepReadonly<PluginConfig>;
+  private current: DeepReadonly<PluginConfig & DisableKeywords>;
 
   get debug() {
     return !!this.current.debug;
@@ -82,6 +89,14 @@ export class Config implements DeepReadonly<PluginConfig> {
 
   get cost() {
     return this.current.cost as DeepReadonly<CostConfig>;
+  }
+
+  get disableKeyword() {
+    return this.current.disableKeyword;
+  }
+
+  get disableCostErrorKeyword() {
+    return this.current.disableCostErrorKeyword;
   }
 
   constructor(private info?: ts.server.PluginCreateInfo, private log?: LanguageServiceLogger) {
@@ -146,6 +161,9 @@ export class Config implements DeepReadonly<PluginConfig> {
           warning: config?.cost?.threshold?.warning ?? this.defaultConfig.cost.threshold?.warning,
         },
       },
+      disableKeyword: config?.disableKeyword ?? this.defaultConfig.disableKeyword,
+      disableCostErrorKeyword:
+        config?.disableCostErrorKeyword ?? this.defaultConfig.disableCostErrorKeyword,
     };
 
     const configOutput = JSON.stringify(this.current, null, 2);

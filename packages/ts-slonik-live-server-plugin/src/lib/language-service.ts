@@ -5,10 +5,10 @@ import {
   TemplateLanguageService,
 } from 'typescript-template-language-service-decorator';
 
+import { Config } from './config';
 import { LanguageServiceLogger } from './logger';
 import { PgInfoService } from './pg-info-service';
 import { SqlDiagnosticService } from './sql-diagnostic-service';
-import { disableCostErrorKeyword, disableKeyword } from './sql-diagnostic-service/constants';
 import { getPreviousLine } from './util';
 
 export class SqlLanguageService implements TemplateLanguageService {
@@ -16,6 +16,7 @@ export class SqlLanguageService implements TemplateLanguageService {
     private pgInfoService: PgInfoService,
     private sqlDiagnosticService: SqlDiagnosticService,
     private log: LanguageServiceLogger,
+    private config: Config,
   ) {}
 
   getCompletionEntryDetails(
@@ -80,7 +81,7 @@ export class SqlLanguageService implements TemplateLanguageService {
 
     const rtn: ts.CodeAction[] = [];
 
-    if (!previousLine.includes(disableCostErrorKeyword)) {
+    if (!previousLine.includes(this.config.disableCostErrorKeyword)) {
       rtn.push({
         changes: [
           {
@@ -91,7 +92,7 @@ export class SqlLanguageService implements TemplateLanguageService {
                   start: disableKeywordStart - context.node.getStart() - 1,
                   length: disableKeywordLength,
                 },
-                newText: `${indentation?.[0] || ''}// ${disableCostErrorKeyword}\n`,
+                newText: `${indentation?.[0] || ''}// ${this.config.disableCostErrorKeyword}\n`,
               },
             ],
           },
@@ -117,7 +118,7 @@ export class SqlLanguageService implements TemplateLanguageService {
                   start: disableKeywordStart - context.node.getStart() - 1,
                   length: disableKeywordLength,
                 },
-                newText: `${indentation?.[0] || ''}// ${disableKeyword}\n`,
+                newText: `${indentation?.[0] || ''}// ${this.config.disableKeyword}\n`,
               },
             ],
           },

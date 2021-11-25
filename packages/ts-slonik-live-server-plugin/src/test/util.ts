@@ -101,7 +101,12 @@ export const mockService = (files: Readonly<File[]>, debug?: boolean) => {
   const pgInfoService = new PgInfoService(config, log);
   pgInfoService.loadDbInfo();
   const sqlDiagnosticService = new SqlDiagnosticService(config, log, languageService);
-  const sqlLanguageService = new SqlLanguageService(pgInfoService, sqlDiagnosticService, log);
+  const sqlLanguageService = new SqlLanguageService(
+    pgInfoService,
+    sqlDiagnosticService,
+    log,
+    config,
+  );
 
   return {
     languageService,
