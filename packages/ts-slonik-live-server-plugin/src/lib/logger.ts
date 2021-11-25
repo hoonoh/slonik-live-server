@@ -64,7 +64,7 @@ export class LanguageServiceLogger implements Logger {
   }
 
   static log(msg: string) {
-    LanguageServiceLogger.logger?.info(`[${LanguageServiceLogger.head}] ${msg}`);
+    LanguageServiceLogger.logger?.info(`${LanguageServiceLogger.head} ${msg}`);
   }
 
   static debugGroupStart() {

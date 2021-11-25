@@ -63,7 +63,8 @@
       "**/.webpack": true,
       "**/.serverless": true,
       "yarn.lock": true,
-      "yarn-error.log": true
+      "yarn-error.log": true,
+      "coverage": true
     },
 
     "typescript.tsdk": "slonik-live-server/node_modules/typescript/lib",
