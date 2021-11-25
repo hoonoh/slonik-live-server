@@ -66,7 +66,7 @@
       "yarn-error.log": true
     },
 
-    "typescript.tsdk": "@monorepo_root/node_modules/typescript/lib",
+    "typescript.tsdk": "slonik-live-server/node_modules/typescript/lib",
 
     // for test workspace
     "slonikLiveServer.debug": true,
