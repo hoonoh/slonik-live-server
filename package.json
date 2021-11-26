@@ -69,7 +69,7 @@
     "lerna": "4.0.0",
     "mockdate": "3.0.5",
     "node-pg-migrate": "6.0.0",
-    "patch-package": "^6.4.7",
+    "patch-package": "6.4.7",
     "prettier": "2.4.1",
     "rimraf": "3.0.2",
     "semantic-release": "18.0.0",
