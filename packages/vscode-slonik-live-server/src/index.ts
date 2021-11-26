@@ -87,8 +87,7 @@ const syncConfig = (api: any) => {
           table: config['pg.exclude.table'],
         },
       },
-      disableKeyword: 'slonik-live-server-disable',
-      disableCostErrorKeyword: 'slonik-live-server-disable-cost-errors',
+      // pluginName: 'slonik-live-server',
     };
     const configOutput = JSON.stringify(config, null, 2);
     const [, , password] = configOutput.match(/postgresql\:\/\/(.+)\:(.+)@/) || ['', '', ''];
