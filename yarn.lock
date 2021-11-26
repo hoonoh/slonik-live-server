@@ -10388,6 +10388,18 @@ ts-node@10.4.0:
     make-error "^1.1.1"
     yn "3.1.1"
 
+ts-slonik-live-server-plugin@1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/ts-slonik-live-server-plugin/-/ts-slonik-live-server-plugin-1.1.3.tgz#5581f3cd2590b9ff6ce78b54f56ee051bf7487c7"
+  integrity sha512-Lw7hAI5X5nbO544TXufuBRo2iAgyYq6sO1I/fJ+O7V1lFRWW6ATlvQ/HhwxRZ9ffQsBqA3L2MG2jSN5/xzBc9w==
+  dependencies:
+    d-forest "3.1.0"
+    dotenv "10.0.0"
+    pg "8.7.1"
+    pgsql-ast-parser "9.2.1"
+    safe-stable-stringify "2.2.0"
+    typescript-template-language-service-decorator "2.2.0"
+
 tsconfig-paths@^3.11.0:
   version "3.11.0"
   resolved "https://registry.yarnpkg.com/tsconfig-paths/-/tsconfig-paths-3.11.0.tgz#954c1fe973da6339c78e06b03ce2e48810b65f36"
