@@ -42,7 +42,7 @@ class TsSlonikPlugin {
       this.typescript,
       info.languageService,
       info.project,
-      new SqlLanguageService(this.pgInfoService, this.sqlDiagnosticService, this.log),
+      new SqlLanguageService(this.pgInfoService, this.sqlDiagnosticService, this.log, this.config),
       {
         tags: ['sql'],
         enableForStringWithSubstitutions: true,

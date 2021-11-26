@@ -1,13 +1,12 @@
-/* eslint-disable class-methods-use-this */
 import { createHash } from 'crypto';
 import { QueryResult } from 'pg';
 import ts from 'typescript/lib/tsserverlibrary';
 
 import { Config } from '../config';
+import { DiagnosticCode } from '../diagnostic-code';
 import { LanguageServiceLogger } from '../logger';
 import { PgError, pgQuery } from '../pg/query';
 import { getPreviousLine } from '../util';
-import { disableCostErrorKeyword, disableKeyword, disablerErrorCode } from './constants';
 import { SqlTemplteLiteralHandler } from './handlers/sql-template-literal';
 import { SqlDiagnostic, SqlInfo } from './types';
 import { getErrorPosition } from './util/error-position';
@@ -79,14 +78,15 @@ export class SqlDiagnosticService {
 
   findSqlNodes = (sourceFile: ts.SourceFile, includeAll = false) => {
     const result: ts.Node[] = [];
+    const config = this.config;
     function recurse(node: ts.Node) {
       if (ts.isTaggedTemplateExpression(node) && node.tag.getText() === 'sql') {
         // check if previous line includes disable statment
         const lastLine = getPreviousLine(sourceFile.text, node.getStart());
         if (
           includeAll ||
-          lastLine.includes(disableCostErrorKeyword) ||
-          !lastLine.includes(disableKeyword)
+          lastLine.includes(config.disableCostErrorKeyword) ||
+          !lastLine.includes(config.disableKeyword)
         ) {
           result.push(node);
         }
@@ -106,8 +106,8 @@ export class SqlDiagnosticService {
     if (!typeChecker) throw new Error('typechecker not found?');
 
     const previousLine = getPreviousLine(sourceFile.text, sqlNode.getStart());
-    const costErrorEnabled = !previousLine.includes(disableCostErrorKeyword);
-    const checkEnabled = !costErrorEnabled || !previousLine.includes(disableKeyword);
+    const costErrorEnabled = !previousLine.includes(this.config.disableCostErrorKeyword);
+    const checkEnabled = !costErrorEnabled || !previousLine.includes(this.config.disableKeyword);
     if (!checkEnabled) return undefined;
 
     this.log.debug(() => [`checkSqlNodes start`]);
@@ -180,7 +180,7 @@ export class SqlDiagnosticService {
       category: ts.DiagnosticCategory,
       messageText: string,
       position?: { start: number; length: number },
-      isCostErrorEnabled = true,
+      isCostError = false,
     ) => {
       if (!position && category === ts.DiagnosticCategory.Suggestion) {
         position = {
@@ -188,6 +188,18 @@ export class SqlDiagnosticService {
           length: 3, // vscode seems to always set length to 1 when diagnostic category is suggestion
         };
       }
+
+      let code = DiagnosticCode.ok;
+      if (isCostError) {
+        if (category === ts.DiagnosticCategory.Warning) {
+          code = DiagnosticCode.costWarning;
+        } else if (category === ts.DiagnosticCategory.Error) {
+          code = DiagnosticCode.costError;
+        }
+      } else if (ts.DiagnosticCategory.Error) {
+        code = DiagnosticCode.error;
+      }
+
       const sqlDiagnostic: SqlDiagnostic = {
         ...sqlInfoPartial,
         raw,
@@ -197,12 +209,12 @@ export class SqlDiagnosticService {
           file: sourceFile,
           start: position?.start ?? 0,
           length: position?.length ?? sqlNode.getEnd() - sqlNode.getStart(),
-          source: 'ts-slonik-live-server-plugin',
-          code: disablerErrorCode,
-          category: !isCostErrorEnabled ? ts.DiagnosticCategory.Suggestion : category,
+          source: this.config.pluginName,
+          code,
+          category: isCostError && !costErrorEnabled ? ts.DiagnosticCategory.Suggestion : category,
           messageText,
         },
-        costErrorEnabled: isCostErrorEnabled,
+        costErrorEnabled,
       };
       this.updateCachedDiagnostic(sqlDiagnostic);
       this.log.debug(() => [`took`, Date.now() - now]);
@@ -312,7 +324,7 @@ export class SqlDiagnosticService {
           ts.DiagnosticCategory.Error,
           `explain cost error threshold: ${cost}${debugQuery(raw)}`,
           undefined,
-          costErrorEnabled,
+          true,
         );
       }
       if (this.config.cost.threshold.warning && cost > this.config.cost.threshold.warning) {
@@ -321,7 +333,7 @@ export class SqlDiagnosticService {
           ts.DiagnosticCategory.Warning,
           `explain cost warning: ${cost}${debugQuery(raw)}`,
           undefined,
-          costErrorEnabled,
+          true,
         );
       }
       if (this.config.cost.info) {
