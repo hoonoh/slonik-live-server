@@ -6,6 +6,7 @@ import {
 } from 'typescript-template-language-service-decorator';
 
 import { Config } from './config';
+import { DiagnosticCode } from './diagnostic-code';
 import { LanguageServiceLogger } from './logger';
 import { PgInfoService } from './pg-info-service';
 import { SqlDiagnosticService } from './sql-diagnostic-service';
@@ -34,7 +35,7 @@ export class SqlLanguageService implements TemplateLanguageService {
     return {
       displayParts: [],
       kind: ts.ScriptElementKind.keyword,
-      kindModifiers: 'ts-slonik-live-server-plugin',
+      kindModifiers: '',
       name,
       documentation,
     };
@@ -52,79 +53,91 @@ export class SqlLanguageService implements TemplateLanguageService {
     };
   }
 
-  getSemanticDiagnostics = (context: TemplateContext) => {
+  getSemanticDiagnostics(context: TemplateContext) {
     const diagnostic = this.sqlDiagnosticService.checkSqlNode(
       context.node.getSourceFile(),
       context.node,
     );
     if (!diagnostic) return [];
     return [diagnostic];
-  };
+  }
 
-  getCodeFixesAtPosition = (
+  getSupportedCodeFixes() {
+    return [
+      DiagnosticCode.ok,
+      DiagnosticCode.error,
+      DiagnosticCode.costError,
+      DiagnosticCode.costWarning,
+    ];
+  }
+
+  getCodeFixesAtPosition(
     context: TemplateContext,
     start: number,
     end: number,
     errorCodes: ReadonlyArray<number>,
     formatOptions: ts.FormatCodeSettings,
-  ) => {
+  ) {
     const sourceText = context.node.getSourceFile().getFullText();
 
-    let disableKeywordStart = sourceText.lastIndexOf('\n', context.node.getStart()) + 1;
-    let disableKeywordLength = 0;
+    const newLineCharacter = formatOptions.newLineCharacter || '\n';
+
+    const disableKeywordStart =
+      sourceText.lastIndexOf(newLineCharacter, context.node.getStart()) + 1;
 
     const indentation = formatOptions.convertTabsToSpaces
-      ? sourceText.substr(disableKeywordStart).match(new RegExp(/^( +)/))
-      : sourceText.substr(disableKeywordStart).match(new RegExp(/^(\t+)/));
+      ? sourceText.substring(disableKeywordStart).match(new RegExp(/^( +)/))
+      : sourceText.substring(disableKeywordStart).match(new RegExp(/^(\t+)/));
 
     const previousLine = getPreviousLine(sourceText, context.node.getStart());
 
-    const rtn: ts.CodeAction[] = [];
+    const span = {
+      start: disableKeywordStart - context.node.getStart() - 1,
+      length: 0,
+    };
 
-    if (!previousLine.includes(this.config.disableCostErrorKeyword)) {
+    const rtn: (ts.CodeAction | ts.CodeFixAction)[] = [];
+
+    if (
+      !previousLine.includes(this.config.disableCostErrorKeyword) &&
+      (errorCodes.includes(DiagnosticCode.costError) ||
+        errorCodes.includes(DiagnosticCode.costWarning))
+    ) {
       rtn.push({
         changes: [
           {
             fileName: context.fileName,
             textChanges: [
               {
-                span: {
-                  start: disableKeywordStart - context.node.getStart() - 1,
-                  length: disableKeywordLength,
-                },
+                span,
                 newText: `${indentation?.[0] || ''}// ${this.config.disableCostErrorKeyword}\n`,
               },
             ],
           },
         ],
-        description:
-          'disable ts-slonik-live-server-plugin cost errors for this sql tagged template',
+        description: `disable ${this.config.pluginName} cost errors for this sql tagged template`,
       });
-    } else {
-      disableKeywordStart = sourceText.indexOf(previousLine) + 1;
-      disableKeywordLength = previousLine.length;
-    }
-
-    return [
-      ...rtn,
-      {
-        fixName: 'ts-slonik-live-server-plugin-ignore',
+    } else if (
+      !previousLine.includes(this.config.disableKeyword) &&
+      errorCodes.includes(DiagnosticCode.error)
+    ) {
+      rtn.push({
+        fixName: this.config.disableKeyword,
         changes: [
           {
             fileName: context.fileName,
             textChanges: [
               {
-                span: {
-                  start: disableKeywordStart - context.node.getStart() - 1,
-                  length: disableKeywordLength,
-                },
+                span,
                 newText: `${indentation?.[0] || ''}// ${this.config.disableKeyword}\n`,
               },
             ],
           },
         ],
-        description: 'disable ts-slonik-live-server-plugin for this sql tagged template',
-      },
-    ];
-  };
+        description: `disable ${this.config.pluginName} for this sql tagged template`,
+      });
+    }
+
+    return rtn;
+  }
 }

@@ -38,9 +38,8 @@ type CostConfig = {
   threshold: CostThreshold;
 };
 
-type DisableKeywords = {
-  disableKeyword: string;
-  disableCostErrorKeyword: string;
+type PlauginName = {
+  pluginName: string;
 };
 
 export type PluginConfig = {
@@ -48,10 +47,10 @@ export type PluginConfig = {
   debug?: boolean;
   pg: PgConfig;
   cost: CostConfig;
-} & Partial<DisableKeywords>;
+} & Partial<PlauginName>;
 
 export class Config implements DeepReadonly<PluginConfig> {
-  private defaultConfig: DeepReadonly<PluginConfig & DisableKeywords> = {
+  private defaultConfig: DeepReadonly<PluginConfig & PlauginName> = {
     debug: false,
     pg: {
       uri: 'postgres://localhost/postgres',
@@ -73,11 +72,10 @@ export class Config implements DeepReadonly<PluginConfig> {
         warning: 50,
       },
     },
-    disableKeyword: 'ts-slonik-live-server-plugin-disable',
-    disableCostErrorKeyword: 'ts-slonik-live-server-plugin-disable-cost-errors',
+    pluginName: 'ts-slonik-live-server-plugin',
   };
 
-  private current: DeepReadonly<PluginConfig & DisableKeywords>;
+  private current: DeepReadonly<PluginConfig & PlauginName>;
 
   get debug() {
     return !!this.current.debug;
@@ -91,12 +89,16 @@ export class Config implements DeepReadonly<PluginConfig> {
     return this.current.cost as DeepReadonly<CostConfig>;
   }
 
+  get pluginName() {
+    return this.current.pluginName;
+  }
+
   get disableKeyword() {
-    return this.current.disableKeyword;
+    return this.current.pluginName + '-disable';
   }
 
   get disableCostErrorKeyword() {
-    return this.current.disableCostErrorKeyword;
+    return this.current.pluginName + '-disable-cost-errors';
   }
 
   constructor(private info?: ts.server.PluginCreateInfo, private log?: LanguageServiceLogger) {
@@ -161,9 +163,7 @@ export class Config implements DeepReadonly<PluginConfig> {
           warning: config?.cost?.threshold?.warning ?? this.defaultConfig.cost.threshold?.warning,
         },
       },
-      disableKeyword: config?.disableKeyword ?? this.defaultConfig.disableKeyword,
-      disableCostErrorKeyword:
-        config?.disableCostErrorKeyword ?? this.defaultConfig.disableCostErrorKeyword,
+      pluginName: config?.pluginName ?? this.defaultConfig.pluginName,
     };
 
     const configOutput = JSON.stringify(this.current, null, 2);
