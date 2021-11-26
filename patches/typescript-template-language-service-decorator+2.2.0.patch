@@ -1,0 +1,107 @@
+diff --git a/node_modules/typescript-template-language-service-decorator/lib/standard-template-source-helper.js b/node_modules/typescript-template-language-service-decorator/lib/standard-template-source-helper.js
+index ecb9e94..ab0e0bb 100644
+--- a/node_modules/typescript-template-language-service-decorator/lib/standard-template-source-helper.js
++++ b/node_modules/typescript-template-language-service-decorator/lib/standard-template-source-helper.js
+@@ -149,16 +149,16 @@ class StandardTemplateSourceHelper {
+                 }
+                 return undefined;
+             case this.typescript.SyntaxKind.TemplateHead:
+-                if (!templateStringSettings.enableForStringWithSubstitutions || !node.parent || !node.parent.parent) {
+-                    return undefined;
++                if (templateStringSettings.enableForStringWithSubstitutions && node.parent && node.parent.parent) {
++                    return this.getValidTemplateNode(templateStringSettings, node.parent.parent);
+                 }
+-                return this.getValidTemplateNode(templateStringSettings, node.parent.parent);
++                return undefined;
+             case this.typescript.SyntaxKind.TemplateMiddle:
+             case this.typescript.SyntaxKind.TemplateTail:
+-                if (!templateStringSettings.enableForStringWithSubstitutions || !node.parent || !node.parent.parent) {
+-                    return undefined;
++                if (templateStringSettings.enableForStringWithSubstitutions && node.parent && node.parent.parent) {
++                    return this.getValidTemplateNode(templateStringSettings, node.parent.parent.parent);
+                 }
+-                return this.getValidTemplateNode(templateStringSettings, node.parent.parent.parent);
++                return undefined;
+             default:
+                 return undefined;
+         }
+diff --git a/node_modules/typescript-template-language-service-decorator/lib/template-language-service-decorator.d.ts b/node_modules/typescript-template-language-service-decorator/lib/template-language-service-decorator.d.ts
+index 98409e5..fb83d0a 100644
+--- a/node_modules/typescript-template-language-service-decorator/lib/template-language-service-decorator.d.ts
++++ b/node_modules/typescript-template-language-service-decorator/lib/template-language-service-decorator.d.ts
+@@ -8,7 +8,7 @@ export default class TemplateLanguageServiceProxy {
+     private readonly templateStringService;
+     private readonly _wrappers;
+     constructor(typescript: typeof ts, sourceHelper: TemplateSourceHelper, templateStringService: TemplateLanguageService, _logger: Logger);
+-    decorate(languageService: ts.LanguageService): ts.LanguageService;
++    decorate(languageService: ts.LanguageService): any;
+     private tryAdaptGetSyntaxDiagnostics;
+     private tryAdaptGetSemanticDiagnostics;
+     private tryAdaptGetQuickInfoAtPosition;
+diff --git a/node_modules/typescript-template-language-service-decorator/lib/template-language-service-decorator.js b/node_modules/typescript-template-language-service-decorator/lib/template-language-service-decorator.js
+index cc03a1c..1e924ac 100644
+--- a/node_modules/typescript-template-language-service-decorator/lib/template-language-service-decorator.js
++++ b/node_modules/typescript-template-language-service-decorator/lib/template-language-service-decorator.js
+@@ -154,7 +154,7 @@ class TemplateLanguageServiceProxy {
+         this.typescript.getSupportedCodeFixes = () => {
+             return [
+                 ...delegate(),
+-                ...this.templateStringService.getSupportedCodeFixes(),
++                ...this.templateStringService.getSupportedCodeFixes().map(x => '' + x),
+             ];
+         };
+     }
+@@ -254,19 +254,19 @@ class TemplateLanguageServiceProxy {
+         const templateDiagnostics = [];
+         for (const context of this.sourceHelper.getAllTemplates(fileName)) {
+             for (const diagnostic of implementation(context)) {
+-                templateDiagnostics.push(Object.assign({}, diagnostic, { start: context.node.getStart() + 1 + (diagnostic.start || 0) }));
++                templateDiagnostics.push(Object.assign(Object.assign({}, diagnostic), { start: context.node.getStart() + 1 + (diagnostic.start || 0) }));
+             }
+         }
+         return [...baseDiagnostics, ...templateDiagnostics];
+     }
+     translateCompletionInfo(context, info) {
+-        return Object.assign({}, info, { entries: info.entries.map(entry => this.translateCompletionEntry(context, entry)) });
++        return Object.assign(Object.assign({}, info), { entries: info.entries.map(entry => this.translateCompletionEntry(context, entry)) });
+     }
+     translateCompletionEntry(context, entry) {
+-        return Object.assign({}, entry, { replacementSpan: entry.replacementSpan ? this.translateTextSpan(context, entry.replacementSpan) : undefined });
++        return Object.assign(Object.assign({}, entry), { replacementSpan: entry.replacementSpan ? this.translateTextSpan(context, entry.replacementSpan) : undefined });
+     }
+     translateTextChange(context, textChange) {
+-        return Object.assign({}, textChange, { span: this.translateTextSpan(context, textChange.span) });
++        return Object.assign(Object.assign({}, textChange), { span: this.translateTextSpan(context, textChange.span) });
+     }
+     translateFileTextChange(context, changes) {
+         return {
+@@ -275,13 +275,13 @@ class TemplateLanguageServiceProxy {
+         };
+     }
+     translateCodeAction(context, action) {
+-        return Object.assign({}, action, { fixName: action.fixName || '', changes: action.changes.map(change => this.translateFileTextChange(context, change)) });
++        return Object.assign(Object.assign({}, action), { fixName: action.fixName || '', changes: action.changes.map(change => this.translateFileTextChange(context, change)) });
+     }
+     translateSignatureHelpItems(context, signatureHelp) {
+-        return Object.assign({}, signatureHelp, { applicableSpan: this.translateTextSpan(context, signatureHelp.applicableSpan) });
++        return Object.assign(Object.assign({}, signatureHelp), { applicableSpan: this.translateTextSpan(context, signatureHelp.applicableSpan) });
+     }
+     translateOutliningSpan(context, span) {
+-        return Object.assign({}, span, { textSpan: this.translateTextSpan(context, span.textSpan), hintSpan: this.translateTextSpan(context, span.hintSpan) });
++        return Object.assign(Object.assign({}, span), { textSpan: this.translateTextSpan(context, span.textSpan), hintSpan: this.translateTextSpan(context, span.hintSpan) });
+     }
+     translateTextSpan(context, span) {
+         return {
+@@ -290,10 +290,10 @@ class TemplateLanguageServiceProxy {
+         };
+     }
+     translateDefinitionInfo(context, definition) {
+-        return Object.assign({}, definition, { fileName: context.fileName, textSpan: this.translateTextSpan(context, definition.textSpan) });
++        return Object.assign(Object.assign({}, definition), { fileName: context.fileName, textSpan: this.translateTextSpan(context, definition.textSpan) });
+     }
+     translateReferenceEntry(context, entry) {
+-        return Object.assign({}, entry, { fileName: context.fileName, textSpan: this.translateTextSpan(context, entry.textSpan) });
++        return Object.assign(Object.assign({}, entry), { fileName: context.fileName, textSpan: this.translateTextSpan(context, entry.textSpan) });
+     }
+ }
+ exports.default = TemplateLanguageServiceProxy;
