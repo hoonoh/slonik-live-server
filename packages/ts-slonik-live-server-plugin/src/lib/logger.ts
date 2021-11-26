@@ -85,14 +85,14 @@ export class LanguageServiceLogger implements Logger {
   static debug(msg: MessageType): void;
   static debug(msgGenerator: () => MessageType | MessageType[]): void;
   static debug(stringOrGenerator: any) {
-    if (LanguageServiceLogger.isDebugEnabled) {
-      if (typeof stringOrGenerator === 'string') {
+    if (LanguageServiceLogger.logger?.loggingEnabled() && LanguageServiceLogger.isDebugEnabled) {
+      if (typeof stringOrGenerator !== 'function') {
         LanguageServiceLogger.logger?.info(
           `${LanguageServiceLogger.head}debug: ${' '.repeat(
             LanguageServiceLogger.debugGroup * 2,
           )}${LanguageServiceLogger.parseMessage(stringOrGenerator)}`,
         );
-      } else if (LanguageServiceLogger.logger?.loggingEnabled()) {
+      } else {
         LanguageServiceLogger.logger?.info(
           `${LanguageServiceLogger.head}debug: ${' '.repeat(
             LanguageServiceLogger.debugGroup * 2,
