@@ -1,3 +1,10 @@
+# [ts-slonik-live-server-plugin-v1.1.4](https://github.com/hoonoh/slonik-live-server/compare/ts-slonik-live-server-plugin-v1.1.3...ts-slonik-live-server-plugin-v1.1.4) (2021-11-26)
+
+
+### Bug Fixes
+
+* multiple fixes ([#109](https://github.com/hoonoh/slonik-live-server/issues/109)) ([b443795](https://github.com/hoonoh/slonik-live-server/commit/b4437956e2985b03d905017115ea4b18a7a56e5d))
+
 # [ts-slonik-live-server-plugin-v1.1.3](https://github.com/hoonoh/slonik-live-server/compare/ts-slonik-live-server-plugin-v1.1.2...ts-slonik-live-server-plugin-v1.1.3) (2021-11-23)
 
 
