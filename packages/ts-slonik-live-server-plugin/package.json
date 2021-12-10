@@ -75,7 +75,7 @@
     "dotenv": "10.0.0",
     "pg": "8.7.1",
     "pgsql-ast-parser": "9.2.1",
-    "safe-stable-stringify": "2.3.0",
+    "safe-stable-stringify": "2.3.1",
     "typescript-template-language-service-decorator": "2.2.0"
   }
 }
