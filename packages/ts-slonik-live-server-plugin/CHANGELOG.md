@@ -1,3 +1,10 @@
+# [ts-slonik-live-server-plugin-v1.1.6](https://github.com/hoonoh/slonik-live-server/compare/ts-slonik-live-server-plugin-v1.1.5...ts-slonik-live-server-plugin-v1.1.6) (2022-01-04)
+
+
+### Bug Fixes
+
+* fix getSupportedCodeFixes bug ([60b2c36](https://github.com/hoonoh/slonik-live-server/commit/60b2c3639c73cafae91d5b95d06967d95021bd21)), closes [#117](https://github.com/hoonoh/slonik-live-server/issues/117)
+
 # [ts-slonik-live-server-plugin-v1.1.5](https://github.com/hoonoh/slonik-live-server/compare/ts-slonik-live-server-plugin-v1.1.4...ts-slonik-live-server-plugin-v1.1.5) (2022-01-04)
 
 
