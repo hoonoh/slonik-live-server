@@ -38,11 +38,18 @@ class TsSlonikPlugin {
       info.languageService,
     );
 
+    const sqlLanguageService = new SqlLanguageService(
+      this.pgInfoService,
+      this.sqlDiagnosticService,
+      this.log,
+      this.config,
+    );
+
     const languageService = decorateWithTemplateLanguageService(
       this.typescript,
       info.languageService,
       info.project,
-      new SqlLanguageService(this.pgInfoService, this.sqlDiagnosticService, this.log, this.config),
+      sqlLanguageService,
       {
         tags: ['sql'],
         enableForStringWithSubstitutions: true,
@@ -50,6 +57,13 @@ class TsSlonikPlugin {
       { logger: this.log },
     );
     (languageService as any)[tsSlonikPluginMarker] = true;
+
+    // https://github.com/microsoft/typescript-template-language-service-decorator/blob/3af3ba3527f8919c1c8a4fbe8348206585177ec4/src/template-language-service-decorator.ts#L193-L204
+    const delegate = this.typescript.getSupportedCodeFixes.bind(this.typescript);
+    this.typescript.getSupportedCodeFixes = () => {
+      return [...delegate(), ...sqlLanguageService.getSupportedCodeFixes().map(x => '' + x)];
+    };
+
     return languageService;
   }
 
