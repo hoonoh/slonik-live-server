@@ -63,6 +63,13 @@ const syncConfig = (api: any) => {
       config[k] = conf as any;
     }
   });
+
+  const configMaskPassword = (conf: DeepPartial<PluginConfig>) => {
+    const configOutput = JSON.stringify(conf, null, 2);
+    const [, , password] = configOutput.match(/postgresql\:\/\/(.+)\:(.+)@/) || ['', '', ''];
+    return configOutput.replace(password, '*'.repeat(password.length));
+  };
+
   if (before !== JSON.stringify(config)) {
     const newConfig: DeepPartial<PluginConfig> = {
       debug: config.debug,
@@ -89,15 +96,11 @@ const syncConfig = (api: any) => {
       },
       pluginName: 'slonik-live-server',
     };
-    const configOutput = JSON.stringify(config, null, 2);
-    const [, , password] = configOutput.match(/postgresql\:\/\/(.+)\:(.+)@/) || ['', '', ''];
-    output.appendLine(
-      `loaded config:\n${configOutput.replace(password, '*'.repeat(password.length))}`,
-    );
+    output.appendLine(`vscode-slonik-live-server loaded config:\n${configMaskPassword(newConfig)}`);
     api.configurePlugin('ts-slonik-live-server-plugin', newConfig);
     return;
   }
-  output.appendLine(`config unchanged\n${before}\n${JSON.stringify(config)}`);
+  output.appendLine(`config unchanged\n${before}\n${configMaskPassword(config)}`);
 };
 
 export async function activate(context: ExtensionContext) {
