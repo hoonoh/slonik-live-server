@@ -1,3 +1,10 @@
+# [ts-slonik-live-server-plugin-v1.1.7](https://github.com/hoonoh/slonik-live-server/compare/ts-slonik-live-server-plugin-v1.1.6...ts-slonik-live-server-plugin-v1.1.7) (2022-01-14)
+
+
+### Bug Fixes
+
+* **deps:** update dependency dotenv to v11 ([#127](https://github.com/hoonoh/slonik-live-server/issues/127)) ([ccef11f](https://github.com/hoonoh/slonik-live-server/commit/ccef11fe084c2480900b10ccb1767d3ed13ccdd0))
+
 # [ts-slonik-live-server-plugin-v1.1.6](https://github.com/hoonoh/slonik-live-server/compare/ts-slonik-live-server-plugin-v1.1.5...ts-slonik-live-server-plugin-v1.1.6) (2022-01-04)
 
 
