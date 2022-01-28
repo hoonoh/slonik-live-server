@@ -72,9 +72,9 @@
   },
   "dependencies": {
     "d-forest": "3.2.4",
-    "dotenv": "14.2.0",
+    "dotenv": "14.3.2",
     "pg": "8.7.1",
-    "pgsql-ast-parser": "9.2.1",
+    "pgsql-ast-parser": "9.2.2",
     "safe-stable-stringify": "2.3.1",
     "slonik": "27.1.0",
     "slonik-sql-tag-raw": "1.1.3",
