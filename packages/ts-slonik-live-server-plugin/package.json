@@ -72,7 +72,7 @@
   },
   "dependencies": {
     "d-forest": "3.2.4",
-    "dotenv": "14.3.2",
+    "dotenv": "16.0.0",
     "pg": "8.7.3",
     "pgsql-ast-parser": "9.3.2",
     "safe-stable-stringify": "2.3.1",
