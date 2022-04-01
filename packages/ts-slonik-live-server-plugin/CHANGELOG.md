@@ -1,3 +1,10 @@
+# [ts-slonik-live-server-plugin-v1.1.10](https://github.com/hoonoh/slonik-live-server/compare/ts-slonik-live-server-plugin-v1.1.9...ts-slonik-live-server-plugin-v1.1.10) (2022-04-01)
+
+
+### Bug Fixes
+
+* **deps:** update dependency pgsql-ast-parser to v10 ([#165](https://github.com/hoonoh/slonik-live-server/issues/165)) ([b4e1fe7](https://github.com/hoonoh/slonik-live-server/commit/b4e1fe764a212e5395bba373cfff8b9af1f33ab5))
+
 # [ts-slonik-live-server-plugin-v1.1.9](https://github.com/hoonoh/slonik-live-server/compare/ts-slonik-live-server-plugin-v1.1.8...ts-slonik-live-server-plugin-v1.1.9) (2022-02-04)
 
 
