@@ -74,7 +74,7 @@
     "d-forest": "3.2.4",
     "dotenv": "16.0.0",
     "pg": "8.7.3",
-    "pgsql-ast-parser": "9.3.2",
+    "pgsql-ast-parser": "10.0.0",
     "safe-stable-stringify": "2.3.1",
     "slonik": "27.1.1",
     "slonik-sql-tag-raw": "1.1.4",
