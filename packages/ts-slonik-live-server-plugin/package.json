@@ -78,6 +78,6 @@
     "safe-stable-stringify": "2.3.1",
     "slonik": "27.1.1",
     "slonik-sql-tag-raw": "1.1.4",
-    "typescript-template-language-service-decorator": "2.2.0"
+    "typescript-template-language-service-decorator": "2.3.1"
   }
 }
