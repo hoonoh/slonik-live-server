@@ -1,3 +1,10 @@
+# [ts-slonik-live-server-plugin-v1.1.11](https://github.com/hoonoh/slonik-live-server/compare/ts-slonik-live-server-plugin-v1.1.10...ts-slonik-live-server-plugin-v1.1.11) (2022-04-29)
+
+
+### Bug Fixes
+
+* **deps:** update dependency slonik to v28 ([#166](https://github.com/hoonoh/slonik-live-server/issues/166)) ([f2e9328](https://github.com/hoonoh/slonik-live-server/commit/f2e9328f696ccf78db35fc3b96202ae8080ff3f2))
+
 # [ts-slonik-live-server-plugin-v1.1.10](https://github.com/hoonoh/slonik-live-server/compare/ts-slonik-live-server-plugin-v1.1.9...ts-slonik-live-server-plugin-v1.1.10) (2022-04-01)
 
 
