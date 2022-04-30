@@ -127,7 +127,7 @@
     "workspace"
   ],
   "dependencies": {
-    "ts-slonik-live-server-plugin": "1.1.10"
+    "ts-slonik-live-server-plugin": "1.1.11"
   },
   "icon": "pg.png"
 }
