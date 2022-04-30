@@ -1,3 +1,10 @@
+# [vscode-slonik-live-server-v1.0.11](https://github.com/hoonoh/slonik-live-server/compare/vscode-slonik-live-server-v1.0.10...vscode-slonik-live-server-v1.0.11) (2022-04-30)
+
+
+### Bug Fixes
+
+* **deps:** update dependency ts-slonik-live-server-plugin to v1.1.11 ([#175](https://github.com/hoonoh/slonik-live-server/issues/175)) ([292d092](https://github.com/hoonoh/slonik-live-server/commit/292d09280ae116b163a0ff21e5be4b8857c3da1a))
+
 # [vscode-slonik-live-server-v1.0.10](https://github.com/hoonoh/slonik-live-server/compare/vscode-slonik-live-server-v1.0.9...vscode-slonik-live-server-v1.0.10) (2022-04-02)
 
 
