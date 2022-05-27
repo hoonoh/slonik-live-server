@@ -66,7 +66,7 @@
     "husky": "8.0.1",
     "jest": "28.1.0",
     "jest-extended": "2.0.0",
-    "lerna": "4.0.0",
+    "lerna": "5.0.0",
     "mockdate": "3.0.5",
     "node-pg-migrate": "6.2.1",
     "prettier": "2.6.2",
