@@ -43,7 +43,7 @@
     "@semantic-release/github": "8.0.4",
     "@semantic-release/npm": "9.0.1",
     "@semantic-release/release-notes-generator": "10.0.3",
-    "@types/jest": "27.5.1",
+    "@types/jest": "28.1.0",
     "@types/node": "16.11.36",
     "@types/pg": "8.6.5",
     "@types/vscode": "1.67.0",
