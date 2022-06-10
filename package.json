@@ -71,7 +71,7 @@
     "node-pg-migrate": "6.2.1",
     "prettier": "2.6.2",
     "rimraf": "3.0.2",
-    "semantic-release": "19.0.2",
+    "semantic-release": "19.0.3",
     "semantic-release-monorepo": "7.0.5",
     "semantic-release-vsce": "5.0.12",
     "ts-essentials": "9.1.2",
