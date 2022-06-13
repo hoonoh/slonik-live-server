@@ -53,7 +53,7 @@
     "commitizen": "4.2.4",
     "cpy-cli": "4.1.0",
     "cz-conventional-changelog": "3.3.0",
-    "eslint": "8.16.0",
+    "eslint": "8.17.0",
     "eslint-config-airbnb-base": "15.0.0",
     "eslint-config-airbnb-typescript": "17.0.0",
     "eslint-config-prettier": "8.5.0",
