@@ -1,4 +1,4 @@
-import { readFileSync } from 'fs';
+import { existsSync, readFileSync } from 'fs';
 import { basename } from 'path';
 import ts from 'typescript/lib/tsserverlibrary';
 
@@ -42,6 +42,8 @@ export const mockService = (files: Readonly<File[]>, debug?: boolean) => {
       };
     },
     getScriptVersion: () => '1',
+    readFile: path => readFileSync(path, 'utf-8'),
+    fileExists: path => existsSync(path),
   };
 
   const languageService = ts.createLanguageService(host);
