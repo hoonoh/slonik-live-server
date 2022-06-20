@@ -52,7 +52,7 @@
       "<rootDir>/src"
     ],
     "transform": {
-      "^.+\\.ts?$": "ts-jest"
+      "^.+\\.ts?$": "@swc/jest"
     },
     "collectCoverage": true,
     "collectCoverageFrom": [
@@ -60,11 +60,6 @@
       "!./src/test/**"
     ],
     "coverageDirectory": "./coverage",
-    "globals": {
-      "ts-jest": {
-        "tsconfig": "./tsconfig.json"
-      }
-    },
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.ts$",
     "setupFilesAfterEnv": [
       "jest-extended/all"
