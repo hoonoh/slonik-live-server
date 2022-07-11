@@ -1,3 +1,10 @@
+# [ts-slonik-live-server-plugin-v1.1.12](https://github.com/hoonoh/slonik-live-server/compare/ts-slonik-live-server-plugin-v1.1.11...ts-slonik-live-server-plugin-v1.1.12) (2022-07-11)
+
+
+### Bug Fixes
+
+* replace cpy with cp ([#199](https://github.com/hoonoh/slonik-live-server/issues/199)) ([bb9c691](https://github.com/hoonoh/slonik-live-server/commit/bb9c691abb350368b339784fc2d94e064c5bb501))
+
 # [ts-slonik-live-server-plugin-v1.1.11](https://github.com/hoonoh/slonik-live-server/compare/ts-slonik-live-server-plugin-v1.1.10...ts-slonik-live-server-plugin-v1.1.11) (2022-04-29)
 
 
