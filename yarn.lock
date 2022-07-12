@@ -11909,6 +11909,7 @@ __metadata:
   resolution: "vscode-slonik-live-server@workspace:packages/vscode-slonik-live-server"
   dependencies:
     "@types/vscode": 1.68.0
+    semantic-release: 19.0.3
     ts-essentials: 9.1.2
     ts-slonik-live-server-plugin: 1.1.12
     typescript: 4.7.4
