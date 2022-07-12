@@ -3689,7 +3689,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chalk@npm:<5":
+"chalk@npm:^4.1.2":
   version: 4.1.2
   resolution: "chalk@npm:4.1.2"
   dependencies:
@@ -11453,7 +11453,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-slonik-live-server-plugin@*, ts-slonik-live-server-plugin@1.1.12, ts-slonik-live-server-plugin@workspace:packages/ts-slonik-live-server-plugin":
+"ts-slonik-live-server-plugin@*, ts-slonik-live-server-plugin@workspace:packages/ts-slonik-live-server-plugin":
   version: 0.0.0-use.local
   resolution: "ts-slonik-live-server-plugin@workspace:packages/ts-slonik-live-server-plugin"
   dependencies:
@@ -11469,6 +11469,22 @@ __metadata:
     typescript-template-language-service-decorator: 2.3.1
   languageName: unknown
   linkType: soft
+
+"ts-slonik-live-server-plugin@npm:1.1.12":
+  version: 1.1.12
+  resolution: "ts-slonik-live-server-plugin@npm:1.1.12"
+  dependencies:
+    d-forest: 3.2.4
+    dotenv: 16.0.1
+    pg: 8.7.3
+    pgsql-ast-parser: 10.4.0
+    safe-stable-stringify: 2.3.1
+    slonik: 28.1.1
+    slonik-sql-tag-raw: 1.1.4
+    typescript-template-language-service-decorator: 2.3.1
+  checksum: 77e9ada051a5fbd31416531ab5817a446ce381809728f50ae0ce159c429fb19c8a5d5285f5a5e2162d64576503122080bb81993fe9276001e3531c388bae897a
+  languageName: node
+  linkType: hard
 
 "tsconfig-paths@npm:^3.14.1":
   version: 3.14.1
