@@ -1,3 +1,16 @@
+# [vscode-slonik-live-server-v1.0.12](https://github.com/hoonoh/slonik-live-server/compare/vscode-slonik-live-server-v1.0.11...vscode-slonik-live-server-v1.0.12) (2022-07-12)
+
+
+### Bug Fixes
+
+* bump ts-slonik-live-server-plugin version ([#200](https://github.com/hoonoh/slonik-live-server/issues/200)) ([7d9e61c](https://github.com/hoonoh/slonik-live-server/commit/7d9e61cc6f111b878b708e5d521748da533b4b83))
+* vscode extension release ([#205](https://github.com/hoonoh/slonik-live-server/issues/205)) ([dd8a270](https://github.com/hoonoh/slonik-live-server/commit/dd8a27045529f6ef68db1a29e97c8682025f0aa1))
+* vscode extension release ([#205](https://github.com/hoonoh/slonik-live-server/issues/205)) ([#206](https://github.com/hoonoh/slonik-live-server/issues/206)) ([a849869](https://github.com/hoonoh/slonik-live-server/commit/a849869f8f6c25db0540e2a28f23490b684a7aee))
+* vscode extension release ([#207](https://github.com/hoonoh/slonik-live-server/issues/207)) ([803e731](https://github.com/hoonoh/slonik-live-server/commit/803e731e0843e6bed5235c0098d0076ecfce3c53))
+* vscode extension release ([#208](https://github.com/hoonoh/slonik-live-server/issues/208)) ([f0d3df4](https://github.com/hoonoh/slonik-live-server/commit/f0d3df4fb04b3e4bf71d734322a0aa51c981f3f3))
+* vscode plugin builds ([#201](https://github.com/hoonoh/slonik-live-server/issues/201)) ([a2b8c2a](https://github.com/hoonoh/slonik-live-server/commit/a2b8c2a7453c63fc8bc269ab80faf0d62fd26596))
+* vscode plugin release ([#202](https://github.com/hoonoh/slonik-live-server/issues/202)) ([2f9b95f](https://github.com/hoonoh/slonik-live-server/commit/2f9b95f14f8113aa04e086ac52b1dc3e9ac74daf))
+
 # [vscode-slonik-live-server-v1.0.11](https://github.com/hoonoh/slonik-live-server/compare/vscode-slonik-live-server-v1.0.10...vscode-slonik-live-server-v1.0.11) (2022-04-30)
 
 
