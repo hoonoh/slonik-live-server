@@ -4099,11 +4099,6 @@ dot-prop@^6.0.1:
   dependencies:
     is-obj "^2.0.0"
 
-dotenv@16.0.0:
-  version "16.0.0"
-  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-16.0.0.tgz#c619001253be89ebb638d027b609c75c26e47411"
-  integrity sha512-qD9WU0MPM4SWLPJy/r2Be+2WgQj8plChsyrCNQzW/0WjvcJQiKQJ9mH3ZgB3fxbUUxgc/11ZJ0Fi5KiimWGz2Q==
-
 dotenv@16.0.1:
   version "16.0.1"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-16.0.1.tgz#8f8f9d94876c35dac989876a5d3a82a267fdce1d"
@@ -8300,14 +8295,6 @@ pgpass@1.x:
   dependencies:
     split2 "^3.1.1"
 
-pgsql-ast-parser@10.0.2:
-  version "10.0.2"
-  resolved "https://registry.yarnpkg.com/pgsql-ast-parser/-/pgsql-ast-parser-10.0.2.tgz#df63752e02b41b87f6f6106e9547bcad11246960"
-  integrity sha512-evH3sRyqmtA11AJD1naowum37JGVGyD36PqHaBG8ZcoS1iWzKYhuz9BGwqugQs2nuRGEZ7x1h+Orh58ovpmokQ==
-  dependencies:
-    moo "^0.5.1"
-    nearley "^2.19.5"
-
 pgsql-ast-parser@10.4.0:
   version "10.4.0"
   resolved "https://registry.yarnpkg.com/pgsql-ast-parser/-/pgsql-ast-parser-10.4.0.tgz#b26b42ffc77e0ffa65ebbc865b3cb45e71f5ed1f"
@@ -9187,10 +9174,10 @@ slonik-sql-tag-raw@1.1.4:
     lodash "^4.17.20"
     serialize-error "^8.0.0"
 
-slonik@28.1.0, slonik@^28.0.0:
-  version "28.1.0"
-  resolved "https://registry.yarnpkg.com/slonik/-/slonik-28.1.0.tgz#1b4f0af8e2275b508d505a399c7ff0f956f329fb"
-  integrity sha512-0VpQXQv+2Nkf30FHMjMC9oeuzMtr7098m7kMSpPi9EWtclPIxluG3jjWREg5tYrXsjCRwWTEwUKhyUyzq/N1mw==
+slonik@28.1.1:
+  version "28.1.1"
+  resolved "https://registry.yarnpkg.com/slonik/-/slonik-28.1.1.tgz#f4b3df0d41817d51b7286a195f03b4332be23e46"
+  integrity sha512-M02q5vw/aHBvPyeYSK79Os8rZqC28pOvT9Fjh3ZTKp17C0QenDpsp8lZf54EKMWBanzgkjOzoWfY9MGKZD/t2Q==
   dependencies:
     concat-stream "^2.0.0"
     es6-error "^4.1.1"
@@ -9211,10 +9198,10 @@ slonik@28.1.0, slonik@^28.0.0:
     serialize-error "^8.0.0"
     through2 "^4.0.2"
 
-slonik@28.1.1:
-  version "28.1.1"
-  resolved "https://registry.yarnpkg.com/slonik/-/slonik-28.1.1.tgz#f4b3df0d41817d51b7286a195f03b4332be23e46"
-  integrity sha512-M02q5vw/aHBvPyeYSK79Os8rZqC28pOvT9Fjh3ZTKp17C0QenDpsp8lZf54EKMWBanzgkjOzoWfY9MGKZD/t2Q==
+slonik@^28.0.0:
+  version "28.1.0"
+  resolved "https://registry.yarnpkg.com/slonik/-/slonik-28.1.0.tgz#1b4f0af8e2275b508d505a399c7ff0f956f329fb"
+  integrity sha512-0VpQXQv+2Nkf30FHMjMC9oeuzMtr7098m7kMSpPi9EWtclPIxluG3jjWREg5tYrXsjCRwWTEwUKhyUyzq/N1mw==
   dependencies:
     concat-stream "^2.0.0"
     es6-error "^4.1.1"
@@ -9941,20 +9928,6 @@ ts-node@10.8.1:
     make-error "^1.1.1"
     v8-compile-cache-lib "^3.0.1"
     yn "3.1.1"
-
-ts-slonik-live-server-plugin@1.1.11:
-  version "1.1.11"
-  resolved "https://registry.yarnpkg.com/ts-slonik-live-server-plugin/-/ts-slonik-live-server-plugin-1.1.11.tgz#5a349a888d1ab1b5836494b238e7c4ca80ed30fc"
-  integrity sha512-Roc/XYxXcbm3BR5lsjj2z48O03idEZn+90tJcsYj8JMZZVvx1+fMX4ulFin2YNwcWIhdAQR3w11vmsz9Awn0zw==
-  dependencies:
-    d-forest "3.2.4"
-    dotenv "16.0.0"
-    pg "8.7.3"
-    pgsql-ast-parser "10.0.2"
-    safe-stable-stringify "2.3.1"
-    slonik "28.1.0"
-    slonik-sql-tag-raw "1.1.4"
-    typescript-template-language-service-decorator "2.3.1"
 
 tsconfig-paths@^3.14.1:
   version "3.14.1"
