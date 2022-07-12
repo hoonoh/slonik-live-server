@@ -3,3 +3,9 @@ dist
 node_modules
 yarn-error.log
 zz-test.ts
+
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
