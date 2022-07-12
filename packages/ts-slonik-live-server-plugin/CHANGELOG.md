@@ -1,3 +1,11 @@
+# [ts-slonik-live-server-plugin-v1.1.13](https://github.com/hoonoh/slonik-live-server/compare/ts-slonik-live-server-plugin-v1.1.12...ts-slonik-live-server-plugin-v1.1.13) (2022-07-12)
+
+
+### Bug Fixes
+
+* ts-slonik-live-server-plugin release ([#203](https://github.com/hoonoh/slonik-live-server/issues/203)) ([84133cb](https://github.com/hoonoh/slonik-live-server/commit/84133cb51fd6e58b55b183e402880571fde8e37f))
+* vscode plugin builds ([#201](https://github.com/hoonoh/slonik-live-server/issues/201)) ([a2b8c2a](https://github.com/hoonoh/slonik-live-server/commit/a2b8c2a7453c63fc8bc269ab80faf0d62fd26596))
+
 # [ts-slonik-live-server-plugin-v1.1.12](https://github.com/hoonoh/slonik-live-server/compare/ts-slonik-live-server-plugin-v1.1.11...ts-slonik-live-server-plugin-v1.1.12) (2022-07-11)
 
 
