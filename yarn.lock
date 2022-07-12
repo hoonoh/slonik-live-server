@@ -11463,6 +11463,7 @@ __metadata:
     pg: 8.7.3
     pgsql-ast-parser: 10.4.0
     safe-stable-stringify: 2.3.1
+    semantic-release: 19.0.3
     slonik: 28.1.1
     slonik-sql-tag-raw: 1.1.4
     typescript-template-language-service-decorator: 2.3.1
