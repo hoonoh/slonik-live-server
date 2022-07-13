@@ -10612,7 +10612,7 @@ __metadata:
     ts-essentials: 9.1.2
     ts-node: 10.8.1
     typescript: 4.7.4
-    vsce: 2.9.1
+    vsce: 2.9.2
   languageName: unknown
   linkType: soft
 
@@ -11861,37 +11861,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vsce@npm:2.9.1":
-  version: 2.9.1
-  resolution: "vsce@npm:2.9.1"
-  dependencies:
-    azure-devops-node-api: ^11.0.1
-    chalk: ^2.4.2
-    cheerio: ^1.0.0-rc.9
-    commander: ^6.1.0
-    glob: ^7.0.6
-    hosted-git-info: ^4.0.2
-    keytar: ^7.7.0
-    leven: ^3.1.0
-    markdown-it: ^12.3.2
-    mime: ^1.3.4
-    minimatch: ^3.0.3
-    parse-semver: ^1.1.1
-    read: ^1.0.7
-    semver: ^5.1.0
-    tmp: ^0.2.1
-    typed-rest-client: ^1.8.4
-    url-join: ^4.0.1
-    xml2js: ^0.4.23
-    yauzl: ^2.3.1
-    yazl: ^2.2.2
-  bin:
-    vsce: vsce
-  checksum: c1af8d8a40139b35b23e71db4b9203ff99393754d6781dcc959df88c7d1f5f8c24c278b087f3de95e57a05e5444d93b65a0ab4b514798c8b6a396fc8a6d97afd
-  languageName: node
-  linkType: hard
-
-"vsce@npm:^2.6.3":
+"vsce@npm:2.9.2, vsce@npm:^2.6.3":
   version: 2.9.2
   resolution: "vsce@npm:2.9.2"
   dependencies:
@@ -11918,6 +11888,36 @@ __metadata:
   bin:
     vsce: vsce
   checksum: 856b0df5e63334020206e0ff483cc76804a44f20d9a8f995f533819401ca6875530b4b1e5dcc683fe71e4c3c0a550e178f94529fd4c08032e737e5d0ad3d2fb7
+  languageName: node
+  linkType: hard
+
+"vsce@patch:vsce@npm:2.9.2#.yarn/patches/vsce-npm-2.9.2-2695a5b64c.patch::locator=slonik-live-server%40workspace%3A.":
+  version: 2.9.2
+  resolution: "vsce@patch:vsce@npm%3A2.9.2#.yarn/patches/vsce-npm-2.9.2-2695a5b64c.patch::version=2.9.2&hash=8df074&locator=slonik-live-server%40workspace%3A."
+  dependencies:
+    azure-devops-node-api: ^11.0.1
+    chalk: ^2.4.2
+    cheerio: ^1.0.0-rc.9
+    commander: ^6.1.0
+    glob: ^7.0.6
+    hosted-git-info: ^4.0.2
+    keytar: ^7.7.0
+    leven: ^3.1.0
+    markdown-it: ^12.3.2
+    mime: ^1.3.4
+    minimatch: ^3.0.3
+    parse-semver: ^1.1.1
+    read: ^1.0.7
+    semver: ^5.1.0
+    tmp: ^0.2.1
+    typed-rest-client: ^1.8.4
+    url-join: ^4.0.1
+    xml2js: ^0.4.23
+    yauzl: ^2.3.1
+    yazl: ^2.2.2
+  bin:
+    vsce: vsce
+  checksum: ad70c03b10373045fae62cc605797fc65c88e61b38ce37f3c1f863871dfeb3631f9c3a39ae36acc2e5c7d3e15c64f574c12a490a560b3df9e0236c903af006cc
   languageName: node
   linkType: hard
 

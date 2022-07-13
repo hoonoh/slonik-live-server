@@ -1,0 +1,23 @@
+diff --git a/out/package.js b/out/package.js
+index dc59da62ec08d6422aadac1b55b8f49f3286eedd..825f14c42096257c070662a9c9412a908b7df32d 100644
+--- a/out/package.js
++++ b/out/package.js
+@@ -1106,7 +1106,7 @@ async function collectAllFiles(cwd, dependencies, dependencyEntryPoints) {
+ }
+ function collectFiles(cwd, dependencies, dependencyEntryPoints, ignoreFile) {
+     return collectAllFiles(cwd, dependencies, dependencyEntryPoints).then(files => {
+-        files = files.filter(f => !/\r$/m.test(f));
++        files = files.filter((f, idx, arr) => !/\r$/m.test(f) && arr.indexOf(f) === idx);
+         return (fs.promises
+             .readFile(ignoreFile ? ignoreFile : path.join(cwd, '.vscodeignore'), 'utf8')
+             .catch(err => err.code !== 'ENOENT' ? Promise.reject(err) : ignoreFile ? Promise.reject(err) : Promise.resolve(''))
+@@ -1311,6 +1311,9 @@ exports.listFiles = listFiles;
+  * Lists the files included in the extension's package. Runs prepublish.
+  */
+ async function ls(options = {}) {
++    const cwd = options.cwd || process.cwd();
++    const manifest = await readManifest(cwd);
++    util.patchOptionsWithManifest(options, manifest);
+     const files = await listFiles({ ...options, prepublish: true });
+     for (const file of files) {
+         console.log(`${file}`);
