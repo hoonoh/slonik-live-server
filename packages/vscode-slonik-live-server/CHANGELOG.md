@@ -1,3 +1,11 @@
+# [vscode-slonik-live-server-v1.0.13](https://github.com/hoonoh/slonik-live-server/compare/vscode-slonik-live-server-v1.0.12...vscode-slonik-live-server-v1.0.13) (2022-07-13)
+
+
+### Bug Fixes
+
+* vsce bundle ([#211](https://github.com/hoonoh/slonik-live-server/issues/211)) ([27eed73](https://github.com/hoonoh/slonik-live-server/commit/27eed7331be3a335a651334d686245c0f579351d))
+* vscode extension release ([#209](https://github.com/hoonoh/slonik-live-server/issues/209)) ([3bb3a70](https://github.com/hoonoh/slonik-live-server/commit/3bb3a70dd4e3cb1df2c194167de7902f8a32991e))
+
 # [vscode-slonik-live-server-v1.0.12](https://github.com/hoonoh/slonik-live-server/compare/vscode-slonik-live-server-v1.0.11...vscode-slonik-live-server-v1.0.12) (2022-07-12)
 
 
