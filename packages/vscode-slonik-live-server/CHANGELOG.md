@@ -1,3 +1,10 @@
+# [vscode-slonik-live-server-v1.0.14](https://github.com/hoonoh/slonik-live-server/compare/vscode-slonik-live-server-v1.0.13...vscode-slonik-live-server-v1.0.14) (2022-07-13)
+
+
+### Bug Fixes
+
+* vsce builds routine ([#212](https://github.com/hoonoh/slonik-live-server/issues/212)) ([f2060e1](https://github.com/hoonoh/slonik-live-server/commit/f2060e12194567962599b5f719a5d04cb2458c17))
+
 # [vscode-slonik-live-server-v1.0.13](https://github.com/hoonoh/slonik-live-server/compare/vscode-slonik-live-server-v1.0.12...vscode-slonik-live-server-v1.0.13) (2022-07-13)
 
 
