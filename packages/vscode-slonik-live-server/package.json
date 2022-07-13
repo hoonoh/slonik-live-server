@@ -16,7 +16,7 @@
   "scripts": {
     "release": "yarn semantic-release",
     "build": "yarn dlx rimraf dist && tsc -p tsconfig.build.json",
-    "vscode:prepublish": "yarn dlx rimraf node_modules && yarn workspaces focus && yarn build"
+    "vscode:prepublish": "yarn dlx rimraf node_modules && yarn workspaces focus && yarn build && yarn dlx rimraf node_modules && yarn workspaces focus --production"
   },
   "repository": {
     "type": "git",
