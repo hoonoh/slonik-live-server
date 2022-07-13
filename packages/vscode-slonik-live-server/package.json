@@ -8,15 +8,10 @@
   "license": "MIT",
   "displayName": "Slonik Live Server",
   "description": "Tests Slonik SQL template tag queries, suggests table & column names and checks query costs against live PostgreSQL database",
-  "private": true,
-  "installConfig": {
-    "hoistingLimits": "dependencies",
-    "selfReferences": false
-  },
   "scripts": {
     "release": "yarn semantic-release",
-    "build": "yarn dlx rimraf dist && tsc -p tsconfig.build.json",
-    "vscode:prepublish": "yarn dlx rimraf node_modules && yarn workspaces focus && yarn build && yarn dlx rimraf node_modules && yarn workspaces focus --production && find node_modules -maxdepth 1 && find node_modules/ts-slonik-live-server-plugin/dist/ && find node_modules/ts-slonik-live-server-plugin/node_modules -maxdepth 1"
+    "build": "yarn dlx rimraf dist && yarn tsc -p tsconfig.build.json",
+    "vscode:prepublish": "yarn build"
   },
   "repository": {
     "type": "git",
@@ -36,6 +31,10 @@
     "postgresql"
   ],
   "main": "./dist/index.js",
+  "vsce": {
+    "yarn": false,
+    "dependencies": true
+  },
   "contributes": {
     "configuration": [
       {
