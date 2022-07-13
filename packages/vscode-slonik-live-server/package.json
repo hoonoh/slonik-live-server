@@ -16,7 +16,7 @@
   "scripts": {
     "release": "yarn semantic-release",
     "build": "yarn dlx rimraf dist && tsc -p tsconfig.build.json",
-    "vscode:prepublish": "yarn dlx rimraf node_modules && yarn workspaces focus && yarn build && yarn dlx rimraf node_modules && yarn workspaces focus --production"
+    "vscode:prepublish": "yarn dlx rimraf node_modules && yarn workspaces focus && yarn build && yarn dlx rimraf node_modules && yarn workspaces focus --production && find node_modules -maxdepth 1 && find node_modules/ts-slonik-live-server-plugin/dist/ && find node_modules/ts-slonik-live-server-plugin/node_modules -maxdepth 1"
   },
   "repository": {
     "type": "git",
