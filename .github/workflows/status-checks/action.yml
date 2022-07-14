@@ -4,7 +4,9 @@ runs:
   steps:
     - name: Install dependencies
       shell: bash
-      run: yarn --immutable
+      run: |
+        rm -rf l packages/vscode-slonik-live-server/node_modules
+        yarn --immutable
 
     - name: Build
       shell: bash
@@ -21,3 +23,14 @@ runs:
     - name: Run tests
       shell: bash
       run: yarn test:ci
+
+    - name: Check vsce package deps
+      shell: bash
+      run: |
+        cd packages/vscode-slonik-live-server
+        rm -rf node_modules && yarn --immutable
+        VSCE_DEPS="$(yarn vsce ls)"
+        CHECK="node_modules/ts-slonik-live-server-plugin"
+        [[ "$VSCE_DEPS" =~ "$CHECK" ]] || (echo "ERROR: missing $CHECK" && exit 1)
+        CHECK='node_modules/ts-slonik-live-server-plugin/node_modules/slonik/package.json'
+        [[ "$VSCE_DEPS" =~ "$CHECK" ]] || (echo "ERROR: missing $CHECK" && exit 1)
