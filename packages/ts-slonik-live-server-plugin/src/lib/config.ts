@@ -140,6 +140,10 @@ export class Config implements DeepReadonly<PluginConfig> {
 
     if (!pgUri) pgUri = config?.pg?.uri || this.defaultConfig.pg.uri;
 
+    // added after ts-essentials@v9.2.0 changes with `DeepPartial`
+    const filterStrArray = <T>(strArr?: (string | undefined)[]) =>
+      strArr ? strArr.filter((str): str is string => !!str) : undefined;
+
     this.current = {
       dotEnv: config?.dotEnv,
       debug: config?.debug ?? this.defaultConfig.debug,
@@ -148,11 +152,12 @@ export class Config implements DeepReadonly<PluginConfig> {
         defaultSchema: config?.pg?.defaultSchema ?? this.defaultConfig.pg.defaultSchema,
         infoTtl: config?.pg?.infoTtl ?? this.defaultConfig.pg.infoTtl,
         include: {
-          schema: config?.pg?.include?.schema ?? this.defaultConfig.pg.include.schema,
-          table: config?.pg?.include?.table ?? this.defaultConfig.pg.include.table,
+          schema:
+            filterStrArray(config?.pg?.include?.schema) ?? this.defaultConfig.pg.include.schema,
+          table: filterStrArray(config?.pg?.include?.table) ?? this.defaultConfig.pg.include.table,
         },
         exclude: {
-          table: config?.pg?.exclude?.table ?? this.defaultConfig.pg.exclude.table,
+          table: filterStrArray(config?.pg?.exclude?.table) ?? this.defaultConfig.pg.exclude.table,
         },
       },
       cost: {
