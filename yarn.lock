@@ -4943,20 +4943,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-jest@npm:26.8.4":
-  version: 26.8.4
-  resolution: "eslint-plugin-jest@npm:26.8.4"
+"eslint-plugin-jest@npm:27.0.1":
+  version: 27.0.1
+  resolution: "eslint-plugin-jest@npm:27.0.1"
   dependencies:
     "@typescript-eslint/utils": ^5.10.0
   peerDependencies:
     "@typescript-eslint/eslint-plugin": ^5.0.0
-    eslint: ^6.0.0 || ^7.0.0 || ^8.0.0
+    eslint: ^7.0.0 || ^8.0.0
   peerDependenciesMeta:
     "@typescript-eslint/eslint-plugin":
       optional: true
     jest:
       optional: true
-  checksum: e15cfc8fd5056e6a4915f6872e5eca217c28fb46b1e0a7bae0bac6af3adf17b7f4a7822e00b0651dc2168251e711bba6f8893f02c8417a4ee2c712d87a19d24d
+  checksum: 269d4dc46bb925eb4c19106fd9e03775a863f53e05716628cc47777abc15887775ee47d73c4f8bdd98bb26b7462d8d8f654610bb2a367f8c97881204a2c3f42e
   languageName: node
   linkType: hard
 
@@ -10657,7 +10657,7 @@ __metadata:
     eslint-config-prettier: 8.5.0
     eslint-import-resolver-typescript: 3.4.2
     eslint-plugin-import: 2.26.0
-    eslint-plugin-jest: 26.8.4
+    eslint-plugin-jest: 27.0.1
     eslint-plugin-prettier: 4.2.1
     eslint-plugin-simple-import-sort: 7.0.0
     eslint-plugin-unused-imports: 2.0.0
