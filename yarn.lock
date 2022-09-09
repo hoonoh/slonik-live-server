@@ -9533,13 +9533,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pgsql-ast-parser@npm:10.5.2":
-  version: 10.5.2
-  resolution: "pgsql-ast-parser@npm:10.5.2"
+"pgsql-ast-parser@npm:11.0.0":
+  version: 11.0.0
+  resolution: "pgsql-ast-parser@npm:11.0.0"
   dependencies:
     moo: ^0.5.1
     nearley: ^2.19.5
-  checksum: 8810ee1593fc5ada2c4243fda4f67a3935f2d6fe3a22aadf3d7eaef80b9e45dce636af4851e0d5cd4bcab047b45a0a0d72e215e8839736694b1f3217dd0b3df7
+  checksum: 26eca637c074c27f10e7eb312b3c05a0e4247ab5ce7965d0c60e68f18a9c782b1b1db054e0c21fc22c5bb15d42aa827f9146a334f6d7b5daeb9f7ff99cd6bf1f
   languageName: node
   linkType: hard
 
@@ -11524,7 +11524,7 @@ __metadata:
     dotenv: 16.0.1
     node-pg-migrate: 6.2.2
     pg: 8.7.3
-    pgsql-ast-parser: 10.5.2
+    pgsql-ast-parser: 11.0.0
     safe-stable-stringify: 2.3.1
     semantic-release: 19.0.3
     slonik: 30.3.0
