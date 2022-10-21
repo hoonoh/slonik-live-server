@@ -649,9 +649,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"roarr@npm:^7.12.3":
-  version: 7.12.3
-  resolution: "roarr@npm:7.12.3"
+"roarr@npm:^7.14.0":
+  version: 7.14.0
+  resolution: "roarr@npm:7.14.0"
   dependencies:
     boolean: ^3.1.4
     fast-json-stringify: ^2.7.10
@@ -659,7 +659,7 @@ __metadata:
     fast-safe-stringify: ^2.1.1
     globalthis: ^1.0.2
     semver-compare: ^1.0.0
-  checksum: b7e3b3bc3b8f6ccb68d8fcd0427ee25ba1ff3e369faf2a3b93fe7d484869d950f3dbfa800e65e105daeb1bca2ba26cb28f7cee89fa370311b73899cdf4b181a1
+  checksum: f97d6d0dadc461635dead70262add9b1019eb360794f7dd421abe803b7261e5d35d7eb611c99d4f8cee06ade58bd3162c815e589428bf6dba00adbbdc42b6e7a
   languageName: node
   linkType: hard
 
@@ -732,9 +732,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"slonik@npm:^31.0.0":
-  version: 31.1.0
-  resolution: "slonik@npm:31.1.0"
+"slonik@npm:^32.0.0":
+  version: 32.0.0
+  resolution: "slonik@npm:32.0.0"
   dependencies:
     concat-stream: ^2.0.0
     es6-error: ^4.1.1
@@ -752,11 +752,11 @@ __metadata:
     pg-types: ^4.0.0
     postgres-array: ^3.0.1
     postgres-interval: ^4.0.0
-    roarr: ^7.12.3
+    roarr: ^7.14.0
     serialize-error: ^8.0.0
     through2: ^4.0.2
-    zod: ^3.19.0
-  checksum: ed1788e394bc614b79d8dc224c0c19d5b0ae9ac6459c617b85a138634fdc6b547827d81c04eddf8eea7fedd039a70f7f8d58aac9dead2b0077ad08e90a6f2793
+    zod: ^3.19.1
+  checksum: 4629ff3d1cd92c71d3437a451b8fddc6e2ad46731e47ed07bd19ceded9c122a851c1bad4822217dae6adbb9039562bdd894914c5aa5bc9f8e3e34bb11438e91f
   languageName: node
   linkType: hard
 
@@ -798,7 +798,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "test-workspace@workspace:."
   dependencies:
-    slonik: ^31.0.0
+    slonik: ^32.0.0
     ts-slonik-live-server-plugin: "*"
     typescript: ^4.2.3
   languageName: unknown
@@ -946,9 +946,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod@npm:^3.19.0":
-  version: 3.19.0
-  resolution: "zod@npm:3.19.0"
-  checksum: 35b9270ba73ff15e1cc3e529cdd49b78ceb5f9204770b974ffa5d1728ad1be8429315aa25263d088edecaa99ecc3631339fe79313435154060951706294f47e5
+"zod@npm:^3.19.1":
+  version: 3.19.1
+  resolution: "zod@npm:3.19.1"
+  checksum: 56e420ea5845912324a8fc61833714a2aec84954e418b52660d76502183c6e62fef9447cbfa64349640c5ce190cf2c24267e006bb80f066183e2f3fa9fe11864
   languageName: node
   linkType: hard
