@@ -2673,10 +2673,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:16.11.51":
-  version: 16.11.51
-  resolution: "@types/node@npm:16.11.51"
-  checksum: b4193d3f9d4240d866db0ca50de4a8c3b68fd81754d0a572712b559497d0f34931e4246ce0b2692afc8f8def9fcc69fd176bd7176af896d07eefa6d78d886425
+"@types/node@npm:18.11.7":
+  version: 18.11.7
+  resolution: "@types/node@npm:18.11.7"
+  checksum: 69d630825cf6fbf580d08d76a4d4836ef8c34ed4fe0842221ade87d275f517099cbfabe8e22397208e564bd24926db97699ab9db5c091383269a432b336665e2
   languageName: node
   linkType: hard
 
@@ -10884,7 +10884,7 @@ __metadata:
     "@swc/core": 1.2.241
     "@swc/jest": 0.2.22
     "@types/jest": 29.0.0
-    "@types/node": 16.11.51
+    "@types/node": 18.11.7
     "@types/pg": 8.6.5
     "@types/vscode": 1.70.0
     "@typescript-eslint/eslint-plugin": 5.33.1

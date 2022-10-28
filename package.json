@@ -46,7 +46,7 @@
     "@swc/core": "1.2.241",
     "@swc/jest": "0.2.22",
     "@types/jest": "29.0.0",
-    "@types/node": "16.11.51",
+    "@types/node": "18.11.7",
     "@types/pg": "8.6.5",
     "@types/vscode": "1.70.0",
     "@typescript-eslint/eslint-plugin": "5.33.1",
