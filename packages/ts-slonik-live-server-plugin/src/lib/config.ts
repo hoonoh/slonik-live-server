@@ -141,7 +141,7 @@ export class Config implements DeepReadonly<PluginConfig> {
     if (!pgUri) pgUri = config?.pg?.uri || this.defaultConfig.pg.uri;
 
     // added after ts-essentials@v9.2.0 changes with `DeepPartial`
-    const filterStrArray = <T>(strArr?: (string | undefined)[]) =>
+    const filterStrArray = (strArr?: (string | undefined)[]) =>
       strArr ? strArr.filter((str): str is string => !!str) : undefined;
 
     this.current = {
