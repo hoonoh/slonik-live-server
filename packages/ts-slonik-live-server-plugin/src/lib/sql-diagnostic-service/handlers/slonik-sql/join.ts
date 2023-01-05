@@ -19,7 +19,7 @@ export class SlonikSqlJoinHandler {
     (node.expression as ts.CallExpression).arguments.forEach((arg, idx) => {
       if (idx === 0 && ts.isArrayLiteralExpression(arg)) {
         joinTargets = arg.elements.map(e => {
-          if (ts.isTaggedTemplateExpression(e) && e.tag.getText() === 'sql') {
+          if (ts.isTaggedTemplateExpression(e) && e.tag.getText().startsWith('sql')) {
             const subRecurse = SqlTemplteLiteralHandler.handle(typeChecker, e);
             skipAtPosition.push(node.pos);
             return joinTextBlocksAndValues(subRecurse);

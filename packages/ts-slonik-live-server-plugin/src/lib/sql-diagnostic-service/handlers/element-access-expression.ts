@@ -37,7 +37,7 @@ export class ElementAccessExpressionHandler {
       if (arrayValueNode) {
         if (
           ts.isTaggedTemplateExpression(arrayValueNode) &&
-          arrayValueNode.tag.getText() === 'sql'
+          arrayValueNode.tag.getText().startsWith('sql')
         ) {
           if (ts.isTemplateExpression(arrayValueNode.template)) {
             values.push({
