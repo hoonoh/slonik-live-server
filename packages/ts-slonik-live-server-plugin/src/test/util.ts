@@ -1,5 +1,6 @@
 import { existsSync, readFileSync } from 'fs';
-import { basename } from 'path';
+import {} from 'os';
+import { basename, parse } from 'path';
 import ts from 'typescript/lib/tsserverlibrary';
 
 import { Config } from '../lib/config';
@@ -32,9 +33,9 @@ export const mockService = (files: Readonly<File[]>, debug?: boolean) => {
     getCurrentDirectory: () => __dirname,
     getDefaultLibFileName: options => ts.getDefaultLibFilePath(options),
     getScriptFileNames: () => files.map(file => file.fileName),
-    getScriptSnapshot: fileName => {
-      const text =
-        files.find(f => f.fileName === fileName)?.text || readFileSync(fileName).toString();
+    getScriptSnapshot: path => {
+      const fileName = parse(path).base;
+      const text = files.find(f => f.fileName === fileName)?.text || readFileSync(path).toString();
       return {
         getChangeRange: () => undefined,
         getLength: () => text?.length || 0,
@@ -43,7 +44,11 @@ export const mockService = (files: Readonly<File[]>, debug?: boolean) => {
     },
     getScriptVersion: () => '1',
     readFile: path => readFileSync(path, 'utf-8'),
-    fileExists: path => existsSync(path),
+    fileExists: path => {
+      const fileName = parse(path).base;
+      if (files.find(f => f.fileName === fileName)) return true;
+      return existsSync(path);
+    },
   };
 
   const languageService = ts.createLanguageService(host);
