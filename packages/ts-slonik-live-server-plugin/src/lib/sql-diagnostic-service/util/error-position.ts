@@ -7,59 +7,115 @@ export const getErrorPosition = (
   sqlNodeTextParts: string[],
   error: PgError,
   errorTargetText?: string,
-) => {
-  const returnNodePosition = () => ({ start: node.pos, length: node.end - node.pos });
+): { start: number; length: number } => {
+  // fallback to total query text range
+  const fallback = {
+    start: 0,
+    length: node.end - node.pos,
+  };
 
   const { position } = error;
 
-  if (position === undefined) return returnNodePosition();
+  if (position === undefined) return fallback;
 
-  const explainLength = 'explain\n'.length;
+  // identifiers, etc
+  const errorTargetTextAlt = errorTargetText?.includes('.')
+    ? errorTargetText
+        .split('.')
+        .map(str => `"${str}"`)
+        .join('.')
+    : undefined;
 
-  let curPos = explainLength;
-  let arrPos = -1;
-  let isInValuePos = -1;
-
-  for (let i = 0; i < sqlInfo.textBlocks.length; i += 1) {
-    const textBlock = sqlInfo.textBlocks[i];
-    arrPos += 1;
-    if (curPos + textBlock.length > position) {
-      break;
+  let arrIdx = sqlNodeTextParts.reduce((acc, cur, idx) => {
+    if (acc >= 0) return acc;
+    const joined = sqlNodeTextParts
+      .concat()
+      .slice(0, idx + 1)
+      .join('');
+    if (
+      joined.length >= position &&
+      // case insensitive check if errorTargetText exist
+      (!errorTargetText || joined.toLowerCase().includes(errorTargetText.toLowerCase()))
+    ) {
+      acc = idx;
     }
-    curPos += textBlock.length;
+    return acc;
+  }, -1);
 
-    if (sqlInfo.values.length > i) {
-      const value = sqlInfo.values[i];
-      const valueLength = value.isString ? value.value.length + 2 : value.value.length;
-      arrPos += 1;
-      if (curPos + valueLength > position) {
-        isInValuePos = arrPos;
-        break;
+  if (arrIdx < 0) {
+    // try again with joined strings in sqlInfo
+    const sqlResolvedTextParts = sqlNodeTextParts.reduce((acc, cur, idx) => {
+      if (idx % 2 === 0) {
+        acc.push(sqlInfo.textBlocks[idx / 2 || 0] || '');
+      } else {
+        acc.push(sqlInfo.values[(idx - 1) / 2 || 0]?.value || '');
       }
-      curPos += valueLength;
-    }
+      return acc;
+    }, [] as string[]);
+    arrIdx = sqlResolvedTextParts.reduce((acc, cur, idx) => {
+      if (acc >= 0) return acc;
+      const joined = sqlResolvedTextParts
+        .concat()
+        .slice(0, idx + 1)
+        .join('');
+      if (
+        joined.length >= position &&
+        // case insensitive check if errorTargetText or errorTargetTextAlt exist
+        (!errorTargetText ||
+          joined.toLowerCase().includes(errorTargetText.toLowerCase()) ||
+          !errorTargetTextAlt ||
+          joined.toLowerCase().includes(errorTargetTextAlt.toLowerCase()))
+      )
+        acc = idx;
+      return acc;
+    }, -1);
   }
 
-  if (arrPos < 0) return returnNodePosition();
+  const start = sqlNodeTextParts.concat().slice(0, arrIdx).join('').length;
 
-  let start = 0;
-  for (let i = 0; i < arrPos; i += 1) {
-    start += sqlNodeTextParts[i].length;
-  }
   if (errorTargetText) {
-    if (isInValuePos < 0) {
-      start += position - curPos - 1;
-    } else {
-      const value = sqlInfo.values[isInValuePos];
-      if (value) {
-        const valueText = value.isString ? `'${value.value}'` : value.value;
-        start += valueText.indexOf(errorTargetText);
+    // find in values
+    if (errorTargetText && errorTargetTextAlt) {
+      const valueMatchIdx = sqlInfo.values.findIndex(({ value }, idx) => {
+        return (
+          idx >= arrIdx - 1 &&
+          (value.includes(errorTargetText) || value.includes(errorTargetTextAlt))
+        );
+      });
+      if (valueMatchIdx >= 0) {
+        const targetValue = sqlInfo.values[valueMatchIdx].value.includes(errorTargetTextAlt)
+          ? errorTargetTextAlt
+          : errorTargetText;
+        return {
+          start: start + Math.max(0, sqlInfo.values[valueMatchIdx].value.indexOf(targetValue)),
+          length: sqlNodeTextParts[arrIdx + valueMatchIdx].length,
+        };
       }
+    }
+
+    // find in text blocks
+    const matchIdx = sqlInfo.textBlocks.findIndex(str => {
+      return str.includes(errorTargetText);
+    });
+    if (matchIdx >= 0) {
+      return {
+        start: start + Math.max(0, sqlInfo.textBlocks[matchIdx].indexOf(errorTargetText)),
+        length: errorTargetText.length,
+      };
+    }
+
+    // try case-insensitive search in raw text (sqlNodeTextParts)
+    const caseInsentiveIdx = sqlNodeTextParts
+      .join('')
+      .toLowerCase()
+      .indexOf(errorTargetText.toLowerCase());
+    if (caseInsentiveIdx >= 0) {
+      return {
+        start: caseInsentiveIdx,
+        length: errorTargetText.length,
+      };
     }
   }
 
-  return {
-    start,
-    length: isInValuePos >= 0 ? sqlNodeTextParts[arrPos].length : errorTargetText?.length || 10,
-  };
+  return fallback;
 };

@@ -40,7 +40,7 @@ jobs:
         uses: ./.github/workflows/status-checks
 
       - name: Release
-        run: yarn release
+        run: yarn --immutable && yarn release
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
