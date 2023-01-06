@@ -1,3 +1,17 @@
+# [ts-slonik-live-server-plugin-v1.1.14](https://github.com/hoonoh/slonik-live-server/compare/ts-slonik-live-server-plugin-v1.1.13...ts-slonik-live-server-plugin-v1.1.14) (2023-01-06)
+
+
+### Bug Fixes
+
+* **deps:** update dependency pgsql-ast-parser to v11 ([#227](https://github.com/hoonoh/slonik-live-server/issues/227)) ([0b8cfe4](https://github.com/hoonoh/slonik-live-server/commit/0b8cfe46b84980a0c8b0f6911b8d66a11caa9629))
+* **deps:** update dependency slonik to v29 ([#216](https://github.com/hoonoh/slonik-live-server/issues/216)) ([ebccb0c](https://github.com/hoonoh/slonik-live-server/commit/ebccb0c5da20fa92a04eff7b88a367f7aae294c1))
+* **deps:** update dependency slonik to v30 ([#218](https://github.com/hoonoh/slonik-live-server/issues/218)) ([db7bcb8](https://github.com/hoonoh/slonik-live-server/commit/db7bcb8657f829c83cb4d82ad534799d7ea71abd))
+* **deps:** update dependency slonik to v31 ([#228](https://github.com/hoonoh/slonik-live-server/issues/228)) ([00283fc](https://github.com/hoonoh/slonik-live-server/commit/00283fca1b59a640f5ac267447210b7927437935))
+* **deps:** update dependency slonik to v32 ([#230](https://github.com/hoonoh/slonik-live-server/issues/230)) ([d455687](https://github.com/hoonoh/slonik-live-server/commit/d45568792b4f653dc0204de5b834474ac1fe7e61))
+* **deps:** update dependency slonik to v33 ([#232](https://github.com/hoonoh/slonik-live-server/issues/232)) ([af64861](https://github.com/hoonoh/slonik-live-server/commit/af648618c07b07b962a9d9e93edbf7acf3d9ac2d))
+* **deps:** update dependency slonik-sql-tag-raw to v2 ([#233](https://github.com/hoonoh/slonik-live-server/issues/233)) ([db9bcdc](https://github.com/hoonoh/slonik-live-server/commit/db9bcdc5d35a03b7bfce3e06ef68a495e98c0162))
+* error position & release ([#235](https://github.com/hoonoh/slonik-live-server/issues/235)) ([e0884e6](https://github.com/hoonoh/slonik-live-server/commit/e0884e6070e0261697ece2894e8c25d06760e9a0))
+
 # [ts-slonik-live-server-plugin-v1.1.13](https://github.com/hoonoh/slonik-live-server/compare/ts-slonik-live-server-plugin-v1.1.12...ts-slonik-live-server-plugin-v1.1.13) (2022-07-12)
 
 
