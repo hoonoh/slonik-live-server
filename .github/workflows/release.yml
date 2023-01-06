@@ -40,7 +40,10 @@ jobs:
         uses: ./.github/workflows/status-checks
 
       - name: Release
-        run: yarn --immutable && yarn release
+        run: |
+          rm -rf packages/vscode-slonik-live-server/node_modules
+          yarn --immutable
+          yarn release
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
