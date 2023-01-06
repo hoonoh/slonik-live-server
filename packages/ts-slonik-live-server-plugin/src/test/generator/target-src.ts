@@ -6,7 +6,7 @@
 
 import { sql } from 'slonik';
 
-sql`select ${sql.json({
+sql.unsafe`select ${sql.json({
   foo: 'foo',
   bar: 'bar',
   baz: {

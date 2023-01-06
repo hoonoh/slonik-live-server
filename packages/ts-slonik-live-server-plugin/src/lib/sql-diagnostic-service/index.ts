@@ -80,7 +80,7 @@ export class SqlDiagnosticService {
     const result: ts.Node[] = [];
     const config = this.config;
     function recurse(node: ts.Node) {
-      if (ts.isTaggedTemplateExpression(node) && node.tag.getText() === 'sql') {
+      if (ts.isTaggedTemplateExpression(node) && node.tag.getText().startsWith('sql')) {
         // check if previous line includes disable statment
         const lastLine = getPreviousLine(sourceFile.text, node.getStart());
         if (

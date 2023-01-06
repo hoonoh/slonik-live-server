@@ -49,7 +49,7 @@ export class SlonikSqlArrayHandler {
         } /* istanbul ignore else */ else if (idx === 1) {
           if (ts.isStringLiteral(arg)) {
             type = `${arg.text}[]`;
-          } else if (ts.isTaggedTemplateExpression(arg) && arg.tag.getText() === 'sql') {
+          } else if (ts.isTaggedTemplateExpression(arg) && arg.tag.getText().startsWith('sql')) {
             type = joinTextBlocksAndValues(
               SqlTemplteLiteralHandler.handle(typeChecker, arg.template),
             );
