@@ -80,7 +80,6 @@
     "vsce": "2.15.0"
   },
   "resolutions": {
-    "chalk": "5.2.0",
     "vsce@2.9.2": "patch:vsce@npm:2.9.2#.yarn/patches/vsce-npm-2.9.2-2695a5b64c.patch"
   }
 }
