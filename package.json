@@ -71,7 +71,7 @@
     "lerna": "6.4.0",
     "mockdate": "3.0.5",
     "prettier": "2.8.1",
-    "semantic-release": "20.0.0",
+    "semantic-release": "21.0.0",
     "semantic-release-monorepo": "7.0.5",
     "semantic-release-vsce": "5.5.3",
     "ts-essentials": "9.3.0",
