@@ -1,3 +1,5 @@
+import ts from 'typescript/lib/tsserverlibrary';
+
 import { PgError } from '../../pg/query';
 import { SqlInfo } from '../types';
 

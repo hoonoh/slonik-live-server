@@ -6,7 +6,7 @@
   "dependencies": {
     "slonik": "^33.0.0",
     "ts-slonik-live-server-plugin": "*",
-    "typescript": "^4.2.3"
+    "typescript": "^5.0.0"
   },
   "resolutions": {
     "ts-slonik-live-server-plugin": "../ts-slonik-live-server-plugin"
