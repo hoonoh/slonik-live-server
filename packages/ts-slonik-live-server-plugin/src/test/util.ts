@@ -24,7 +24,7 @@ export const mockService = (files: Readonly<File[]>, debug?: boolean) => {
       lib: [
         'lib.esnext.full.d.ts',
         '../../@types/node/index.d.ts',
-        '../../slonik/dist/src/index.d.ts',
+        '../../slonik/dist/index.d.ts',
         '../../slonik-sql-tag-raw/dist/sqlTags/raw.d.ts',
       ],
       moduleResolution: ts.ModuleResolutionKind.NodeJs,

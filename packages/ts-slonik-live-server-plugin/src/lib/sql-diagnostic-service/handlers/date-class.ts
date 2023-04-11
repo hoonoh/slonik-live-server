@@ -47,7 +47,7 @@ export class DateClassHandler {
       'valueOf',
     ] as const;
 
-    type DateMethod = typeof dateGetters[number];
+    type DateMethod = (typeof dateGetters)[number];
 
     const expressionType = typeChecker.getTypeAtLocation(
       isDeclarationParent ? node : node.getChildAt(0),
