@@ -2,6 +2,7 @@ import { parse } from 'dotenv';
 import { existsSync, readFileSync } from 'fs';
 import { resolve } from 'path';
 import { DeepPartial, DeepReadonly } from 'ts-essentials';
+import ts from 'typescript/lib/tsserverlibrary';
 
 import { LanguageServiceLogger } from './logger';
 

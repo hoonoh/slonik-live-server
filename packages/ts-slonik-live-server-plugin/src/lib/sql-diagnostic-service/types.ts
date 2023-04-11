@@ -1,3 +1,5 @@
+import ts from 'typescript';
+
 export type Value = {
   value: string;
   isString?: boolean;
