@@ -30,7 +30,7 @@ jobs:
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         shell: bash
-        run: echo "::set-output name=dir::$(yarn cache dir)"
+        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
       - uses: actions/cache@v3
         id: yarn-cache
@@ -49,6 +49,6 @@ jobs:
           yarn --immutable
           yarn release
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
