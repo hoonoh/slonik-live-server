@@ -2054,26 +2054,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@semantic-release/npm@npm:10.0.3":
-  version: 10.0.3
-  resolution: "@semantic-release/npm@npm:10.0.3"
+"@semantic-release/npm@npm:9.0.2, @semantic-release/npm@npm:^9.0.0":
+  version: 9.0.2
+  resolution: "@semantic-release/npm@npm:9.0.2"
   dependencies:
     "@semantic-release/error": ^3.0.0
-    aggregate-error: ^4.0.1
-    execa: ^7.0.0
+    aggregate-error: ^3.0.0
+    execa: ^5.0.0
     fs-extra: ^11.0.0
-    lodash-es: ^4.17.21
+    lodash: ^4.17.15
     nerf-dart: ^1.0.0
-    normalize-url: ^8.0.0
-    npm: ^9.5.0
+    normalize-url: ^6.0.0
+    npm: ^8.3.0
     rc: ^1.2.8
-    read-pkg: ^8.0.0
+    read-pkg: ^5.0.0
     registry-auth-token: ^5.0.0
     semver: ^7.1.2
-    tempy: ^3.0.0
+    tempy: ^1.0.0
   peerDependencies:
-    semantic-release: ">=20.1.0"
-  checksum: b7bb691c35b59fd574122f421241dd5266f14e9f0a9d5513a15d978ffd979e0c6721018c1c47c23a0bfa5e217ce04ae698bd4f83e11bc17382f08c1b5127c6e0
+    semantic-release: ">=19.0.0"
+  checksum: e0493a06fc4c69929b06a86e117cf907ca9435e5496b47e49076c7be50a772b39279ce0b20c36f4384aaec892a91b106273efd795ff635fbe2f4c7aad6b84414
   languageName: node
   linkType: hard
 
@@ -2100,50 +2100,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@semantic-release/npm@npm:^9.0.0":
-  version: 9.0.2
-  resolution: "@semantic-release/npm@npm:9.0.2"
-  dependencies:
-    "@semantic-release/error": ^3.0.0
-    aggregate-error: ^3.0.0
-    execa: ^5.0.0
-    fs-extra: ^11.0.0
-    lodash: ^4.17.15
-    nerf-dart: ^1.0.0
-    normalize-url: ^6.0.0
-    npm: ^8.3.0
-    rc: ^1.2.8
-    read-pkg: ^5.0.0
-    registry-auth-token: ^5.0.0
-    semver: ^7.1.2
-    tempy: ^1.0.0
-  peerDependencies:
-    semantic-release: ">=19.0.0"
-  checksum: e0493a06fc4c69929b06a86e117cf907ca9435e5496b47e49076c7be50a772b39279ce0b20c36f4384aaec892a91b106273efd795ff635fbe2f4c7aad6b84414
-  languageName: node
-  linkType: hard
-
-"@semantic-release/release-notes-generator@npm:11.0.1, @semantic-release/release-notes-generator@npm:^11.0.0":
-  version: 11.0.1
-  resolution: "@semantic-release/release-notes-generator@npm:11.0.1"
-  dependencies:
-    conventional-changelog-angular: ^5.0.0
-    conventional-changelog-writer: ^5.0.0
-    conventional-commits-filter: ^2.0.0
-    conventional-commits-parser: ^3.2.3
-    debug: ^4.0.0
-    get-stream: ^6.0.0
-    import-from: ^4.0.0
-    into-stream: ^7.0.0
-    lodash-es: ^4.17.21
-    read-pkg-up: ^9.0.0
-  peerDependencies:
-    semantic-release: ">=20.1.0"
-  checksum: 19bb468c96be0e642646d192d16cdcbf1aee5e60203c53c7e0148da09f47d581939cc20e7aaccd26f0198d93932254b7ab496ef3d73d59d129d38ea9e3f25c04
-  languageName: node
-  linkType: hard
-
-"@semantic-release/release-notes-generator@npm:^10.0.0":
+"@semantic-release/release-notes-generator@npm:10.0.3, @semantic-release/release-notes-generator@npm:^10.0.0":
   version: 10.0.3
   resolution: "@semantic-release/release-notes-generator@npm:10.0.3"
   dependencies:
@@ -2160,6 +2117,26 @@ __metadata:
   peerDependencies:
     semantic-release: ">=18.0.0-beta.1"
   checksum: 0237e7e6ebf41b7c6a72eea704b007442cfd05910ded7059235a5684a0e4a233b2ca3c3e39923901131e7f0a4dcb5e95737af469081529acc393223c04715505
+  languageName: node
+  linkType: hard
+
+"@semantic-release/release-notes-generator@npm:^11.0.0":
+  version: 11.0.1
+  resolution: "@semantic-release/release-notes-generator@npm:11.0.1"
+  dependencies:
+    conventional-changelog-angular: ^5.0.0
+    conventional-changelog-writer: ^5.0.0
+    conventional-commits-filter: ^2.0.0
+    conventional-commits-parser: ^3.2.3
+    debug: ^4.0.0
+    get-stream: ^6.0.0
+    import-from: ^4.0.0
+    into-stream: ^7.0.0
+    lodash-es: ^4.17.21
+    read-pkg-up: ^9.0.0
+  peerDependencies:
+    semantic-release: ">=20.1.0"
+  checksum: 19bb468c96be0e642646d192d16cdcbf1aee5e60203c53c7e0148da09f47d581939cc20e7aaccd26f0198d93932254b7ab496ef3d73d59d129d38ea9e3f25c04
   languageName: node
   linkType: hard
 
@@ -5115,7 +5092,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"error-ex@npm:^1.3.1, error-ex@npm:^1.3.2":
+"error-ex@npm:^1.3.1":
   version: 1.3.2
   resolution: "error-ex@npm:1.3.2"
   dependencies:
@@ -8912,7 +8889,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lines-and-columns@npm:^2.0.3, lines-and-columns@npm:~2.0.3":
+"lines-and-columns@npm:~2.0.3":
   version: 2.0.3
   resolution: "lines-and-columns@npm:2.0.3"
   checksum: 5955363dfd7d3d7c476d002eb47944dbe0310d57959e2112dce004c0dc76cecfd479cf8c098fd479ff344acdf04ee0e82b455462a26492231ac152f6c48d17a1
@@ -11148,19 +11125,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"parse-json@npm:^7.0.0":
-  version: 7.0.0
-  resolution: "parse-json@npm:7.0.0"
-  dependencies:
-    "@babel/code-frame": ^7.21.4
-    error-ex: ^1.3.2
-    json-parse-even-better-errors: ^3.0.0
-    lines-and-columns: ^2.0.3
-    type-fest: ^3.8.0
-  checksum: de6c756f65af568439a7ac87c830e5a8b98bd25160a8832872183588a139f9c8fd8bab96c8bc49788f5a957a59d8de7b5a3fa8a01027248b3079433f81dd5590
-  languageName: node
-  linkType: hard
-
 "parse-passwd@npm:^1.0.0":
   version: 1.0.0
   resolution: "parse-passwd@npm:1.0.0"
@@ -12201,18 +12165,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"read-pkg@npm:^8.0.0":
-  version: 8.0.0
-  resolution: "read-pkg@npm:8.0.0"
-  dependencies:
-    "@types/normalize-package-data": ^2.4.1
-    normalize-package-data: ^5.0.0
-    parse-json: ^7.0.0
-    type-fest: ^3.8.0
-  checksum: 10c6f8bc64fd7c7d62d8d0233c41b0d929525d2c10c1a65ecfbe793519f0aea38d0ddbd649639d38b971269ff1b5c45bb70f438162fa2aeec7b119aa9435a29b
-  languageName: node
-  linkType: hard
-
 "read@npm:1, read@npm:^1.0.7, read@npm:~1.0.7":
   version: 1.0.7
   resolution: "read@npm:1.0.7"
@@ -13022,8 +12974,8 @@ __metadata:
     "@semantic-release/commit-analyzer": 9.0.2
     "@semantic-release/git": 10.0.1
     "@semantic-release/github": 8.0.7
-    "@semantic-release/npm": 10.0.3
-    "@semantic-release/release-notes-generator": 11.0.1
+    "@semantic-release/npm": 9.0.2
+    "@semantic-release/release-notes-generator": 10.0.3
     "@swc/core": 1.3.57
     "@swc/jest": 0.2.26
     "@types/jest": 29.5.1
@@ -14225,13 +14177,6 @@ __metadata:
   peerDependencies:
     typescript: ">=4.7.0"
   checksum: df3bd25809ea79ac7712da7c11648251118c23f65b226eba263797e42be60ba34085874ec492202b8ecf2e5a2273b27ddcbfe3be2c275dfcef3f0e2ee90ea179
-  languageName: node
-  linkType: hard
-
-"type-fest@npm:^3.8.0":
-  version: 3.8.0
-  resolution: "type-fest@npm:3.8.0"
-  checksum: f9a9ef00378dddd6af2be5cbb67ce4c3a61f6696c5f3ae88815c98266865766118343d928faec8a0efc012efe1d080f59bf62d8fdc382bf285f45d02dbc8fb66
   languageName: node
   linkType: hard
 
