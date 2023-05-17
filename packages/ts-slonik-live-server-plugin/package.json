@@ -26,7 +26,7 @@
   ],
   "license": "MIT",
   "scripts": {
-    "release": "yarn semantic-release",
+    "release": "yarn semantic-release --debug",
     "prepack": "yarn build && ts-node -T ./src/util/prepack.ts",
     "build": "yarn dlx rimraf dist && tsc -p tsconfig.build.json && cp ./src/lib/pg/pg.js ./dist/lib/pg/pg.js",
     "test:db:migrate": "DATABASE_URL=postgresql://postgres:secretpassword@localhost:54321/postgres yarn node-pg-migrate -m ./src/test/migrations --tsconfig ./tsconfig.json",
