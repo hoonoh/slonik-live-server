@@ -73,7 +73,6 @@
     "lerna": "6.6.2",
     "mockdate": "3.0.5",
     "prettier": "2.8.8",
-    "rimraf": "5.0.0",
     "semantic-release": "19.0.5",
     "semantic-release-monorepo": "7.0.5",
     "semantic-release-vsce": "5.5.9",

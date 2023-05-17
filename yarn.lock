@@ -13092,7 +13092,6 @@ __metadata:
     lerna: 6.6.2
     mockdate: 3.0.5
     prettier: 2.8.8
-    rimraf: 5.0.0
     semantic-release: 19.0.5
     semantic-release-monorepo: 7.0.5
     semantic-release-vsce: 5.5.9
@@ -14066,6 +14065,7 @@ __metadata:
     node-pg-migrate: 6.2.2
     pg: 8.11.0
     pgsql-ast-parser: 11.0.1
+    rimraf: 5.0.0
     safe-stable-stringify: 2.4.3
     semantic-release: 21.0.2
     slonik: 33.3.1
