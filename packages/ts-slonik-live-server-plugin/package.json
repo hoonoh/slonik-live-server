@@ -67,7 +67,7 @@
   "dependencies": {
     "d-forest": "3.2.4",
     "dotenv": "16.0.3",
-    "pg": "8.10.0",
+    "pg": "8.11.0",
     "pgsql-ast-parser": "11.0.1",
     "safe-stable-stringify": "2.4.3",
     "slonik": "33.3.1",
