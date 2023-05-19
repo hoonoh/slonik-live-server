@@ -1,3 +1,10 @@
+# [ts-slonik-live-server-plugin-v1.1.15](https://github.com/hoonoh/slonik-live-server/compare/ts-slonik-live-server-plugin-v1.1.14...ts-slonik-live-server-plugin-v1.1.15) (2023-05-19)
+
+
+### Bug Fixes
+
+* **deps:** bump pg version ([f30a512](https://github.com/hoonoh/slonik-live-server/commit/f30a512be7e7eae490ea97b1f92ba19574801bc0))
+
 # [ts-slonik-live-server-plugin-v1.1.14](https://github.com/hoonoh/slonik-live-server/compare/ts-slonik-live-server-plugin-v1.1.13...ts-slonik-live-server-plugin-v1.1.14) (2023-01-06)
 
 
