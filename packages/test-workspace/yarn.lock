@@ -53,13 +53,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bluebird@npm:^3.7.1":
-  version: 3.7.2
-  resolution: "bluebird@npm:3.7.2"
-  checksum: 869417503c722e7dc54ca46715f70e15f4d9c602a423a02c825570862d12935be59ed9c7ba34a9b31f186c017c23cac6b54e35446f8353059c101da73eac22ef
-  languageName: node
-  linkType: hard
-
 "boolean@npm:^3.1.4":
   version: 3.2.0
   resolution: "boolean@npm:3.2.0"
@@ -147,10 +140,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv@npm:16.1.3":
-  version: 16.1.3
-  resolution: "dotenv@npm:16.1.3"
-  checksum: 8f73bae720161cf365b679de162fe79a05f5b7a21d0d2b8bf9fb0601a2ed30f7e9dc49fa8b752d93206e4b7d427eccea2f383a1622cd5da4a1824f43bf8f780b
+"dotenv@npm:16.1.4":
+  version: 16.1.4
+  resolution: "dotenv@npm:16.1.4"
+  checksum: c1b2e13df4d374a6a29e134c56c7b040ba20500677fe8b9939ea654f3b3badb9aaa0b172e40e4dfa1233a4177dbb8fb79d84cc79a50ac9c9641fe2ad98c14876
   languageName: node
   linkType: hard
 
@@ -196,16 +189,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"get-stack-trace@npm:^2.1.1":
-  version: 2.1.1
-  resolution: "get-stack-trace@npm:2.1.1"
-  dependencies:
-    bluebird: ^3.7.1
-    source-map: ^0.8.0-beta.0
-  checksum: 88f63852aa9d975c59f41fecbf9152004b050d3ed5713df370b62370cffc0db25a5203c491ae1dc71b7d822e3c2233e2127de487ee3fc044e8794358f3bab44d
-  languageName: node
-  linkType: hard
-
 "globalthis@npm:^1.0.2":
   version: 1.0.2
   resolution: "globalthis@npm:1.0.2"
@@ -236,13 +219,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"is-plain-object@npm:^5.0.0":
-  version: 5.0.0
-  resolution: "is-plain-object@npm:5.0.0"
-  checksum: e32d27061eef62c0847d303125440a38660517e586f2f3db7c9d179ae5b6674ab0f469d519b2e25c147a1a3bc87156d0d5f4d8821e0ce4a9ee7fe1fcf11ce45c
-  languageName: node
-  linkType: hard
-
 "iso8601-duration@npm:^1.3.0":
   version: 1.3.0
   resolution: "iso8601-duration@npm:1.3.0"
@@ -254,13 +230,6 @@ __metadata:
   version: 0.4.1
   resolution: "json-schema-traverse@npm:0.4.1"
   checksum: 7486074d3ba247769fda17d5181b345c9fb7d12e0da98b22d1d71a5db9698d8b4bd900a3ec1a4ffdd60846fc2556274a5c894d0c48795f14cb03aeae7b55260b
-  languageName: node
-  linkType: hard
-
-"lodash.sortby@npm:^4.7.0":
-  version: 4.7.0
-  resolution: "lodash.sortby@npm:4.7.0"
-  checksum: db170c9396d29d11fe9a9f25668c4993e0c1331bcb941ddbd48fb76f492e732add7f2a47cfdf8e9d740fa59ac41bbfaf931d268bc72aab3ab49e9f89354d718c
   languageName: node
   linkType: hard
 
@@ -467,13 +436,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pgsql-ast-parser@npm:11.0.1":
-  version: 11.0.1
-  resolution: "pgsql-ast-parser@npm:11.0.1"
+"pgsql-ast-parser@npm:11.1.0":
+  version: 11.1.0
+  resolution: "pgsql-ast-parser@npm:11.1.0"
   dependencies:
     moo: ^0.5.1
     nearley: ^2.19.5
-  checksum: 8272f68de3bfce31446b65f67736bf214b9bc8d8182f7990855fb2ecfe144fd8b7eb0988c3aabd974fae42f86bc5b5ec2382d55c2cc83ac26424fe849128900e
+  checksum: 0aa2ecf916dbc53d2cb5da8d78cf6f91f817ba425e82c11ee37a2ae0aad77ed2771ee9f84db114fd83626d6c8292deb83a5b2fe41187f2bd2d449de5831efb68
   languageName: node
   linkType: hard
 
@@ -671,15 +640,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"slonik@npm:33.3.2, slonik@npm:^33.0.0":
-  version: 33.3.2
-  resolution: "slonik@npm:33.3.2"
+"slonik@npm:33.3.3, slonik@npm:^33.0.0":
+  version: 33.3.3
+  resolution: "slonik@npm:33.3.3"
   dependencies:
     "@types/pg": ^8.10.1
     concat-stream: ^2.0.0
     es6-error: ^4.1.1
-    get-stack-trace: ^2.1.1
-    is-plain-object: ^5.0.0
     iso8601-duration: ^1.3.0
     p-defer: ^3.0.0
     pg: ^8.11.0
@@ -696,16 +663,7 @@ __metadata:
     through2: ^4.0.2
   peerDependencies:
     zod: ^3
-  checksum: dc16b6b818d7d6473b73dd913aefffd084bf2a5d3c480d7d9893615c4a8fef3591b4a7f69b5d3fa338d08082293db8e2ee5ab00a552673ac83567f2f3cd01ac0
-  languageName: node
-  linkType: hard
-
-"source-map@npm:^0.8.0-beta.0":
-  version: 0.8.0-beta.0
-  resolution: "source-map@npm:0.8.0-beta.0"
-  dependencies:
-    whatwg-url: ^7.0.0
-  checksum: e94169be6461ab0ac0913313ad1719a14c60d402bd22b0ad96f4a6cffd79130d91ab5df0a5336a326b04d2df131c1409f563c9dc0d21a6ca6239a44b6c8dbd92
+  checksum: 1b995adeda17bc3d46d1aa98735c1e960b1145d58f8e9b986b1fde5f67044bf4146dd922477e7b3d24ea6c3cc190a77bd2dc2bce70a8724c25d3a15b7a62d16e
   languageName: node
   linkType: hard
 
@@ -763,28 +721,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tr46@npm:^1.0.1":
-  version: 1.0.1
-  resolution: "tr46@npm:1.0.1"
-  dependencies:
-    punycode: ^2.1.0
-  checksum: 96d4ed46bc161db75dbf9247a236ea0bfcaf5758baae6749e92afab0bc5a09cb59af21788ede7e55080f2bf02dce3e4a8f2a484cc45164e29f4b5e68f7cbcc1a
-  languageName: node
-  linkType: hard
-
 "ts-slonik-live-server-plugin@file:../ts-slonik-live-server-plugin::locator=test-workspace%40workspace%3A.":
   version: 1.1.15
-  resolution: "ts-slonik-live-server-plugin@file:../ts-slonik-live-server-plugin#../ts-slonik-live-server-plugin::hash=7ce9b4&locator=test-workspace%40workspace%3A."
+  resolution: "ts-slonik-live-server-plugin@file:../ts-slonik-live-server-plugin#../ts-slonik-live-server-plugin::hash=9c7a9a&locator=test-workspace%40workspace%3A."
   dependencies:
     d-forest: 3.2.4
-    dotenv: 16.1.3
+    dotenv: 16.1.4
     pg: 8.11.0
-    pgsql-ast-parser: 11.0.1
+    pgsql-ast-parser: 11.1.0
     safe-stable-stringify: 2.4.3
-    slonik: 33.3.2
+    slonik: 33.3.3
     slonik-sql-tag-raw: 2.0.0
     typescript-template-language-service-decorator: 2.3.2
-  checksum: 9fecdff0428d1244e14dd333bcdfabf4c92197f4625261a5a2a8b29e22ea08e2830d9119e141f3d68c9b5e1206faeed2ff1aef309dbda980233f5a4580c45644
+  checksum: 8ebfc6ebd9bb55fc81588e0a7c6ce4a2f1f83770070e85c3438fd27a6f553c051ec6e288083f7e3fecb14fa50c8443b7a69d0736691b79bc42ef1855b3ed3356
   languageName: node
   linkType: hard
 
@@ -821,11 +770,11 @@ __metadata:
 
 "typescript@patch:typescript@^5.0.0#~builtin<compat/typescript>":
   version: 5.1.3
-  resolution: "typescript@patch:typescript@npm%3A5.1.3#~builtin<compat/typescript>::version=5.1.3&hash=77c9e2"
+  resolution: "typescript@patch:typescript@npm%3A5.1.3#~builtin<compat/typescript>::version=5.1.3&hash=5da071"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 32a25b2e128a4616f999d4ee502aabb1525d5647bc8955e6edf05d7fbc53af8aa98252e2f6ba80bcedfc0260c982b885f3c09cfac8bb65d2924f3133ad1e1e62
+  checksum: 6f0a9dca6bf4ce9dcaf4e282aade55ef4c56ecb5fb98d0a4a5c0113398815aea66d871b5611e83353e5953a19ed9ef103cf5a76ac0f276d550d1e7cd5344f61e
   languageName: node
   linkType: hard
 
@@ -842,24 +791,6 @@ __metadata:
   version: 1.0.2
   resolution: "util-deprecate@npm:1.0.2"
   checksum: 474acf1146cb2701fe3b074892217553dfcf9a031280919ba1b8d651a068c9b15d863b7303cb15bd00a862b498e6cf4ad7b4a08fb134edd5a6f7641681cb54a2
-  languageName: node
-  linkType: hard
-
-"webidl-conversions@npm:^4.0.2":
-  version: 4.0.2
-  resolution: "webidl-conversions@npm:4.0.2"
-  checksum: c93d8dfe908a0140a4ae9c0ebc87a33805b416a33ee638a605b551523eec94a9632165e54632f6d57a39c5f948c4bab10e0e066525e9a4b87a79f0d04fbca374
-  languageName: node
-  linkType: hard
-
-"whatwg-url@npm:^7.0.0":
-  version: 7.1.0
-  resolution: "whatwg-url@npm:7.1.0"
-  dependencies:
-    lodash.sortby: ^4.7.0
-    tr46: ^1.0.1
-    webidl-conversions: ^4.0.2
-  checksum: fecb07c87290b47d2ec2fb6d6ca26daad3c9e211e0e531dd7566e7ff95b5b3525a57d4f32640ad4adf057717e0c215731db842ad761e61d947e81010e05cf5fd
   languageName: node
   linkType: hard
 
