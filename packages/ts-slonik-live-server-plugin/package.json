@@ -67,7 +67,7 @@
   "dependencies": {
     "d-forest": "3.2.4",
     "dotenv": "16.3.1",
-    "pg": "8.11.0",
+    "pg": "8.11.1",
     "pgsql-ast-parser": "11.1.0",
     "safe-stable-stringify": "2.4.3",
     "slonik": "34.0.1",
@@ -77,6 +77,6 @@
   "devDependencies": {
     "node-pg-migrate": "6.2.2",
     "rimraf": "5.0.1",
-    "semantic-release": "21.0.5"
+    "semantic-release": "21.0.6"
   }
 }
