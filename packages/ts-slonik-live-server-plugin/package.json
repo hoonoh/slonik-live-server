@@ -77,6 +77,6 @@
   "devDependencies": {
     "node-pg-migrate": "6.2.2",
     "rimraf": "5.0.1",
-    "semantic-release": "21.0.7"
+    "semantic-release": "21.1.1"
   }
 }
