@@ -42,13 +42,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"buffer-from@npm:^1.0.0":
-  version: 1.1.1
-  resolution: "buffer-from@npm:1.1.1"
-  checksum: ccc53b69736008bff764497367c4d24879ba7122bc619ee499ff47eef3a5b885ca496e87272e7ebffa0bec3804c83f84041c616f6e3318f40624e27c1d80f045
-  languageName: node
-  linkType: hard
-
 "buffer-writer@npm:2.0.0":
   version: 2.0.0
   resolution: "buffer-writer@npm:2.0.0"
@@ -60,18 +53,6 @@ __metadata:
   version: 2.20.3
   resolution: "commander@npm:2.20.3"
   checksum: ab8c07884e42c3a8dbc5dd9592c606176c7eb5c1ca5ff274bcf907039b2c41de3626f684ea75ccf4d361ba004bbaff1f577d5384c155f3871e456bdf27becf9e
-  languageName: node
-  linkType: hard
-
-"concat-stream@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "concat-stream@npm:2.0.0"
-  dependencies:
-    buffer-from: ^1.0.0
-    inherits: ^2.0.3
-    readable-stream: ^3.0.2
-    typedarray: ^0.0.6
-  checksum: d7f75d48f0ecd356c1545d87e22f57b488172811b1181d96021c7c4b14ab8855f5313280263dca44bb06e5222f274d047da3e290a38841ef87b59719bde967c7
   languageName: node
   linkType: hard
 
@@ -465,7 +446,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"readable-stream@npm:3, readable-stream@npm:^3.0.0, readable-stream@npm:^3.0.2":
+"readable-stream@npm:3, readable-stream@npm:^3.0.0":
   version: 3.6.0
   resolution: "readable-stream@npm:3.6.0"
   dependencies:
@@ -554,12 +535,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"slonik@npm:34.1.1, slonik@npm:^34.0.0":
-  version: 34.1.1
-  resolution: "slonik@npm:34.1.1"
+"slonik@npm:34.3.0, slonik@npm:^34.0.0":
+  version: 34.3.0
+  resolution: "slonik@npm:34.3.0"
   dependencies:
     "@types/pg": ^8.10.2
-    concat-stream: ^2.0.0
     es6-error: ^4.1.1
     iso8601-duration: ^1.3.0
     pg: ^8.11.3
@@ -574,7 +554,7 @@ __metadata:
     through2: ^4.0.2
   peerDependencies:
     zod: ^3
-  checksum: 86c13da775314940d65387a5a88ae6651f5dd963e19e0ef43c6bf37f61e7b9b1faa4409233d41482b9121188ee32aba47d3337782d9302fbf33bb05f47a0fed0
+  checksum: 3ac81cefb7c2529637fdb30be26a49dd6e5a8b2f2b905c0066387be9e4e9034908595d291ce9108f6a901ad74a712336835ea0c3fa74978fe699cd195206e405
   languageName: node
   linkType: hard
 
@@ -624,17 +604,17 @@ __metadata:
 
 "ts-slonik-live-server-plugin@file:../ts-slonik-live-server-plugin::locator=test-workspace%40workspace%3A.":
   version: 1.1.15
-  resolution: "ts-slonik-live-server-plugin@file:../ts-slonik-live-server-plugin#../ts-slonik-live-server-plugin::hash=9495cf&locator=test-workspace%40workspace%3A."
+  resolution: "ts-slonik-live-server-plugin@file:../ts-slonik-live-server-plugin#../ts-slonik-live-server-plugin::hash=eb5447&locator=test-workspace%40workspace%3A."
   dependencies:
     d-forest: 3.2.4
     dotenv: 16.3.1
     pg: 8.11.3
     pgsql-ast-parser: 11.1.0
     safe-stable-stringify: 2.4.3
-    slonik: 34.1.1
+    slonik: 34.3.0
     slonik-sql-tag-raw: 2.0.0
     typescript-template-language-service-decorator: 2.3.2
-  checksum: 5f382a19c383a006f6e88b3c975854807c4f9608088f63d325c5d09bc40cd2ab0d603ac2a20b5f24a9e3aa770248e7a79d68b42d46dff7a6141fce258e3b9187
+  checksum: 11369e6bd57ff6d9af4c34dfd35049bf419e5170d43ae241bd43153c078e5a71d887d7975697c222e96dd2af675ec007efa598b2e70008d248efd775150fca9d
   languageName: node
   linkType: hard
 
@@ -642,13 +622,6 @@ __metadata:
   version: 0.20.2
   resolution: "type-fest@npm:0.20.2"
   checksum: 4fb3272df21ad1c552486f8a2f8e115c09a521ad7a8db3d56d53718d0c907b62c6e9141ba5f584af3f6830d0872c521357e512381f24f7c44acae583ad517d73
-  languageName: node
-  linkType: hard
-
-"typedarray@npm:^0.0.6":
-  version: 0.0.6
-  resolution: "typedarray@npm:0.0.6"
-  checksum: 33b39f3d0e8463985eeaeeacc3cb2e28bc3dfaf2a5ed219628c0b629d5d7b810b0eb2165f9f607c34871d5daa92ba1dc69f49051cf7d578b4cbd26c340b9d1b1
   languageName: node
   linkType: hard
 
