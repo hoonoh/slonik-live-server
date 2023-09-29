@@ -555,9 +555,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"slonik@npm:37.0.0, slonik@npm:^37.0.0":
-  version: 37.0.0
-  resolution: "slonik@npm:37.0.0"
+"slonik@npm:37.0.1, slonik@npm:^37.0.0":
+  version: 37.0.1
+  resolution: "slonik@npm:37.0.1"
   dependencies:
     "@types/pg": ^8.10.2
     es6-error: ^4.1.1
@@ -574,7 +574,7 @@ __metadata:
     serialize-error: ^8.0.0
   peerDependencies:
     zod: ^3
-  checksum: 08b65c644390bf1cd769f173addf8fe78a5bb04f6b3f69bd61065dd474897e1594cbb89be8b7d1e96302dca60930831312913a1f30fb0e46367e5ab26077e199
+  checksum: cad20966c23172853709b7ee340aad8f9bd40fe3c2c35764e64cdcbb18845857be1e6ba0f7e14352a7dd9ee8d5464d87aa9bb90d72fdc03ab37cc8e7d3bc6787
   languageName: node
   linkType: hard
 
@@ -624,17 +624,17 @@ __metadata:
 
 "ts-slonik-live-server-plugin@file:../ts-slonik-live-server-plugin::locator=test-workspace%40workspace%3A.":
   version: 1.1.15
-  resolution: "ts-slonik-live-server-plugin@file:../ts-slonik-live-server-plugin#../ts-slonik-live-server-plugin::hash=33c402&locator=test-workspace%40workspace%3A."
+  resolution: "ts-slonik-live-server-plugin@file:../ts-slonik-live-server-plugin#../ts-slonik-live-server-plugin::hash=14e67d&locator=test-workspace%40workspace%3A."
   dependencies:
     d-forest: 3.2.4
     dotenv: 16.3.1
     pg: 8.11.3
     pgsql-ast-parser: 11.1.0
     safe-stable-stringify: 2.4.3
-    slonik: 37.0.0
+    slonik: 37.0.1
     slonik-sql-tag-raw: 2.0.0
     typescript-template-language-service-decorator: 2.3.2
-  checksum: 13581402f2bf06e30dd2dcf96b7184d28137b3cc57e2b8daec6aa9e8866376543c1fa074918b1c70e92ee5bb8b61e00d53509beeb87e001b9d072390c17636b1
+  checksum: f5b31e6962601cd14a8eb8540f87a1504e7839fdf066f10f8e837eb0a6bd221087ddac7aec498077f4be2a1a3488bedfdffa55363b11d5aeba21e81154dedc8b
   languageName: node
   linkType: hard
 
