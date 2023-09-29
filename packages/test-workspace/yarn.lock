@@ -135,6 +135,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"get-stack-trace@npm:^3.1.1":
+  version: 3.1.1
+  resolution: "get-stack-trace@npm:3.1.1"
+  dependencies:
+    stacktrace-parser: ^0.1.10
+  checksum: de3ebf3d8c22d90a6dfc27e4bd89853188f7efd362ccb342453c8018f2d42d074a7b51fc8fd4ea6916c124ff720d67ff7febbc869bc00a07ca86312095b360a2
+  languageName: node
+  linkType: hard
+
 "globalthis@npm:^1.0.2":
   version: 1.0.2
   resolution: "globalthis@npm:1.0.2"
@@ -231,12 +240,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pg-cursor@npm:^2.10.0":
-  version: 2.10.0
-  resolution: "pg-cursor@npm:2.10.0"
+"pg-cursor@npm:^2.10.3":
+  version: 2.10.3
+  resolution: "pg-cursor@npm:2.10.3"
   peerDependencies:
     pg: ^8
-  checksum: c2dc43da70bca6873d3b23fbbc70b42e27ebd4205afbf6ea29ab0a9293d42943f635a8ea7892ecf77fec8d75df3aaa3ca33d59d3fc4db826f9b7553ae0383824
+  checksum: 86dd66c4bf70da5272eb60d485a60f4216ebbffe2b7d314fe18a28a0cadf9b0d056d2291e0f108ed413be185818c2e82105bf290bf98fc91f73c52e4d0de42b8
   languageName: node
   linkType: hard
 
@@ -267,6 +276,17 @@ __metadata:
   version: 1.6.0
   resolution: "pg-protocol@npm:1.6.0"
   checksum: e12662d2de2011e0c3a03f6a09f435beb1025acdc860f181f18a600a5495dc38a69d753bbde1ace279c8c442536af9c1a7c11e1d0fe3fad3aa1348b28d9d2683
+  languageName: node
+  linkType: hard
+
+"pg-query-stream@npm:^4.5.3":
+  version: 4.5.3
+  resolution: "pg-query-stream@npm:4.5.3"
+  dependencies:
+    pg-cursor: ^2.10.3
+  peerDependencies:
+    pg: ^8
+  checksum: 942b8fa9f33c4d6403c9d07ad5fc2f68b5ad3664bce5aecd861b6034932feb6a1389d8a364adf621798f1d314ca51b11b5bc2fafc12085022dc262cb6a3dddfb
   languageName: node
   linkType: hard
 
@@ -446,7 +466,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"readable-stream@npm:3, readable-stream@npm:^3.0.0":
+"readable-stream@npm:^3.0.0":
   version: 3.6.0
   resolution: "readable-stream@npm:3.6.0"
   dependencies:
@@ -535,26 +555,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"slonik@npm:34.3.0, slonik@npm:^34.0.0":
-  version: 34.3.0
-  resolution: "slonik@npm:34.3.0"
+"slonik@npm:37.0.0, slonik@npm:^37.0.0":
+  version: 37.0.0
+  resolution: "slonik@npm:37.0.0"
   dependencies:
     "@types/pg": ^8.10.2
     es6-error: ^4.1.1
+    get-stack-trace: ^3.1.1
     iso8601-duration: ^1.3.0
     pg: ^8.11.3
-    pg-cursor: ^2.10.0
     pg-protocol: ^1.6.0
+    pg-query-stream: ^4.5.3
     pg-types: ^4.0.1
     postgres-array: ^3.0.2
     postgres-interval: ^4.0.0
     roarr: ^7.15.0
     safe-stable-stringify: ^2.4.3
     serialize-error: ^8.0.0
-    through2: ^4.0.2
   peerDependencies:
     zod: ^3
-  checksum: 3ac81cefb7c2529637fdb30be26a49dd6e5a8b2f2b905c0066387be9e4e9034908595d291ce9108f6a901ad74a712336835ea0c3fa74978fe699cd195206e405
+  checksum: 08b65c644390bf1cd769f173addf8fe78a5bb04f6b3f69bd61065dd474897e1594cbb89be8b7d1e96302dca60930831312913a1f30fb0e46367e5ab26077e199
   languageName: node
   linkType: hard
 
@@ -564,6 +584,15 @@ __metadata:
   dependencies:
     readable-stream: ^3.0.0
   checksum: 8127ddbedd0faf31f232c0e9192fede469913aa8982aa380752e0463b2e31c2359ef6962eb2d24c125bac59eeec76873678d723b1c7ff696216a1cd071e3994a
+  languageName: node
+  linkType: hard
+
+"stacktrace-parser@npm:^0.1.10":
+  version: 0.1.10
+  resolution: "stacktrace-parser@npm:0.1.10"
+  dependencies:
+    type-fest: ^0.7.1
+  checksum: f4fbddfc09121d91e587b60de4beb4941108e967d71ad3a171812dc839b010ca374d064ad0a296295fed13acd103609d99a4224a25b4e67de13cae131f1901ee
   languageName: node
   linkType: hard
 
@@ -587,34 +616,25 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "test-workspace@workspace:."
   dependencies:
-    slonik: ^34.0.0
+    slonik: ^37.0.0
     ts-slonik-live-server-plugin: "*"
     typescript: ^5.0.0
   languageName: unknown
   linkType: soft
 
-"through2@npm:^4.0.2":
-  version: 4.0.2
-  resolution: "through2@npm:4.0.2"
-  dependencies:
-    readable-stream: 3
-  checksum: ac7430bd54ccb7920fd094b1c7ff3e1ad6edd94202e5528331253e5fde0cc56ceaa690e8df9895de2e073148c52dfbe6c4db74cacae812477a35660090960cc0
-  languageName: node
-  linkType: hard
-
 "ts-slonik-live-server-plugin@file:../ts-slonik-live-server-plugin::locator=test-workspace%40workspace%3A.":
   version: 1.1.15
-  resolution: "ts-slonik-live-server-plugin@file:../ts-slonik-live-server-plugin#../ts-slonik-live-server-plugin::hash=eb5447&locator=test-workspace%40workspace%3A."
+  resolution: "ts-slonik-live-server-plugin@file:../ts-slonik-live-server-plugin#../ts-slonik-live-server-plugin::hash=33c402&locator=test-workspace%40workspace%3A."
   dependencies:
     d-forest: 3.2.4
     dotenv: 16.3.1
     pg: 8.11.3
     pgsql-ast-parser: 11.1.0
     safe-stable-stringify: 2.4.3
-    slonik: 34.3.0
+    slonik: 37.0.0
     slonik-sql-tag-raw: 2.0.0
     typescript-template-language-service-decorator: 2.3.2
-  checksum: 11369e6bd57ff6d9af4c34dfd35049bf419e5170d43ae241bd43153c078e5a71d887d7975697c222e96dd2af675ec007efa598b2e70008d248efd775150fca9d
+  checksum: 13581402f2bf06e30dd2dcf96b7184d28137b3cc57e2b8daec6aa9e8866376543c1fa074918b1c70e92ee5bb8b61e00d53509beeb87e001b9d072390c17636b1
   languageName: node
   linkType: hard
 
@@ -622,6 +642,13 @@ __metadata:
   version: 0.20.2
   resolution: "type-fest@npm:0.20.2"
   checksum: 4fb3272df21ad1c552486f8a2f8e115c09a521ad7a8db3d56d53718d0c907b62c6e9141ba5f584af3f6830d0872c521357e512381f24f7c44acae583ad517d73
+  languageName: node
+  linkType: hard
+
+"type-fest@npm:^0.7.1":
+  version: 0.7.1
+  resolution: "type-fest@npm:0.7.1"
+  checksum: 5b1b113529d59949d97b76977d545989ddc11b81bb0c766b6d2ccc65473cb4b4a5c7d24f5be2c2bb2de302a5d7a13c1732ea1d34c8c59b7e0ec1f890cf7fc424
   languageName: node
   linkType: hard
 
