@@ -139,7 +139,7 @@
   },
   "devDependencies": {
     "semantic-release": "22.0.5",
-    "ts-essentials": "9.4.0",
+    "ts-essentials": "9.4.1",
     "typescript": "5.2.2",
     "vsce": "2.15.0"
   },
