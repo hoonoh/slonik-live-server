@@ -5,13 +5,6 @@ __metadata:
   version: 6
   cacheKey: 8
 
-"@fastify/deepmerge@npm:^1.0.0":
-  version: 1.3.0
-  resolution: "@fastify/deepmerge@npm:1.3.0"
-  checksum: 33ec927905dca320d7ae9535a1521909f7c82339706345324ab6287ad100589a799b8257c15b0e582c7bb74e2aa4883d82ba0228d7b116aa8789ada4f78d6974
-  languageName: node
-  linkType: hard
-
 "@types/node@npm:*":
   version: 18.15.10
   resolution: "@types/node@npm:18.15.10"
@@ -27,32 +20,6 @@ __metadata:
     pg-protocol: "*"
     pg-types: ^4.0.1
   checksum: 90a616360844b6f877be21a24839af2115f5eb9c8e3eeaf577fa0f036c6c56ad140113fdd8268e63cf215bd0953d89caa1af05191dd89cb2e6d96eb6db6074d2
-  languageName: node
-  linkType: hard
-
-"ajv-formats@npm:^2.1.1":
-  version: 2.1.1
-  resolution: "ajv-formats@npm:2.1.1"
-  dependencies:
-    ajv: ^8.0.0
-  peerDependencies:
-    ajv: ^8.0.0
-  peerDependenciesMeta:
-    ajv:
-      optional: true
-  checksum: 4a287d937f1ebaad4683249a4c40c0fa3beed30d9ddc0adba04859026a622da0d317851316ea64b3680dc60f5c3c708105ddd5d5db8fe595d9d0207fd19f90b7
-  languageName: node
-  linkType: hard
-
-"ajv@npm:^8.0.0, ajv@npm:^8.10.0":
-  version: 8.12.0
-  resolution: "ajv@npm:8.12.0"
-  dependencies:
-    fast-deep-equal: ^3.1.1
-    json-schema-traverse: ^1.0.0
-    require-from-string: ^2.0.2
-    uri-js: ^4.2.2
-  checksum: 4dc13714e316e67537c8b31bc063f99a1d9d9a497eb4bbd55191ac0dcd5e4985bbb71570352ad6f1e76684fb6d790928f96ba3b2d4fd6e10024be9612fe3f001
   languageName: node
   linkType: hard
 
@@ -84,15 +51,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"define-properties@npm:^1.1.3":
-  version: 1.1.3
-  resolution: "define-properties@npm:1.1.3"
-  dependencies:
-    object-keys: ^1.0.12
-  checksum: da80dba55d0cd76a5a7ab71ef6ea0ebcb7b941f803793e4e0257b384cb772038faa0c31659d244e82c4342edef841c1a1212580006a05a5068ee48223d787317
-  languageName: node
-  linkType: hard
-
 "discontinuous-range@npm:1.0.0":
   version: 1.0.0
   resolution: "discontinuous-range@npm:1.0.0"
@@ -114,27 +72,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-deep-equal@npm:^3.1.1, fast-deep-equal@npm:^3.1.3":
-  version: 3.1.3
-  resolution: "fast-deep-equal@npm:3.1.3"
-  checksum: e21a9d8d84f53493b6aa15efc9cfd53dd5b714a1f23f67fb5dc8f574af80df889b3bce25dc081887c6d25457cce704e636395333abad896ccdec03abaf1f3f9d
-  languageName: node
-  linkType: hard
-
-"fast-json-stringify@npm:^5.8.0":
-  version: 5.8.0
-  resolution: "fast-json-stringify@npm:5.8.0"
-  dependencies:
-    "@fastify/deepmerge": ^1.0.0
-    ajv: ^8.10.0
-    ajv-formats: ^2.1.1
-    fast-deep-equal: ^3.1.3
-    fast-uri: ^2.1.0
-    rfdc: ^1.2.0
-  checksum: 04232ace5a5758e6a92b9a4518234a1c05e55ef9b788c80bf741ec6a64cf7273a9ef07938ca4b82a96ea470295b4c3e84a657a9bbaacee4bd97daa16595b1a9a
-  languageName: node
-  linkType: hard
-
 "fast-printf@npm:^1.6.9":
   version: 1.6.9
   resolution: "fast-printf@npm:1.6.9"
@@ -144,28 +81,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-uri@npm:^2.1.0":
-  version: 2.2.0
-  resolution: "fast-uri@npm:2.2.0"
-  checksum: edac64d50628f21d562cdc19ea86f5af00902dbb09d2f96fff5974e5317157825e9aa163af9defd11a0818aac6ea2e9958597bed98dd041200a08a976809d08b
-  languageName: node
-  linkType: hard
-
 "get-stack-trace@npm:^3.1.1":
   version: 3.1.1
   resolution: "get-stack-trace@npm:3.1.1"
   dependencies:
     stacktrace-parser: ^0.1.10
   checksum: de3ebf3d8c22d90a6dfc27e4bd89853188f7efd362ccb342453c8018f2d42d074a7b51fc8fd4ea6916c124ff720d67ff7febbc869bc00a07ca86312095b360a2
-  languageName: node
-  linkType: hard
-
-"globalthis@npm:^1.0.2":
-  version: 1.0.2
-  resolution: "globalthis@npm:1.0.2"
-  dependencies:
-    define-properties: ^1.1.3
-  checksum: 5a5f3c7ab94708260a98106b35946b74bb57f6b2013e39668dc9e8770b80a3418103b63a2b4aa01c31af15fdf6a2940398ffc0a408573c34c2304f928895adff
   languageName: node
   linkType: hard
 
@@ -180,13 +101,6 @@ __metadata:
   version: 1.3.0
   resolution: "iso8601-duration@npm:1.3.0"
   checksum: 22a0d23bde4b4791775caa60b9fd6334e5d6c58cd2bede1dbfc6296c9beef8f70ebf9e8cabb29ae0ca2a84f14c8ab52580f2f9a255411812f6d0d3f0e5ad9031
-  languageName: node
-  linkType: hard
-
-"json-schema-traverse@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "json-schema-traverse@npm:1.0.0"
-  checksum: 02f2f466cdb0362558b2f1fd5e15cce82ef55d60cd7f8fa828cf35ba74330f8d767fcae5c5c2adb7851fa811766c694b9405810879bc4e1ddd78a7c0e03658ad
   languageName: node
   linkType: hard
 
@@ -218,13 +132,6 @@ __metadata:
     nearley-unparse: bin/nearley-unparse.js
     nearleyc: bin/nearleyc.js
   checksum: 42c2c330c13c7991b48221c5df00f4352c2f8851636ae4d1f8ca3c8e193fc1b7668c78011d1cad88cca4c1c4dc087425420629c19cc286d7598ec15533aaef26
-  languageName: node
-  linkType: hard
-
-"object-keys@npm:^1.0.12":
-  version: 1.1.1
-  resolution: "object-keys@npm:1.1.1"
-  checksum: b363c5e7644b1e1b04aa507e88dcb8e3a2f52b6ffd0ea801e4c7a62d5aa559affe21c55a07fd4b1fd55fc03a33c610d73426664b20032405d7b92a1414c34d6a
   languageName: node
   linkType: hard
 
@@ -458,13 +365,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"punycode@npm:^2.1.0":
-  version: 2.1.1
-  resolution: "punycode@npm:2.1.1"
-  checksum: 823bf443c6dd14f669984dea25757b37993f67e8d94698996064035edd43bed8a5a17a9f12e439c2b35df1078c6bec05a6c86e336209eb1061e8025c481168e8
-  languageName: node
-  linkType: hard
-
 "railroad-diagrams@npm:^1.0.0":
   version: 1.0.0
   resolution: "railroad-diagrams@npm:1.0.0"
@@ -493,13 +393,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"require-from-string@npm:^2.0.2":
-  version: 2.0.2
-  resolution: "require-from-string@npm:2.0.2"
-  checksum: a03ef6895445f33a4015300c426699bc66b2b044ba7b670aa238610381b56d3f07c686251740d575e22f4c87531ba662d06937508f0f3c0f1ddc04db3130560b
-  languageName: node
-  linkType: hard
-
 "ret@npm:~0.1.10":
   version: 0.1.15
   resolution: "ret@npm:0.1.15"
@@ -507,24 +400,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rfdc@npm:^1.2.0":
-  version: 1.2.0
-  resolution: "rfdc@npm:1.2.0"
-  checksum: 629a80a062ef9a2f184dc37d9dd3adfeca1fb001cedafbc654238fdc2c7d595e22412c423ea8f08aa3497706c439972684bcd65f30c74a2779bae95a5434b712
-  languageName: node
-  linkType: hard
-
-"roarr@npm:^7.15.1":
-  version: 7.15.1
-  resolution: "roarr@npm:7.15.1"
+"roarr@npm:^7.18.3":
+  version: 7.18.3
+  resolution: "roarr@npm:7.18.3"
   dependencies:
-    boolean: ^3.1.4
-    fast-json-stringify: ^5.8.0
     fast-printf: ^1.6.9
-    globalthis: ^1.0.2
     safe-stable-stringify: ^2.4.3
     semver-compare: ^1.0.0
-  checksum: ec54884da45b9c5f40258d76b00fe0692a6480ece3225f5a069517b75d59294127fd785ac85af108968216cc59fad9fc68ae305225caacac02e80464a48bfe4c
+  checksum: 8f59a5b09f945e5a2a464a8ea2031021aeb2c4be08ddf952a20279c07104903a5af77d85ebecf8d6594858f5babd3058c2eef6848a18c71f121c4201382af81f
   languageName: node
   linkType: hard
 
@@ -571,9 +454,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"slonik@npm:37.1.0, slonik@npm:^37.0.0":
-  version: 37.1.0
-  resolution: "slonik@npm:37.1.0"
+"slonik@npm:37.2.0, slonik@npm:^37.0.0":
+  version: 37.2.0
+  resolution: "slonik@npm:37.2.0"
   dependencies:
     "@types/pg": ^8.10.7
     es6-error: ^4.1.1
@@ -585,12 +468,12 @@ __metadata:
     pg-types: ^4.0.1
     postgres-array: ^3.0.2
     postgres-interval: ^4.0.1
-    roarr: ^7.15.1
+    roarr: ^7.18.3
     safe-stable-stringify: ^2.4.3
     serialize-error: ^8.0.0
   peerDependencies:
     zod: ^3
-  checksum: 1d1187d4f2e668a6f0d1024260d00f484ebc7dcbece8d98037a7c191d0c28ef1106c1bdc6ea0d575f40ec6f979a4104460fb0b3dd3494ae3ddff771bb94ed72b
+  checksum: ddb2834dda5381c05ca555029243a12f5b0260bb9d23d8d0b3a1fb47191218d137621aa65d8ff5350394fe3e1facccec783dadc4401689b791083cbfd145bc6b
   languageName: node
   linkType: hard
 
@@ -633,17 +516,17 @@ __metadata:
 
 "ts-slonik-live-server-plugin@file:../ts-slonik-live-server-plugin::locator=test-workspace%40workspace%3A.":
   version: 1.1.15
-  resolution: "ts-slonik-live-server-plugin@file:../ts-slonik-live-server-plugin#../ts-slonik-live-server-plugin::hash=f1bf6b&locator=test-workspace%40workspace%3A."
+  resolution: "ts-slonik-live-server-plugin@file:../ts-slonik-live-server-plugin#../ts-slonik-live-server-plugin::hash=8e06d2&locator=test-workspace%40workspace%3A."
   dependencies:
     d-forest: 3.2.4
     dotenv: 16.3.1
     pg: 8.11.3
     pgsql-ast-parser: 11.1.0
     safe-stable-stringify: 2.4.3
-    slonik: 37.1.0
+    slonik: 37.2.0
     slonik-sql-tag-raw: 2.0.0
     typescript-template-language-service-decorator: 2.3.2
-  checksum: a82b0f55fe267d5cb60dfbc91fa44a957f15f0368c0d3107f8bd81ae93c77d620648438c207638edd9c28721837b46e9f675984ec357627980bbf35bce2b3abf
+  checksum: 5c5fa1237df95063ec12a9c3df70508f72cb8685e068a3ca6c915a2169edb69cd3d19296649f2165e58fabf75a6822fb7e124261d3875cea21536081599ae0e4
   languageName: node
   linkType: hard
 
@@ -685,15 +568,6 @@ __metadata:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: 0f4da2f15e6f1245e49db15801dbee52f2bbfb267e1c39225afdab5afee1a72839cd86000e65ee9d7e4dfaff12239d28beaf5ee431357fcced15fb08583d72ca
-  languageName: node
-  linkType: hard
-
-"uri-js@npm:^4.2.2":
-  version: 4.4.1
-  resolution: "uri-js@npm:4.4.1"
-  dependencies:
-    punycode: ^2.1.0
-  checksum: 7167432de6817fe8e9e0c9684f1d2de2bb688c94388f7569f7dbdb1587c9f4ca2a77962f134ec90be0cc4d004c939ff0d05acc9f34a0db39a3c797dada262633
   languageName: node
   linkType: hard
 
