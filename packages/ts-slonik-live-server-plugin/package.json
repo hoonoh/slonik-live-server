@@ -70,13 +70,13 @@
     "pg": "8.11.3",
     "pgsql-ast-parser": "11.1.0",
     "safe-stable-stringify": "2.4.3",
-    "slonik": "37.1.0",
+    "slonik": "37.2.0",
     "slonik-sql-tag-raw": "2.0.0",
     "typescript-template-language-service-decorator": "2.3.2"
   },
   "devDependencies": {
     "node-pg-migrate": "6.2.2",
     "rimraf": "5.0.5",
-    "semantic-release": "22.0.5"
+    "semantic-release": "22.0.6"
   }
 }
