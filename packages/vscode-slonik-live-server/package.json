@@ -3,7 +3,7 @@
   "version": "1.0.14",
   "publisher": "hoonoh",
   "engines": {
-    "vscode": "^1.68.0"
+    "vscode": "^2023.0.0"
   },
   "license": "MIT",
   "displayName": "Slonik Live Server",
