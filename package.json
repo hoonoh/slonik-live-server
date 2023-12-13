@@ -2,7 +2,7 @@
   "name": "slonik-live-server",
   "version": "0.0.0-development",
   "description": "slonik live server monorepo",
-  "packageManager": "yarn@3.7.0",
+  "packageManager": "yarn@4.0.2",
   "private": true,
   "keywords": [
     "slonik",
