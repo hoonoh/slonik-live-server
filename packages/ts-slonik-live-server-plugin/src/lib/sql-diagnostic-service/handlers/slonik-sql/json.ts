@@ -85,17 +85,20 @@ export class SlonikSqlJsonHandler {
           // array literal expression
           //
           else if (ts.isArrayLiteralExpression(prop.initializer)) {
-            join[name] = prop.initializer.elements.reduce((rtn, p) => {
-              rtn.push(
-                SlonikSqlJsonHandler.objectExpressionToJson(
-                  typeChecker,
-                  p,
-                  undefined,
-                  recursedDepth + 1,
-                ),
-              );
-              return rtn;
-            }, [] as Record<string, unknown>[]);
+            join[name] = prop.initializer.elements.reduce(
+              (rtn, p) => {
+                rtn.push(
+                  SlonikSqlJsonHandler.objectExpressionToJson(
+                    typeChecker,
+                    p,
+                    undefined,
+                    recursedDepth + 1,
+                  ),
+                );
+                return rtn;
+              },
+              [] as Record<string, unknown>[],
+            );
           }
           //
           // call expression

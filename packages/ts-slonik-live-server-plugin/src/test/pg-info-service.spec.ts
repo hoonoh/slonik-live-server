@@ -64,19 +64,22 @@ const joinColumns = (...columns: CompletionEntry[][]) => {
 };
 
 const aliasColumns = (columns: CompletionEntry[], alias: string) => {
-  const res = columns.reduce((rtn, c) => {
-    rtn[c.name] = {
-      kind: c.kind,
-      name: c.name,
-      sortText: c.sortText,
-    };
-    rtn[`${alias}.${c.name}`] = {
-      kind: c.kind,
-      name: `${alias}.${c.name}`,
-      sortText: `${alias}.${c.sortText}`,
-    };
-    return rtn;
-  }, {} as Record<string, CompletionEntry>);
+  const res = columns.reduce(
+    (rtn, c) => {
+      rtn[c.name] = {
+        kind: c.kind,
+        name: c.name,
+        sortText: c.sortText,
+      };
+      rtn[`${alias}.${c.name}`] = {
+        kind: c.kind,
+        name: `${alias}.${c.name}`,
+        sortText: `${alias}.${c.sortText}`,
+      };
+      return rtn;
+    },
+    {} as Record<string, CompletionEntry>,
+  );
   return Object.values(res);
 };
 

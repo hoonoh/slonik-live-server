@@ -47,7 +47,10 @@ export class PgInfoService {
 
   private allColumns: Set<ColumnInfo> = new Set();
 
-  constructor(private config: Config, private log: LanguageServiceLogger) {}
+  constructor(
+    private config: Config,
+    private log: LanguageServiceLogger,
+  ) {}
 
   loadDbInfo() {
     if (this.infoLoadedAt + this.config.pg.infoTtl > Date.now()) {

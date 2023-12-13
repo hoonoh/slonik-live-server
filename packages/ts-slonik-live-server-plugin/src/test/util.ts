@@ -125,7 +125,7 @@ export const mockService = (files: Readonly<File[]>, debug?: boolean) => {
 
 export const getFiles = (filePaths: string[]) =>
   filePaths.map(
-    path => ({ path, fileName: basename(path), text: readFileSync(path).toString() } as File),
+    path => ({ path, fileName: basename(path), text: readFileSync(path).toString() }) as File,
   );
 
 export type TestTarget = [title: string, sourceFile: ts.SourceFile, node: ts.Node];
@@ -178,10 +178,13 @@ export const getDiagnosticFromSourceText = (text: string): DiagnosticFromFileRes
   };
   const { languageService, sqlDiagnosticService } = mockService([file]);
   const testTargets = getTestTargets(languageService, sqlDiagnosticService, [file]);
-  const diagnostics = testTargets.reduce((rtn, [, sourceFile, node]) => {
-    const diagnostic = sqlDiagnosticService.checkSqlNode(sourceFile, node, true);
-    if (diagnostic) rtn.push([node, diagnostic]);
-    return rtn;
-  }, [] as [ts.Node, ts.Diagnostic][]);
+  const diagnostics = testTargets.reduce(
+    (rtn, [, sourceFile, node]) => {
+      const diagnostic = sqlDiagnosticService.checkSqlNode(sourceFile, node, true);
+      if (diagnostic) rtn.push([node, diagnostic]);
+      return rtn;
+    },
+    [] as [ts.Node, ts.Diagnostic][],
+  );
   return diagnostics.map(([n, d], idx) => [getTitleFromNode(n), d, idx]);
 };
