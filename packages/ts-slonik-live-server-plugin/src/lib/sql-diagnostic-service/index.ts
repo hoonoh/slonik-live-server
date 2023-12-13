@@ -236,9 +236,9 @@ export class SqlDiagnosticService {
       return addDiagnostic(
         sqlInfo,
         ts.DiagnosticCategory.Suggestion,
-        `fragment starting with \`${
-          rawWithoutLeadingWhitespace.match(/^([\w-]+)/)?.[0]
-        }\` are not diagnosed`,
+        `fragment starting with \`${rawWithoutLeadingWhitespace.match(
+          /^([\w-]+)/,
+        )?.[0]}\` are not diagnosed`,
       );
     }
 

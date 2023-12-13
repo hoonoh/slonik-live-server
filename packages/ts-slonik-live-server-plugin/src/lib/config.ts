@@ -102,7 +102,10 @@ export class Config implements DeepReadonly<PluginConfig> {
     return this.current.pluginName + '-disable-cost-errors';
   }
 
-  constructor(private info?: ts.server.PluginCreateInfo, private log?: LanguageServiceLogger) {
+  constructor(
+    private info?: ts.server.PluginCreateInfo,
+    private log?: LanguageServiceLogger,
+  ) {
     this.load(info?.config);
   }
 
