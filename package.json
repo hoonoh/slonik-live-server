@@ -22,8 +22,8 @@
   "scripts": {
     "release": "lerna run release",
     "build": "lerna run build",
-    "prepare": "husky install && lerna run prepare && lerna link",
-    "postinstall": "lerna run postinstall && lerna link",
+    "prepare": "husky install && lerna run prepare",
+    "postinstall": "lerna run postinstall",
     "lint": "lerna run lint",
     "test": "lerna run test",
     "test:ci": "lerna run test:ci",
