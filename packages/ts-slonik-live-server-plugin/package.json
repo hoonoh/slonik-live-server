@@ -70,7 +70,7 @@
     "pg": "8.11.3",
     "pgsql-ast-parser": "12.0.1",
     "safe-stable-stringify": "2.4.3",
-    "slonik": "37.2.0",
+    "slonik": "40.2.1",
     "slonik-sql-tag-raw": "2.0.0",
     "typescript-template-language-service-decorator": "2.3.2"
   },

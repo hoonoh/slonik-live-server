@@ -2817,17 +2817,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/pg@npm:^8.10.2":
-  version: 8.10.2
-  resolution: "@types/pg@npm:8.10.2"
-  dependencies:
-    "@types/node": "npm:*"
-    pg-protocol: "npm:*"
-    pg-types: "npm:^4.0.1"
-  checksum: cd75b2b7827ddbef53dd41cc9a1325c65fb7dd64cb5a703a433f9f7f9c0d4b4a0828c00bda6fa4eb301bddc469d81173dcf0187e492c36c17104a90d3e6a27fd
-  languageName: node
-  linkType: hard
-
 "@types/pg@npm:^8.10.7":
   version: 8.10.7
   resolution: "@types/pg@npm:8.10.7"
@@ -12323,10 +12312,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postgres-interval@npm:^4.0.1":
-  version: 4.0.1
-  resolution: "postgres-interval@npm:4.0.1"
-  checksum: 2d54078f517a26ebf768955462b081f7eb9bdf6e2837a015eff497192fa837c5a120a348258e14151bd76d7b3c20e66edc7a27104822f0465d32a4eb8f603516
+"postgres-interval@npm:^4.0.2":
+  version: 4.0.2
+  resolution: "postgres-interval@npm:4.0.2"
+  checksum: 46d0766b11ac91ba3e4816c73a04e4e0c13ddf9efb9797982fdc405019a40b85e8b4a36448bd90e1ac1e8f0ca9b2ff22820e65e103368bc6fd9fa6a3b4268fd4
   languageName: node
   linkType: hard
 
@@ -13085,28 +13074,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"roarr@npm:^7.15.0":
-  version: 7.15.0
-  resolution: "roarr@npm:7.15.0"
-  dependencies:
-    boolean: "npm:^3.1.4"
-    fast-json-stringify: "npm:^2.7.10"
-    fast-printf: "npm:^1.6.9"
-    globalthis: "npm:^1.0.2"
-    safe-stable-stringify: "npm:^2.4.1"
-    semver-compare: "npm:^1.0.0"
-  checksum: 4db12db7ccc9d1612d801073c0923e34d11d9f6e33dabe0655c8d521110148d9964ae4f66720805067d692a149b8b7a501a1d90da519916321a3eab21f49a4e5
-  languageName: node
-  linkType: hard
-
-"roarr@npm:^7.18.3":
-  version: 7.18.3
-  resolution: "roarr@npm:7.18.3"
+"roarr@npm:^7.21.1":
+  version: 7.21.1
+  resolution: "roarr@npm:7.21.1"
   dependencies:
     fast-printf: "npm:^1.6.9"
     safe-stable-stringify: "npm:^2.4.3"
     semver-compare: "npm:^1.0.0"
-  checksum: 3c7dcaae6270470c889886ff11fab76f242715e18129ae52396e92a7ba0bab3347bd5465ae1c2e46241b76d005fe75be9aa236f1dadb1d74a458274f83540c95
+  checksum: 2fa490bdea0e77c4794735d27e14469b96e733c7286df0191e79759bf87357923ca81523816e1007cbdc5389702a749373bfd29dc91ef1da21d4e925709f8d96
   languageName: node
   linkType: hard
 
@@ -13192,13 +13167,6 @@ __metadata:
   version: 2.4.3
   resolution: "safe-stable-stringify@npm:2.4.3"
   checksum: 81dede06b8f2ae794efd868b1e281e3c9000e57b39801c6c162267eb9efda17bd7a9eafa7379e1f1cacd528d4ced7c80d7460ad26f62ada7c9e01dec61b2e768
-  languageName: node
-  linkType: hard
-
-"safe-stable-stringify@npm:^2.4.1":
-  version: 2.4.1
-  resolution: "safe-stable-stringify@npm:2.4.1"
-  checksum: 391dbab34964be0d0e63b91bc996ca23ef8daae440b18cb4132f7c3db1af206f88d047af1149ef7ea69db6b6cdb49472166bb35e43fe82db53a9a3ed315aab79
   languageName: node
   linkType: hard
 
@@ -13687,49 +13655,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"slonik@npm:37.2.0":
-  version: 37.2.0
-  resolution: "slonik@npm:37.2.0"
+"slonik@npm:40.2.1, slonik@npm:^40.0.0":
+  version: 40.2.1
+  resolution: "slonik@npm:40.2.1"
   dependencies:
     "@types/pg": "npm:^8.10.7"
-    es6-error: "npm:^4.1.1"
     get-stack-trace: "npm:^3.1.1"
     iso8601-duration: "npm:^1.3.0"
     pg: "npm:^8.11.3"
-    pg-protocol: "npm:^1.6.0"
     pg-query-stream: "npm:^4.5.3"
     pg-types: "npm:^4.0.1"
     postgres-array: "npm:^3.0.2"
-    postgres-interval: "npm:^4.0.1"
-    roarr: "npm:^7.18.3"
+    postgres-interval: "npm:^4.0.2"
+    roarr: "npm:^7.21.1"
     safe-stable-stringify: "npm:^2.4.3"
     serialize-error: "npm:^8.0.0"
+    strict-event-emitter-types: "npm:^2.0.0"
   peerDependencies:
     zod: ^3
-  checksum: 2bd8e8a5c5e6ae8ce1c5814a3b4f79aeb01a121829996d4102a90c9c23854e90e2b71e1148862f89bca7e3ae2c99629a5e9e996997546649ffb04547d455ad7a
-  languageName: node
-  linkType: hard
-
-"slonik@npm:^37.0.0":
-  version: 37.0.0
-  resolution: "slonik@npm:37.0.0"
-  dependencies:
-    "@types/pg": "npm:^8.10.2"
-    es6-error: "npm:^4.1.1"
-    get-stack-trace: "npm:^3.1.1"
-    iso8601-duration: "npm:^1.3.0"
-    pg: "npm:^8.11.3"
-    pg-protocol: "npm:^1.6.0"
-    pg-query-stream: "npm:^4.5.3"
-    pg-types: "npm:^4.0.1"
-    postgres-array: "npm:^3.0.2"
-    postgres-interval: "npm:^4.0.0"
-    roarr: "npm:^7.15.0"
-    safe-stable-stringify: "npm:^2.4.3"
-    serialize-error: "npm:^8.0.0"
-  peerDependencies:
-    zod: ^3
-  checksum: aa6891380593dddd2183cdf3eef089d489aca40b5e9537ece9c1488979327feed71e62e0f17eb5b6d4957886ae127524acbd0d31c41f0b1791fa6e698bf9852a
+  checksum: daf0cb767ca3a2ac711648804f932146f68304fbd5a4cca01ab353b656e1a70602bc6fa0ba204876431f3568b1bdd17abdfa2d7bf380efec1951a8a3595dbce4
   languageName: node
   linkType: hard
 
@@ -13958,6 +13902,13 @@ __metadata:
     duplexer2: "npm:~0.1.0"
     readable-stream: "npm:^2.0.2"
   checksum: 96a14ae94493aad307176d0c0a795446cedf6c49d11d08e5d0a56bcf9f22352b0dd148b0497c8456f08b00da0867288e9750bf0286b71f6b621c0f2ba6768758
+  languageName: node
+  linkType: hard
+
+"strict-event-emitter-types@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "strict-event-emitter-types@npm:2.0.0"
+  checksum: 7a2985b81908c2a7d1de10afe3be1de3423b8ce6188dc32aeb3dbaf66d4ac3f11029d6931c67d972a3bb976bbd04d27ee090eeed1cbd089c5ba3e899a04ed1b7
   languageName: node
   linkType: hard
 
@@ -14393,7 +14344,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "test-workspace@workspace:packages/test-workspace"
   dependencies:
-    slonik: "npm:^37.0.0"
+    slonik: "npm:^40.0.0"
     ts-slonik-live-server-plugin: "npm:*"
     typescript: "npm:^5.0.0"
   languageName: unknown
@@ -14650,7 +14601,7 @@ __metadata:
     rimraf: "npm:5.0.5"
     safe-stable-stringify: "npm:2.4.3"
     semantic-release: "npm:23.0.0"
-    slonik: "npm:37.2.0"
+    slonik: "npm:40.2.1"
     slonik-sql-tag-raw: "npm:2.0.0"
     typescript-template-language-service-decorator: "npm:2.3.2"
   languageName: unknown
