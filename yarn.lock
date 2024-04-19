@@ -13598,9 +13598,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"slonik@npm:40.2.1, slonik@npm:^40.0.0":
-  version: 40.2.1
-  resolution: "slonik@npm:40.2.1"
+"slonik@npm:41.0.0, slonik@npm:^41.0.0":
+  version: 41.0.0
+  resolution: "slonik@npm:41.0.0"
   dependencies:
     "@types/pg": "npm:^8.10.7"
     get-stack-trace: "npm:^3.1.1"
@@ -13616,7 +13616,7 @@ __metadata:
     strict-event-emitter-types: "npm:^2.0.0"
   peerDependencies:
     zod: ^3
-  checksum: daf0cb767ca3a2ac711648804f932146f68304fbd5a4cca01ab353b656e1a70602bc6fa0ba204876431f3568b1bdd17abdfa2d7bf380efec1951a8a3595dbce4
+  checksum: 47a4a458aabfcd8bb1e7b913ac256bced5cf02a5a02195918ba91069d41566542485617045f15006853f0657d1dea73bbd1ce050f223eec928806165561475e1
   languageName: node
   linkType: hard
 
@@ -14287,7 +14287,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "test-workspace@workspace:packages/test-workspace"
   dependencies:
-    slonik: "npm:^40.0.0"
+    slonik: "npm:^41.0.0"
     ts-slonik-live-server-plugin: "npm:*"
     typescript: "npm:^5.0.0"
   languageName: unknown
@@ -14544,7 +14544,7 @@ __metadata:
     rimraf: "npm:5.0.5"
     safe-stable-stringify: "npm:2.4.3"
     semantic-release: "npm:23.0.0"
-    slonik: "npm:40.2.1"
+    slonik: "npm:41.0.0"
     slonik-sql-tag-raw: "npm:2.0.0"
     typescript-template-language-service-decorator: "npm:2.3.2"
   languageName: unknown

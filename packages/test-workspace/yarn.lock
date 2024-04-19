@@ -447,9 +447,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"slonik@npm:40.2.1, slonik@npm:^40.0.0":
-  version: 40.2.1
-  resolution: "slonik@npm:40.2.1"
+"slonik@npm:41.0.0, slonik@npm:^41.0.0":
+  version: 41.0.0
+  resolution: "slonik@npm:41.0.0"
   dependencies:
     "@types/pg": "npm:^8.10.7"
     get-stack-trace: "npm:^3.1.1"
@@ -465,7 +465,7 @@ __metadata:
     strict-event-emitter-types: "npm:^2.0.0"
   peerDependencies:
     zod: ^3
-  checksum: daf0cb767ca3a2ac711648804f932146f68304fbd5a4cca01ab353b656e1a70602bc6fa0ba204876431f3568b1bdd17abdfa2d7bf380efec1951a8a3595dbce4
+  checksum: 47a4a458aabfcd8bb1e7b913ac256bced5cf02a5a02195918ba91069d41566542485617045f15006853f0657d1dea73bbd1ce050f223eec928806165561475e1
   languageName: node
   linkType: hard
 
@@ -507,7 +507,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "test-workspace@workspace:."
   dependencies:
-    slonik: "npm:^40.0.0"
+    slonik: "npm:^41.0.0"
     ts-slonik-live-server-plugin: "npm:*"
     typescript: "npm:^5.0.0"
   languageName: unknown
@@ -515,17 +515,17 @@ __metadata:
 
 "ts-slonik-live-server-plugin@file:../ts-slonik-live-server-plugin::locator=test-workspace%40workspace%3A.":
   version: 1.1.15
-  resolution: "ts-slonik-live-server-plugin@file:../ts-slonik-live-server-plugin#../ts-slonik-live-server-plugin::hash=f17b68&locator=test-workspace%40workspace%3A."
+  resolution: "ts-slonik-live-server-plugin@file:../ts-slonik-live-server-plugin#../ts-slonik-live-server-plugin::hash=f34123&locator=test-workspace%40workspace%3A."
   dependencies:
     d-forest: "npm:3.2.4"
     dotenv: "npm:16.3.1"
     pg: "npm:8.11.3"
     pgsql-ast-parser: "npm:12.0.1"
     safe-stable-stringify: "npm:2.4.3"
-    slonik: "npm:40.2.1"
+    slonik: "npm:41.0.0"
     slonik-sql-tag-raw: "npm:2.0.0"
     typescript-template-language-service-decorator: "npm:2.3.2"
-  checksum: dd0f57479cffb5610439407f67ecc8001afae89136a3350134b571dc312bbc509256bcafff247b03c450f7d608c921365818e4f55f2c38eaad72aeb3585492c8
+  checksum: 3248d375d4a1ba11f0fb461da1db04891b4a6f346ae9eff48e61f4fcaf9d3a77a44e3f0a27f1cc2e1795f2f80aa8edb0ad150722824a1073633403ada09d88de
   languageName: node
   linkType: hard
 
