@@ -2799,17 +2799,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/pg@npm:^8.0.0":
-  version: 8.6.5
-  resolution: "@types/pg@npm:8.6.5"
-  dependencies:
-    "@types/node": "npm:*"
-    pg-protocol: "npm:*"
-    pg-types: "npm:^2.2.0"
-  checksum: 433720cd63d6be35c8e04c8598961dee5ffb93ed4982017d079ca2e03f7af34f07ad1c6d1e13724fe5c333f3492ac2ec1c6b30b4abe62d739eebd545fd00ccfa
-  languageName: node
-  linkType: hard
-
 "@types/pg@npm:^8.10.7":
   version: 8.10.7
   resolution: "@types/pg@npm:8.10.7"
@@ -4979,13 +4968,6 @@ __metadata:
   version: 1.2.0
   resolution: "decamelize@npm:1.2.0"
   checksum: 85c39fe8fbf0482d4a1e224ef0119db5c1897f8503bcef8b826adff7a1b11414972f6fef2d7dec2ee0b4be3863cf64ac1439137ae9e6af23a3d8dcbe26a5b4b2
-  languageName: node
-  linkType: hard
-
-"decamelize@npm:^5.0.0":
-  version: 5.0.1
-  resolution: "decamelize@npm:5.0.1"
-  checksum: 3da71022bc1e85487810fa0833138effb599fa331ca21e179650e93a765d0c4dabeb1ecdd6ad1474fa0bacd2457953c63ea335afb6e53b35f2b4bf779514e2a3
   languageName: node
   linkType: hard
 
@@ -10251,7 +10233,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mkdirp@npm:^1.0.3, mkdirp@npm:^1.0.4, mkdirp@npm:~1.0.0":
+"mkdirp@npm:^1.0.3, mkdirp@npm:^1.0.4":
   version: 1.0.4
   resolution: "mkdirp@npm:1.0.4"
   bin:
@@ -10507,19 +10489,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-pg-migrate@npm:6.2.2":
-  version: 6.2.2
-  resolution: "node-pg-migrate@npm:6.2.2"
+"node-pg-migrate@npm:7.0.0":
+  version: 7.0.0
+  resolution: "node-pg-migrate@npm:7.0.0"
   dependencies:
-    "@types/pg": "npm:^8.0.0"
-    decamelize: "npm:^5.0.0"
-    mkdirp: "npm:~1.0.0"
-    yargs: "npm:~17.3.0"
+    yargs: "npm:~17.7.0"
   peerDependencies:
+    "@types/pg": ">=6.0.0 <9.0.0"
     pg: ">=4.3.0 <9.0.0"
+  peerDependenciesMeta:
+    "@types/pg":
+      optional: true
   bin:
-    node-pg-migrate: bin/node-pg-migrate
-  checksum: e52643535d14055378cd11a27d9b1c230728e3ddea00910322b89310c7b31ee8312d7dc4a9b4fb3e7d090d3b700af3c8232dde3c9171ea9ecc2a8dea9e9e2fe4
+    node-pg-migrate: bin/node-pg-migrate.js
+  checksum: 178b8f9404727e3a77af9a4dd9b4b560fce47dc04a3f0ea0dafb5ebb60484bac6649281711658e13928c5e5c8d03e0c7fbfd4263b7bd3a30c1eb29ec8935bcfd
   languageName: node
   linkType: hard
 
@@ -12010,7 +11993,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pg-types@npm:^2.1.0, pg-types@npm:^2.2.0":
+"pg-types@npm:^2.1.0":
   version: 2.2.0
   resolution: "pg-types@npm:2.2.0"
   dependencies:
@@ -14555,7 +14538,7 @@ __metadata:
   dependencies:
     d-forest: "npm:3.2.4"
     dotenv: "npm:16.3.1"
-    node-pg-migrate: "npm:6.2.2"
+    node-pg-migrate: "npm:7.0.0"
     pg: "npm:8.11.3"
     pgsql-ast-parser: "npm:12.0.1"
     rimraf: "npm:5.0.5"
@@ -15542,7 +15525,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yargs@npm:17.7.2":
+"yargs@npm:17.7.2, yargs@npm:~17.7.0":
   version: 17.7.2
   resolution: "yargs@npm:17.7.2"
   dependencies:
@@ -15599,21 +15582,6 @@ __metadata:
     y18n: "npm:^5.0.5"
     yargs-parser: "npm:^21.1.1"
   checksum: dd5c89aa8186d2a18625b26b68beb635df648617089135e9661107a92561056427bbd41dbfa228db5a7d968ea1043d96c036c2eb978acf7b61a0ae48bf3be206
-  languageName: node
-  linkType: hard
-
-"yargs@npm:~17.3.0":
-  version: 17.3.1
-  resolution: "yargs@npm:17.3.1"
-  dependencies:
-    cliui: "npm:^7.0.2"
-    escalade: "npm:^3.1.1"
-    get-caller-file: "npm:^2.0.5"
-    require-directory: "npm:^2.1.1"
-    string-width: "npm:^4.2.3"
-    y18n: "npm:^5.0.5"
-    yargs-parser: "npm:^21.0.0"
-  checksum: 2c5ff77132468093a1872b8a9798cdcc5da0bcf7a2b0660264ffa91766324b0926c3346e091d249dc3a86caf7e8e623aa0f8de660c9baf440188d4da7d4378c4
   languageName: node
   linkType: hard
 

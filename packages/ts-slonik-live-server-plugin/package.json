@@ -75,7 +75,7 @@
     "typescript-template-language-service-decorator": "2.3.2"
   },
   "devDependencies": {
-    "node-pg-migrate": "6.2.2",
+    "node-pg-migrate": "7.0.0",
     "rimraf": "5.0.5",
     "semantic-release": "23.0.0"
   }
