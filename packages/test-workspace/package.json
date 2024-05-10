@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "slonik": "^41.0.0",
+    "slonik": "^44.0.0",
     "ts-slonik-live-server-plugin": "*",
     "typescript": "^5.0.0"
   },
