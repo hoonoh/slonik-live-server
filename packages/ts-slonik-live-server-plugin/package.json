@@ -71,7 +71,7 @@
     "pgsql-ast-parser": "12.0.1",
     "safe-stable-stringify": "2.4.3",
     "slonik": "44.0.0",
-    "slonik-sql-tag-raw": "2.0.0",
+    "slonik-sql-tag-raw": "44.0.0",
     "typescript-template-language-service-decorator": "2.3.2"
   },
   "devDependencies": {
