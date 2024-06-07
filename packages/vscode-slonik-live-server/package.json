@@ -138,7 +138,7 @@
     "ts-slonik-live-server-plugin": "1.1.12"
   },
   "devDependencies": {
-    "semantic-release": "23.0.0",
+    "semantic-release": "24.0.0",
     "ts-essentials": "10.0.0",
     "typescript": "5.3.3",
     "vsce": "2.15.0"
