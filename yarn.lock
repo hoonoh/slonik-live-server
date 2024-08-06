@@ -13412,16 +13412,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"slonik-sql-tag-raw@npm:2.0.0":
-  version: 2.0.0
-  resolution: "slonik-sql-tag-raw@npm:2.0.0"
+"slonik-sql-tag-raw@npm:46.0.1":
+  version: 46.0.1
+  resolution: "slonik-sql-tag-raw@npm:46.0.1"
   dependencies:
+    "@slonik/sql-tag": "npm:^46.0.1"
     lodash: "npm:^4.17.20"
-    serialize-error: "npm:^8.0.0"
+    roarr: "npm:^7.21.1"
   peerDependencies:
-    roarr: ">=7.0.3"
-    slonik: ">=33.0.0"
-  checksum: c5c6937828b6f07e69bd096aae7d6377ccf1e6871934505d041a9f505a54bb11bdc6967bb77dfb63deec657e3d8732b81661c8acd8decbe6b80102ea7d0873c8
+    slonik: ">=45.0.0"
+  checksum: bff6aa51d01bcb40dfaaf7abe4ecf9b3f8e0aecb7833c985d7327d6b852de30608d17396a177d9a858b31f1e8ac55bbf0fa25c185b956e139d3e47dfc4e95164
   languageName: node
   linkType: hard
 
@@ -14398,7 +14398,7 @@ __metadata:
     safe-stable-stringify: "npm:2.4.3"
     semantic-release: "npm:24.0.0"
     slonik: "npm:46.0.1"
-    slonik-sql-tag-raw: "npm:2.0.0"
+    slonik-sql-tag-raw: "npm:46.0.1"
     typescript-template-language-service-decorator: "npm:2.3.2"
   languageName: unknown
   linkType: soft
