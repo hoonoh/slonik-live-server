@@ -2483,6 +2483,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@slonik/errors@npm:^46.1.0":
+  version: 46.1.0
+  resolution: "@slonik/errors@npm:46.1.0"
+  dependencies:
+    "@slonik/types": "npm:^46.1.0"
+  peerDependencies:
+    zod: ^3
+  checksum: 27f48027506a59327ae69aceea150df1a132dc1a1ae178ed7170c62e2c6d4f2d83aa831fa2c93c471f5afd79dc961e363f024039ab7485d358d73e8e33edf131
+  languageName: node
+  linkType: hard
+
 "@slonik/pg-driver@npm:^46.0.1":
   version: 46.0.1
   resolution: "@slonik/pg-driver@npm:46.0.1"
@@ -2517,12 +2528,36 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@slonik/sql-tag@npm:^46.1.0":
+  version: 46.1.0
+  resolution: "@slonik/sql-tag@npm:46.1.0"
+  dependencies:
+    "@slonik/errors": "npm:^46.1.0"
+    "@slonik/types": "npm:^46.1.0"
+    roarr: "npm:^7.21.1"
+    safe-stable-stringify: "npm:^2.4.3"
+    serialize-error: "npm:^8.0.0"
+  peerDependencies:
+    zod: ^3
+  checksum: 4c0fb7a7edbad3d72752858d4a29a6b8107190149773b12d5df2d492fc2592d6dce550216652a1e9a6d1157ecd507ffdc6b0fc50ed39a5812314c317fd95df54
+  languageName: node
+  linkType: hard
+
 "@slonik/types@npm:^46.0.1":
   version: 46.0.1
   resolution: "@slonik/types@npm:46.0.1"
   peerDependencies:
     zod: ^3
   checksum: 4afb13795ccf82e3e4e1b7cc5b2f960bc0f7cabf23159b8a387931d262defbdfc409001da81210db676fbcaf094e120d6813a7033d6a236351b7c240a07ae339
+  languageName: node
+  linkType: hard
+
+"@slonik/types@npm:^46.1.0":
+  version: 46.1.0
+  resolution: "@slonik/types@npm:46.1.0"
+  peerDependencies:
+    zod: ^3
+  checksum: 698fd7ad96cceb665819dee0b643de1d5666fadcc7f9f7bb4ed65a98355ebe09587c248c5834d237f7e2e53f3ab7c8b6f9966179a9927c8790991e455241803e
   languageName: node
   linkType: hard
 
@@ -13780,16 +13815,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"slonik-sql-tag-raw@npm:2.0.0":
-  version: 2.0.0
-  resolution: "slonik-sql-tag-raw@npm:2.0.0"
+"slonik-sql-tag-raw@npm:46.1.0":
+  version: 46.1.0
+  resolution: "slonik-sql-tag-raw@npm:46.1.0"
   dependencies:
+    "@slonik/sql-tag": "npm:^46.1.0"
     lodash: "npm:^4.17.20"
-    serialize-error: "npm:^8.0.0"
+    roarr: "npm:^7.21.1"
   peerDependencies:
-    roarr: ">=7.0.3"
-    slonik: ">=33.0.0"
-  checksum: c5c6937828b6f07e69bd096aae7d6377ccf1e6871934505d041a9f505a54bb11bdc6967bb77dfb63deec657e3d8732b81661c8acd8decbe6b80102ea7d0873c8
+    slonik: ">=45.0.0"
+  checksum: 5205e76590811b71c03719dc815abb260fea809fd8d6756c8b26ef4761c26a29aa9fba2b82be2fda6527aae307df00f8d190891d558ecea97938ffa6e8a937bb
   languageName: node
   linkType: hard
 
@@ -14780,7 +14815,7 @@ __metadata:
     safe-stable-stringify: "npm:2.4.3"
     semantic-release: "npm:24.0.0"
     slonik: "npm:46.0.1"
-    slonik-sql-tag-raw: "npm:2.0.0"
+    slonik-sql-tag-raw: "npm:46.1.0"
     typescript-template-language-service-decorator: "npm:2.3.2"
   languageName: unknown
   linkType: soft
