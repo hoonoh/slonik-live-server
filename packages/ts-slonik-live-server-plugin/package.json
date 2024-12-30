@@ -66,17 +66,17 @@
   },
   "dependencies": {
     "d-forest": "3.2.4",
-    "dotenv": "16.3.1",
-    "pg": "8.11.3",
+    "dotenv": "16.4.7",
+    "pg": "8.13.1",
     "pgsql-ast-parser": "12.0.1",
-    "safe-stable-stringify": "2.4.3",
-    "slonik": "46.0.1",
+    "safe-stable-stringify": "2.5.0",
+    "slonik": "46.2.0",
     "slonik-sql-tag-raw": "2.0.0",
     "typescript-template-language-service-decorator": "2.3.2"
   },
   "devDependencies": {
-    "node-pg-migrate": "7.0.0",
+    "node-pg-migrate": "7.8.0",
     "rimraf": "6.0.1",
-    "semantic-release": "24.0.0"
+    "semantic-release": "24.2.0"
   }
 }
